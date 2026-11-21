@@ -68,5 +68,5 @@ hashtags: "#gta6 #gtavi #gta #gaming #fyp"
 posting:
   # Profile name you created in Upload-Post (upload-post.com) and linked your
   # TikTok, Instagram and YouTube accounts to.
-  upload_post_user: gta
+  upload_post_user: default
   platforms: [instagram, youtube]   # add tiktok after upgrading to a paid Upload-Post plan
