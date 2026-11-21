@@ -29,7 +29,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/huggingface
-          key: whisper-models-v1
+          key: whisper-models-v2
       - name: Make clips
         env:
           GH_TOKEN: ${{ github.token }}

@@ -48,13 +48,21 @@ def download_section(url, start, end, dst):
     return dst
 
 
-def clip_words(path, cfg):
-    model = analyze.whisper_model(cfg.get("whisper_model", "base"))
-    segments, _ = model.transcribe(analyze.load_audio_16k(path), language=cfg.get("language"),
-                                   word_timestamps=True, beam_size=1)
+def clip_words(path, cfg, streamer=None):
+    """Word-level captions for one short clip. Uses a more accurate model than the
+    long-stream transcript, and primes it with names and GTA words so they're
+    spelled right."""
+    model = analyze.whisper_model(cfg.get("caption_model", "small.en"))
+    names = ", ".join(x.get("credit", x["name"]) for x in cfg["streamers"])
+    prompt = (f"{streamer.get('credit', '') if streamer else ''} streaming GTA 6. "
+              f"{names}. Vice City, Leonida, Jason, Lucia, chat, bro, cops, mission.")
+    segments, _ = model.transcribe(
+        analyze.load_audio_16k(path), language=cfg.get("language"), word_timestamps=True,
+        beam_size=5, vad_filter=True, condition_on_previous_text=False,
+        initial_prompt=prompt)
     # drop words whisper is unsure about (often game audio / music, not the streamer)
     return [(w.start, w.end, w.word) for s in segments for w in (s.words or [])
-            if getattr(w, "probability", 1.0) >= 0.35]
+            if getattr(w, "probability", 1.0) >= 0.4]
 
 
 def media_duration(path):
@@ -82,7 +90,7 @@ def process_window(streamer, vod, start, end, cfg):
     for i, c in enumerate(clips):
         try:
             raw = download_section(vod["url"], c["start"], c["end"], folder / f"raw{i}.mp4")
-            words = clip_words(raw, cfg)
+            words = clip_words(raw, cfg, streamer)
             base = f"{stamp}_{i:02d}_{streamer['name']}_{vod['id']}_{int(start)}"
             peak = c["peak"] - c["start"] if c.get("peak") else None
             out, layout = edit.render(raw, folder / f"{base}.mp4", words, c["hook"], credit,

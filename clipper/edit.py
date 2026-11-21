@@ -275,6 +275,33 @@ def _clean(text):
             .replace("\n", " ").strip())
 
 
+FILLERS = {"uh", "um", "uhh", "umm", "hmm", "mm", "ah", "er", "erm"}
+MASK = {  # mild masking keeps clips safe for TikTok/Instagram reach
+    "fuck": "F*CK", "fucking": "F*CKING", "fucked": "F*CKED", "motherfucker": "MOTHERF*CKER",
+    "shit": "SH*T", "bitch": "B*TCH", "ass": "A*S", "dick": "D*CK", "pussy": "P*SSY",
+    "nigga": "N*GGA", "niggas": "N*GGAS", "damn": "DAMN",
+}
+
+
+def clean_words(words):
+    """Tidy whisper words for on-screen captions: no fillers, no stray
+    punctuation, profanity masked, every word visible for at least 0.2 s."""
+    out = []
+    for start, end, text in words:
+        raw = text.strip()
+        core = raw.strip(".,;:!?\"'()[]…-").lower()
+        if not core or core in FILLERS:
+            continue
+        shown = MASK.get(core, raw.strip(",.;:\"()[]…").upper())
+        if raw.endswith(("?", "!")) and not shown.endswith(("?", "!")):
+            shown += raw[-1]
+        out.append([max(start - 0.06, 0), max(end, start + 0.2), shown,
+                    raw.endswith((".", "?", "!"))])
+    for a, b in zip(out, out[1:]):      # no overlaps between consecutive words
+        a[1] = min(a[1], b[0]) if b[0] > a[0] else a[1]
+    return [tuple(w) for w in out]
+
+
 def _chunks(words):
     """Group words into 1-3 word caption chunks (max ~16 characters)."""
     chunks, cur = [], []
@@ -282,7 +309,8 @@ def _chunks(words):
         nxt = cur + [w]
         text = " ".join(x[2] for x in nxt)
         gap = cur and w[0] - cur[-1][1] > 0.6
-        if cur and (len(nxt) > 3 or len(text) > 16 or gap):
+        sentence_end = cur and len(cur[-1]) > 3 and cur[-1][3]
+        if cur and (len(nxt) > 4 or len(text) > 18 or gap or sentence_end):
             chunks.append(cur)
             cur = [w]
         else:
@@ -301,7 +329,7 @@ def write_ass(path, words, hook, credit, out_dur, layout, hook_until):
         "[Script Info]", "ScriptType: v4.00+", f"PlayResX: {W}", f"PlayResY: {H}",
         "WrapStyle: 0", "ScaledBorderAndShadow: yes", "",
         "[V4+ Styles]", style,
-        f"Style: Cap,{FONT},88,&H00FFFFFF,&H00FFFFFF,&H00000000,&H80000000,"
+        f"Style: Cap,{FONT},84,&H00FFFFFF,&H00FFFFFF,&H00000000,&H80000000,"
         "0,0,0,0,100,100,1,0,1,8,4,5,60,60,0,1",
         f"Style: Hook,{FONT},58,&H00101010,&H00101010,&H00FFFFFF,&H00FFFFFF,"
         "0,0,0,0,100,100,0,0,3,20,0,5,70,70,0,1",
@@ -318,7 +346,7 @@ def write_ass(path, words, hook, credit, out_dur, layout, hook_until):
                      f"{{\\pos(540,{credit_y})\\alpha&H30&}}{_clean(credit.upper())}")
     chunks = _chunks(words)
     for ci, chunk in enumerate(chunks):
-        texts = [_clean(w[2]).upper() for w in chunk]
+        texts = [_clean(w[2]) for w in chunk]
         nxt = chunks[ci + 1][0][0] if ci + 1 < len(chunks) else out_dur
         end_of_chunk = max(min(chunk[-1][1] + 0.35, nxt, out_dur), chunk[-1][0] + 0.1)
         for k, w in enumerate(chunk):
@@ -342,7 +370,7 @@ def render(src, dst, words, hook, credit, peak=None, facecam=None):
     dst = Path(dst)
     sw, sh, dur = probe(src)
     loud = loudness_10hz(src)
-    words = [w for w in words if w[2].strip() and w[1] <= dur + 0.5]
+    words = clean_words([w for w in words if w[2].strip() and w[1] <= dur + 0.5])
     segments, teaser = plan_segments(words, loud, dur, peak)
     skip = 1 if teaser else 0
     out_dur = sum(b - a for a, b in segments)
@@ -350,12 +378,12 @@ def render(src, dst, words, hook, credit, peak=None, facecam=None):
     out_words = []
     if teaser:  # captions inside the teaser too
         a, b = segments[0]
-        out_words += [(w[0] - a, w[1] - a, w[2]) for w in words if a <= w[0] < b]
+        out_words += [(w[0] - a, w[1] - a, w[2], w[3]) for w in words if a <= w[0] < b]
     for w in words:
         t0 = map_time(w[0], segments, skip)
         if t0 is not None:
             t1 = map_time(min(w[1], dur), segments, skip) or t0 + 0.3
-            out_words.append((t0, max(t1, t0 + 0.08), w[2]))
+            out_words.append((t0, max(t1, t0 + 0.08), w[2], w[3]))
 
     layout, params = detect_layout(src, facecam)
     print(f"layout: {layout} {params}")

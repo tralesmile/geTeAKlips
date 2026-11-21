@@ -1,0 +1,37 @@
+name: Preview clips
+
+on:
+  workflow_dispatch:
+    inputs:
+      clips:
+        description: 'Lines: streamer url start end [peak]'
+        required: true
+        default: |
+          lacy https://www.twitch.tv/videos/2935634460 46 68
+          clix https://www.twitch.tv/videos/2935804701 1178 1212
+
+permissions:
+  contents: write
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+      - run: pip install -r requirements.txt
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: whisper-models-v2
+      - name: Render previews
+        env:
+          GH_TOKEN: ${{ github.token }}
+          YTDLP_COOKIES: ${{ secrets.YTDLP_COOKIES }}
+          PREVIEW_CLIPS: ${{ inputs.clips }}
+        run: python -m clipper.preview

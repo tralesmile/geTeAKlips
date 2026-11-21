@@ -57,6 +57,8 @@ clips_per_streamer: 8
 
 # Speech-to-text model (faster-whisper): tiny, base, small. Bigger = slower, better.
 whisper_model: base
+# More accurate model used only for the on-screen captions of each short clip.
+caption_model: small.en
 # Language of the streams, or null to auto-detect.
 language: en
 
