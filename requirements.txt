@@ -3,3 +3,4 @@ faster-whisper
 numpy
 pyyaml
 requests
+opencv-python-headless>=4.8,<5

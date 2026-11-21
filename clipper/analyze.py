@@ -66,14 +66,21 @@ laughing or big reactions. Pick the {n} best self-contained moments while they a
 funny fails, crazy chases, big reactions, surprising game moments, memorable \
 quotes. The streamer ({credit}) must be the main focus: their words and reactions \
 drive the clip. Never pick moments that make them look bad. \
-Each clip must be {min_s}-{max_s} seconds long, start right before the action \
-(no slow intro) and end right after the payoff. Clips must not overlap.
+Viewers decide in the first 2 seconds, and clips that are watched to the end \
+get shown to more people. So each clip must be {min_s}-{max_s} seconds (shorter \
+is better when the moment allows), start the instant the action or line begins \
+(no greetings, no setup, no dead air) and end right after the payoff, ideally \
+on a beat that makes people rewatch. Clips must not overlap.
 
 Return ONLY a JSON array, best clip first, each item:
 {{"start": "H:MM:SS", "end": "H:MM:SS",
-  "hook": "on-screen hook text that names the streamer, max 7 words, no emojis",
-  "title": "catchy title, max 70 chars",
-  "caption": "1-2 sentence post caption in English that names the streamer"}}
+  "peak": "H:MM:SS of the single funniest/loudest second inside the clip",
+  "hook": "on-screen hook that makes people stay, names the streamer, max 7 words, \
+no emojis, e.g. 'Lacy did NOT expect this' or 'Clix finds the worst car in Vice City'",
+  "title": "YouTube title, max 70 chars, includes the streamer name and 'GTA 6'",
+  "caption": "1-2 natural sentences in English for TikTok/Instagram search: \
+include the streamer name, 'GTA 6' and what happens (e.g. police chase, mission fail, \
+Vice City). End with a short question to get comments."}}
 
 TRANSCRIPT:
 {transcript}"""
@@ -108,7 +115,12 @@ def parse_clips(text, cfg, duration, window_start=0.0):
         if any(start < e and end > s for s, e in taken):
             continue
         taken.append((start, end))
-        clips.append({"start": start, "end": end,
+        try:
+            peak = to_seconds(c.get("peak", ""))
+            peak = peak if start < peak < end else None
+        except ValueError:
+            peak = None
+        clips.append({"start": start, "end": end, "peak": peak,
                       "hook": str(c.get("hook", ""))[:60],
                       "title": str(c.get("title", ""))[:90],
                       "caption": str(c.get("caption", ""))[:500]})

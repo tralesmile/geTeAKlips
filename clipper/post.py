@@ -17,7 +17,7 @@ from .common import (ROOT, WORK, QUEUE_TAG, clip_streamer, load_config,
 POSTING_STATE = ROOT / "state" / "posting.json"
 
 
-def build_fields(meta, cfg):
+def build_fields(meta, cfg, platforms=None):
     streamer = next((x for x in cfg["streamers"] if x["name"] == meta.get("streamer")), {})
     tags = " ".join(t for t in (streamer.get("hashtags", ""), cfg.get("hashtags", "")) if t)
     credit = meta.get("credit", "")
@@ -25,14 +25,15 @@ def build_fields(meta, cfg):
     title = meta["title"] or meta["hook"] or "GTA 6 moment"
     posting = cfg["posting"]
     fields = [("user", posting["upload_post_user"]),
-              ("title", title[:90]),
+              # generic title = the X (Twitter) post text, max 280 characters
+              ("title", f"{meta['caption'] or title} {tags}"[:280]),
               ("tiktok_title", caption[:2200]),
               ("instagram_title", caption[:2200]),
               ("youtube_title", (title[:90] + " #shorts")[:100]),
               ("youtube_description", f"{meta['caption']}\n\nCredit: {credit}\n{tags}"),
               ("privacyStatus", "public"),
               ("categoryId", "20")]  # 20 = Gaming
-    fields += [("platform[]", p) for p in posting["platforms"]]
+    fields += [("platform[]", p) for p in (platforms or posting["platforms"])]
     return fields
 
 
@@ -97,7 +98,7 @@ def wait_for_links(resp, platforms=3, max_wait=600):
         except requests.RequestException:
             continue
         print("status:", r.text[:800])
-        links = re.findall(r"https://[^\s\"']*(?:instagram\.com|youtube\.com|youtu\.be|tiktok\.com)[^\s\"']*", r.text)
+        links = re.findall(r"https://[^\s\"']*(?:instagram\.com|youtube\.com|youtu\.be|tiktok\.com|x\.com|twitter\.com)[^\s\"']*", r.text)
         if len(set(links)) >= platforms or '"completed"' in r.text or '"failed"' in r.text:
             return r.text
     return text
@@ -134,19 +135,31 @@ def main():
         run(["gh", "release", "download", QUEUE_TAG, "-p", meta_name, "-D", WORK, "--clobber"])
         meta.update(json.loads((WORK / meta_name).read_text()))
 
-    with open(WORK / name, "rb") as video:
-        resp = requests.post(
-            "https://api.upload-post.com/api/upload",
-            headers={"Authorization": f"Apikey {os.environ['UPLOAD_POST_API_KEY']}",
-                     "Idempotency-Key": str(uuid.uuid5(uuid.NAMESPACE_URL, name))},
-            data=build_fields(meta, cfg),
-            files={"video": (name, video, "video/mp4")},
-            timeout=600)
-    print(resp.status_code, resp.text[:2000])
+    platforms = list(cfg["posting"]["platforms"])
+
+    def upload(plats):
+        with open(WORK / name, "rb") as video:
+            r = requests.post(
+                "https://api.upload-post.com/api/upload",
+                headers={"Authorization": f"Apikey {os.environ['UPLOAD_POST_API_KEY']}",
+                         "Idempotency-Key": str(uuid.uuid5(uuid.NAMESPACE_URL,
+                                                           name + ",".join(plats)))},
+                data=build_fields(meta, cfg, plats),
+                files={"video": (name, video, "video/mp4")},
+                timeout=600)
+        print(r.status_code, r.text[:2000])
+        return r
+
+    resp = upload(platforms)
+    if resp.status_code >= 300 and "x" in platforms:
+        # never let X block a post: retry on the other platforms
+        platforms = [p for p in platforms if p != "x"]
+        print("retrying without X")
+        resp = upload(platforms)
     if resp.status_code >= 300:
         sys.exit("upload failed; clip stays in the queue for the next run")
 
-    notify(meta, wait_for_links(resp, len(cfg["posting"]["platforms"])))
+    notify(meta, wait_for_links(resp, len(platforms)))
     for n in (name, meta_name):
         if n in names:
             run(["gh", "release", "delete-asset", QUEUE_TAG, n, "-y"])

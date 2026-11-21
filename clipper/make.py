@@ -8,7 +8,7 @@ import sys
 import time
 from pathlib import Path
 
-from . import analyze, render
+from . import analyze, edit
 from .common import (WORK, ensure_queue_release, load_config, load_state,
                      queued_clip_count, run, save_state, ytdlp_base)
 
@@ -52,7 +52,9 @@ def clip_words(path, cfg):
     model = analyze.whisper_model(cfg.get("whisper_model", "base"))
     segments, _ = model.transcribe(analyze.load_audio_16k(path), language=cfg.get("language"),
                                    word_timestamps=True, beam_size=1)
-    return [(w.start, w.end, w.word) for s in segments for w in (s.words or [])]
+    # drop words whisper is unsure about (often game audio / music, not the streamer)
+    return [(w.start, w.end, w.word) for s in segments for w in (s.words or [])
+            if getattr(w, "probability", 1.0) >= 0.35]
 
 
 def media_duration(path):
@@ -80,13 +82,13 @@ def process_window(streamer, vod, start, end, cfg):
     for i, c in enumerate(clips):
         try:
             raw = download_section(vod["url"], c["start"], c["end"], folder / f"raw{i}.mp4")
-            dur = media_duration(raw)
             words = clip_words(raw, cfg)
             base = f"{stamp}_{i:02d}_{streamer['name']}_{vod['id']}_{int(start)}"
-            out = render.render(raw, folder / f"{base}.mp4", words, c["hook"], credit,
-                                dur, streamer.get("facecam"),
-                                streamer.get("zoom", cfg.get("zoom", 1.45)))
-            meta = dict(c, credit=credit, streamer=streamer["name"], vod=vod["url"])
+            peak = c["peak"] - c["start"] if c.get("peak") else None
+            out, layout = edit.render(raw, folder / f"{base}.mp4", words, c["hook"], credit,
+                                      peak=peak, facecam=streamer.get("facecam"))
+            meta = dict(c, credit=credit, streamer=streamer["name"], vod=vod["url"],
+                        layout=layout)
             (folder / f"{base}.json").write_text(json.dumps(meta, indent=2))
             run(["gh", "release", "upload", "queue", out, folder / f"{base}.json",
                  "--clobber"])
