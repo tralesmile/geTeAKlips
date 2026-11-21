@@ -97,7 +97,7 @@ def wait_for_links(resp, platforms=3, max_wait=600):
         except requests.RequestException:
             continue
         print("status:", r.text[:800])
-        links = re.findall(r"https://[^\s\"']*(?:instagram\.com|youtube\.com|youtu\.be)[^\s\"']*", r.text)
+        links = re.findall(r"https://[^\s\"']*(?:instagram\.com|youtube\.com|youtu\.be|tiktok\.com)[^\s\"']*", r.text)
         if len(set(links)) >= platforms or '"completed"' in r.text or '"failed"' in r.text:
             return r.text
     return text
