@@ -68,10 +68,9 @@ def main():
 
     topic = os.environ.get("NTFY_TOPIC", "").strip()
     if topic:
-        requests.post(f"https://ntfy.sh/{topic}", data=body.encode(),
-                      headers={"Title": title, "Tags": "robot",
-                               "Priority": "high" if problems else "default"},
-                      timeout=20)
+        requests.post("https://ntfy.sh/", json={
+            "topic": topic, "title": title, "message": body, "tags": ["robot"],
+            "priority": 4 if problems else 3}, timeout=20).raise_for_status()
 
 
 if __name__ == "__main__":

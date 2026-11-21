@@ -41,9 +41,10 @@ def notify(meta, response_text):
     body = (f"Submit to the {meta.get('credit') or meta.get('streamer')} campaign "
             f"within 30 min:\n" + ("\n".join(links) or "check your profiles for the new post"))
     try:
-        requests.post(f"https://ntfy.sh/{topic}", data=body.encode(),
-                      headers={"Title": f"New clip posted: {meta.get('title', '')[:60]}",
-                               "Priority": "high", "Tags": "movie_camera"}, timeout=20)
+        requests.post("https://ntfy.sh/", json={
+            "topic": topic, "title": f"New clip posted: {meta.get('title', '')[:60]}",
+            "message": body, "priority": 4, "tags": ["movie_camera"]},
+            timeout=20).raise_for_status()
     except requests.RequestException as e:
         print(f"notification failed: {e}")
 
