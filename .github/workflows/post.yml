@@ -13,6 +13,9 @@ permissions:
 concurrency:
   group: post-clip
   cancel-in-progress: false
+# Backup: a Claude scheduled task also starts this workflow ~2 min after each
+# slot, because GitHub sometimes skips scheduled runs. Duplicate runs are
+# skipped by the 75-minute check in clipper/post.py.
 
 jobs:
   post:

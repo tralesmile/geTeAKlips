@@ -74,7 +74,7 @@ def pick_clip(clips, cfg):
     else:  # clips from streamers no longer in config
         choice = sorted(clips, key=newest_first)[0]
     POSTING_STATE.parent.mkdir(parents=True, exist_ok=True)
-    POSTING_STATE.write_text(json.dumps({"last": clip_streamer(choice)}))
+    POSTING_STATE.write_text(json.dumps({"last": clip_streamer(choice), "at": int(time.time())}))
     return choice
 
 
@@ -103,8 +103,21 @@ def wait_for_links(resp, platforms=3, max_wait=600):
     return text
 
 
+MIN_GAP_MINUTES = 75  # the backup trigger fires right after GitHub's: never post twice
+
+
+def posted_recently():
+    if not POSTING_STATE.exists():
+        return False
+    at = json.loads(POSTING_STATE.read_text()).get("at", 0)
+    return time.time() - at < MIN_GAP_MINUTES * 60
+
+
 def main():
     cfg = load_config()
+    if posted_recently() and os.environ.get("FORCE_POST") != "1":
+        print("a clip was posted less than 75 minutes ago; skipping this run")
+        return
     assets = queue_assets()
     names = {a["name"] for a in assets}
     clips = [a["name"] for a in assets if a["name"].endswith(".mp4")]
