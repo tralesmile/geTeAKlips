@@ -6,6 +6,7 @@ import json
 import os
 import re
 import sys
+import time
 import uuid
 
 import requests
@@ -49,6 +50,31 @@ def notify(meta, response_text):
         print(f"notification failed: {e}")
 
 
+def wait_for_links(resp, max_wait=600):
+    """Background uploads: poll Upload-Post until post URLs appear (max 10 min)."""
+    text = resp.text
+    try:
+        request_id = resp.json().get("request_id")
+    except ValueError:
+        request_id = None
+    if not request_id or "instagram.com" in text or "youtube.com" in text:
+        return text
+    headers = {"Authorization": f"Apikey {os.environ['UPLOAD_POST_API_KEY']}"}
+    deadline = time.time() + max_wait
+    while time.time() < deadline:
+        time.sleep(30)
+        try:
+            r = requests.get("https://api.upload-post.com/api/uploadposts/status",
+                             params={"request_id": request_id}, headers=headers, timeout=30)
+        except requests.RequestException:
+            continue
+        print("status:", r.text[:800])
+        links = re.findall(r"https://[^\s\"']*(?:instagram\.com|youtube\.com|youtu\.be)[^\s\"']*", r.text)
+        if len(set(links)) >= 2 or '"completed"' in r.text or '"failed"' in r.text:
+            return r.text
+    return text
+
+
 def main():
     cfg = load_config()
     assets = queue_assets()
@@ -79,7 +105,7 @@ def main():
     if resp.status_code >= 300:
         sys.exit("upload failed; clip stays in the queue for the next run")
 
-    notify(meta, resp.text)
+    notify(meta, wait_for_links(resp))
     for n in (name, meta_name):
         if n in names:
             run(["gh", "release", "delete-asset", QUEUE_TAG, n, "-y"])
