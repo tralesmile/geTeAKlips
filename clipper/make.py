@@ -84,7 +84,8 @@ def process_window(streamer, vod, start, end, cfg):
             words = clip_words(raw, cfg)
             base = f"{stamp}_{i:02d}_{streamer['name']}_{vod['id']}_{int(start)}"
             out = render.render(raw, folder / f"{base}.mp4", words, c["hook"], credit,
-                                dur, streamer.get("facecam"), cfg.get("zoom", 1.45))
+                                dur, streamer.get("facecam"),
+                                streamer.get("zoom", cfg.get("zoom", 1.45)))
             meta = dict(c, credit=credit, streamer=streamer["name"], vod=vod["url"])
             (folder / f"{base}.json").write_text(json.dumps(meta, indent=2))
             run(["gh", "release", "upload", "queue", out, folder / f"{base}.json",

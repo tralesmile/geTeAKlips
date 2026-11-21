@@ -54,16 +54,18 @@ PROMPT = """You are an expert short-form video editor making viral GTA 6 clips \
 for TikTok, Instagram Reels and YouTube Shorts from a stream by {credit}.
 
 Below is the timestamped transcript of the stream. [LOUD] marks screaming, \
-laughing or big reactions. Pick the {n} best self-contained moments: funny \
-fails, crazy chases, big reactions, surprising game moments, strong opinions. \
+laughing or big reactions. Pick the {n} best self-contained moments while they are playing GTA 6: \
+funny fails, crazy chases, big reactions, surprising game moments, memorable \
+quotes. The streamer ({credit}) must be the main focus: their words and reactions \
+drive the clip. Never pick moments that make them look bad. \
 Each clip must be {min_s}-{max_s} seconds long, start right before the action \
 (no slow intro) and end right after the payoff. Clips must not overlap.
 
 Return ONLY a JSON array, best clip first, each item:
 {{"start": "H:MM:SS", "end": "H:MM:SS",
-  "hook": "on-screen hook text, max 7 words, no emojis",
+  "hook": "on-screen hook text that names the streamer, max 7 words, no emojis",
   "title": "catchy title, max 70 chars",
-  "caption": "1-2 sentence post caption"}}
+  "caption": "1-2 sentence post caption in English that names the streamer"}}
 
 TRANSCRIPT:
 {transcript}"""

@@ -12,6 +12,8 @@
 #            of the frame. Example bottom-left cam: [0.0, 0.70, 0.22, 0.30]
 #            Leave null for streamers without a cam (gameplay-only layout).
 #   credit:  shown on every clip and in captions.
+#   hashtags: extra hashtags for this streamer (campaign requirements).
+#   zoom:    optional per-streamer gameplay zoom (overrides the global one).
 streamers:
   # GTA 6 launch marathons with paid clipping campaigns on Whop (pool prizes).
   # Join each campaign before posting their clips.
@@ -26,7 +28,9 @@ streamers:
   - name: kaicenat
     url: https://www.twitch.tv/kaicenat/videos?filter=archive
     facecam: null
-    credit: "@kaicenat"
+    credit: "Kai Cenat"      # campaign: name must be in caption/overlay
+    hashtags: "#KAICENAT"    # campaign: required hashtag
+    zoom: 1.0                # show the full frame so Kai is always visible
 
 # Only look at the newest N VODs of each channel.
 look_back_vods: 2

@@ -13,7 +13,8 @@ from .common import WORK, load_config, queue_assets, run, QUEUE_TAG
 
 
 def build_fields(meta, cfg):
-    tags = cfg.get("hashtags", "")
+    streamer = next((x for x in cfg["streamers"] if x["name"] == meta.get("streamer")), {})
+    tags = " ".join(t for t in (streamer.get("hashtags", ""), cfg.get("hashtags", "")) if t)
     credit = meta.get("credit", "")
     caption = f"{meta['caption']} 🎥 {credit}\n{tags}".strip()
     title = meta["title"] or meta["hook"] or "GTA 6 moment"
