@@ -1,28 +1,3 @@
 {
-  "processed": [
-    {
-      "id": "v2935634460",
-      "streamer": "lacy",
-      "window": [
-        0,
-        4221
-      ],
-      "result": "error:open() got an unexpected keyword argument 'metadata_errors'",
-      "at": "2026-11-21 17:31"
-    },
-    {
-      "id": "v2935804701",
-      "streamer": "clix",
-      "window": [
-        0,
-        1664
-      ],
-      "result": "error:open() got an unexpected keyword argument 'metadata_errors'",
-      "at": "2026-11-21 17:31"
-    }
-  ],
-  "progress": {
-    "v2935634460": 4221.0,
-    "v2935804701": 1664.0
-  }
+  "processed": []
 }

@@ -17,6 +17,14 @@ def whisper_model(name):
     return _whisper[name]
 
 
+def load_audio_16k(path):
+    """Decode any media file to 16 kHz mono float32 with ffmpeg (avoids PyAV)."""
+    proc = subprocess.run(
+        ["ffmpeg", "-v", "error", "-i", str(path), "-vn", "-ac", "1", "-ar", "16000",
+         "-f", "s16le", "-"], capture_output=True, check=True)
+    return np.frombuffer(proc.stdout, dtype=np.int16).astype(np.float32) / 32768.0
+
+
 def loudness_per_second(audio_path):
     """RMS loudness (dB) for each second of audio."""
     proc = subprocess.run(
@@ -38,7 +46,7 @@ def fmt(t):
 
 def build_transcript(audio_path, cfg, offset=0.0):
     model = whisper_model(cfg.get("whisper_model", "base"))
-    segments, _ = model.transcribe(str(audio_path), language=cfg.get("language"),
+    segments, _ = model.transcribe(load_audio_16k(audio_path), language=cfg.get("language"),
                                    vad_filter=True, beam_size=1)
     loud = loudness_per_second(audio_path)
     threshold = np.percentile(loud, 97) if len(loud) else 0

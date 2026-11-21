@@ -50,7 +50,7 @@ def download_section(url, start, end, dst):
 
 def clip_words(path, cfg):
     model = analyze.whisper_model(cfg.get("whisper_model", "base"))
-    segments, _ = model.transcribe(str(path), language=cfg.get("language"),
+    segments, _ = model.transcribe(analyze.load_audio_16k(path), language=cfg.get("language"),
                                    word_timestamps=True, beam_size=1)
     return [(w.start, w.end, w.word) for s in segments for w in (s.words or [])]
 
@@ -124,6 +124,8 @@ def main():
         except Exception as e:
             print(f"could not list {streamer['name']}: {e}", file=sys.stderr)
             continue
+        if not vods:
+            print(f"{streamer['name']}: no public videos found at {streamer['url']}")
         for vod in vods:  # newest first
             try:
                 duration = vod_duration(vod["url"])

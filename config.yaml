@@ -32,7 +32,7 @@ streamers:
     hashtags: "#Clix"        # campaign: required hashtag
     zoom: 1.0                # full frame so Clix is always visible
   - name: kaicenat
-    url: https://www.twitch.tv/kaicenat/videos?filter=archive
+    url: https://www.twitch.tv/kaicenat/videos?filter=all
     facecam: null
     credit: "Kai Cenat"      # campaign: name must be in caption/overlay
     hashtags: "#KAICENAT"    # campaign: required hashtag
