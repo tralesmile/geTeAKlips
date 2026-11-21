@@ -68,9 +68,12 @@ def main():
 
     topic = os.environ.get("NTFY_TOPIC", "").strip()
     if topic:
-        requests.post("https://ntfy.sh/", json={
-            "topic": topic, "title": title, "message": body, "tags": ["robot"],
-            "priority": 4 if problems else 3}, timeout=20).raise_for_status()
+        msg = {"topic": topic, "title": title, "message": body, "tags": ["robot"],
+               "priority": 4 if problems else 3}
+        email = os.environ.get("ALERT_EMAIL", "").strip()
+        if problems and email:
+            msg["email"] = email  # ntfy forwards problem reports by email too
+        requests.post("https://ntfy.sh/", json=msg, timeout=20).raise_for_status()
 
 
 if __name__ == "__main__":
