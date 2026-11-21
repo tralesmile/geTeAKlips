@@ -1,0 +1,36 @@
+name: Probe sources
+
+on:
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install yt-dlp
+      - name: Twitch community clips (top, last 24h)
+        run: |
+          yt-dlp --flat-playlist -J --playlist-end 8 "https://www.twitch.tv/lacy/clips?filter=clips&range=24hr" > clips.json || true
+          python -c "import json;d=json.load(open('clips.json'));print(len(d.get('entries',[])));[print({k:e.get(k) for k in ('id','title','view_count','duration','url','timestamp')}) for e in d.get('entries',[])[:8]]" || true
+      - name: One clip full info (vod offset?)
+        run: |
+          U=$(python -c "import json;d=json.load(open('clips.json'));print(d['entries'][0]['url'])")
+          yt-dlp -J "$U" > one.json || true
+          python -c "import json;d=json.load(open('one.json'));print({k:d.get(k) for k in ('title','view_count','duration','timestamp','creator','uploader','channel')});print(sorted(d.keys()))" || true
+      - name: Twitch chat replay via yt-dlp
+        run: |
+          yt-dlp --skip-download --write-subs --sub-langs all --list-subs "https://www.twitch.tv/videos/2935634460" 2>&1 | tail -8 || true
+      - name: YouTube most-replayed heatmap (Kai, needs cookies)
+        env:
+          YTDLP_COOKIES: ${{ secrets.YTDLP_COOKIES }}
+        run: |
+          printf '%s\n' "$YTDLP_COOKIES" > cookies.txt
+          yt-dlp --cookies cookies.txt --flat-playlist -J --playlist-end 3 "https://www.youtube.com/@KaiCenatLive/streams" > yt.json 2>yt.err || tail -3 yt.err
+          python -c "import json;d=json.load(open('yt.json'));[print(e.get('id'),e.get('title'),e.get('duration')) for e in d.get('entries',[])]" || true
+          V=$(python -c "import json;d=json.load(open('yt.json'));print(d['entries'][0]['url'])" 2>/dev/null)
+          yt-dlp --cookies cookies.txt -J "$V" > v.json 2>v.err || tail -3 v.err
+          python -c "import json;d=json.load(open('v.json'));h=d.get('heatmap') or [];print('heatmap points',len(h));print(sorted(h,key=lambda x:-x['value'])[:5]);print('live_status',d.get('live_status'),'dur',d.get('duration'))" || true
