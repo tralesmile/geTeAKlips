@@ -1,0 +1,27 @@
+name: Health check
+
+on:
+  schedule:
+    # 11:47 and 23:47 Skopje time (UTC+1)
+    - cron: "47 10,22 * * *"
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pyyaml requests
+      - name: Send health report
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+        run: python -m clipper.health
