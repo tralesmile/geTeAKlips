@@ -78,14 +78,14 @@ def pick_clip(clips, cfg):
     return choice
 
 
-def wait_for_links(resp, max_wait=600):
+def wait_for_links(resp, platforms=3, max_wait=600):
     """Background uploads: poll Upload-Post until post URLs appear (max 10 min)."""
     text = resp.text
     try:
         request_id = resp.json().get("request_id")
     except ValueError:
         request_id = None
-    if not request_id or "instagram.com" in text or "youtube.com" in text:
+    if not request_id:
         return text
     headers = {"Authorization": f"Apikey {os.environ['UPLOAD_POST_API_KEY']}"}
     deadline = time.time() + max_wait
@@ -98,7 +98,7 @@ def wait_for_links(resp, max_wait=600):
             continue
         print("status:", r.text[:800])
         links = re.findall(r"https://[^\s\"']*(?:instagram\.com|youtube\.com|youtu\.be)[^\s\"']*", r.text)
-        if len(set(links)) >= 2 or '"completed"' in r.text or '"failed"' in r.text:
+        if len(set(links)) >= platforms or '"completed"' in r.text or '"failed"' in r.text:
             return r.text
     return text
 
@@ -133,7 +133,7 @@ def main():
     if resp.status_code >= 300:
         sys.exit("upload failed; clip stays in the queue for the next run")
 
-    notify(meta, wait_for_links(resp))
+    notify(meta, wait_for_links(resp, len(cfg["posting"]["platforms"])))
     for n in (name, meta_name):
         if n in names:
             run(["gh", "release", "delete-asset", QUEUE_TAG, n, "-y"])

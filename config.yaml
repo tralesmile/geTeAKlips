@@ -35,9 +35,10 @@ streamers:
     hashtags: "#Clix"        # campaign: required hashtag
     zoom: 1.0                # full frame so Clix is always visible
   - name: kaicenat
-    # Kai's Twitch has no public VODs, so paste YouTube links of his GTA 6
-    # marathon streams below (newest at the bottom). Newest one is clipped first.
-    url: https://www.twitch.tv/kaicenat/videos?filter=all
+    # Kai's Twitch has no public VODs; his marathon is also live on YouTube
+    # (@KaiCenatLive), so the bot reads his YouTube streams (needs YTDLP_COOKIES).
+    # Extra links can go under videos: (newest at the bottom).
+    url: https://www.youtube.com/@KaiCenatLive/streams
     videos:
       # - https://www.youtube.com/watch?v=XXXXXXXXXXX
     facecam: null
@@ -76,4 +77,4 @@ posting:
   # Profile name you created in Upload-Post (upload-post.com) and linked your
   # TikTok, Instagram and YouTube accounts to.
   upload_post_user: default
-  platforms: [instagram, youtube]   # add tiktok after upgrading to a paid Upload-Post plan
+  platforms: [tiktok, instagram, youtube]
