@@ -1,0 +1,49 @@
+# ─────────────────────────────────────────────────────────────
+#  GTA clipper config. Edit this file, commit, done.
+# ─────────────────────────────────────────────────────────────
+
+# Streamers to clip. Use channels that allow clipping (e.g. ones running a
+# clipping campaign on Whop Content Rewards) so your accounts don't get strikes.
+#
+#   url:     Twitch:  https://www.twitch.tv/<name>/videos?filter=archive
+#            Kick:    https://kick.com/<name>/videos
+#            YouTube: https://www.youtube.com/@<name>/streams   (needs YTDLP_COOKIES secret)
+#   facecam: where the webcam sits in the 16:9 stream, as fractions [x, y, width, height]
+#            of the frame. Example bottom-left cam: [0.0, 0.70, 0.22, 0.30]
+#            Leave null for streamers without a cam (gameplay-only layout).
+#   credit:  shown on every clip and in captions.
+streamers:
+  - name: example_streamer
+    url: https://www.twitch.tv/example_streamer/videos?filter=archive
+    facecam: null
+    credit: "@example_streamer"
+
+# Only look at the newest N VODs of each channel.
+look_back_vods: 3
+# Skip VODs longer than this (hours) to stay inside GitHub's 6h job limit.
+max_vod_hours: 8
+# How many clips to cut from one VOD.
+clips_per_vod: 10
+clip_min_seconds: 20
+clip_max_seconds: 58
+# Stop making new clips while this many are already waiting to be posted.
+queue_target: 16
+
+# Speech-to-text model (faster-whisper): tiny, base, small. Bigger = slower, better.
+whisper_model: base
+# Language of the streams, or null to auto-detect.
+language: en
+
+# Claude model that picks the best moments and writes titles.
+llm_model: claude-sonnet-5-5
+
+# Gameplay zoom for streamers without a facecam (1.0 = whole frame, small).
+zoom: 1.45
+
+hashtags: "#gta6 #gtavi #gta #gaming #fyp"
+
+posting:
+  # Profile name you created in Upload-Post (upload-post.com) and linked your
+  # TikTok, Instagram and YouTube accounts to.
+  upload_post_user: my_profile
+  platforms: [tiktok, instagram, youtube]

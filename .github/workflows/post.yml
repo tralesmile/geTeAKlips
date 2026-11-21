@@ -1,0 +1,31 @@
+name: Post clip
+
+on:
+  schedule:
+    # 4 posts a day (UTC). 12:07, 16:07, 20:07, 00:07 UTC = 13:07, 17:07,
+    # 21:07, 01:07 in Skopje, and 7am / 11am / 3pm / 7pm US Eastern.
+    - cron: "7 0,12,16,20 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: post-clip
+  cancel-in-progress: false
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pyyaml requests
+      - name: Post next clip
+        env:
+          GH_TOKEN: ${{ github.token }}
+          UPLOAD_POST_API_KEY: ${{ secrets.UPLOAD_POST_API_KEY }}
+        run: python -m clipper.post
