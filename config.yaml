@@ -15,7 +15,9 @@
 #   hashtags: extra hashtags for this streamer (campaign requirements).
 #   zoom:    optional per-streamer gameplay zoom (overrides the global one).
 streamers:
-  # GTA 6 launch marathons with paid clipping campaigns on Whop (pool prizes).
+  # GTA 6 launch marathons with Reach / Content Rewards pool campaigns on Whop.
+  # Rules: streamer is the main focus, name + hashtag in caption, English
+  # audience, submit each post link within 30 minutes.
   # Join each campaign before posting their clips.
   - name: lacy
     url: https://www.twitch.tv/lacy/videos?filter=archive
@@ -26,7 +28,9 @@ streamers:
   - name: clix
     url: https://www.twitch.tv/clix/videos?filter=archive
     facecam: null
-    credit: "@clix"
+    credit: "Clix"           # campaign: name must be in caption/overlay
+    hashtags: "#Clix"        # campaign: required hashtag
+    zoom: 1.0                # full frame so Clix is always visible
   - name: kaicenat
     url: https://www.twitch.tv/kaicenat/videos?filter=archive
     facecam: null
