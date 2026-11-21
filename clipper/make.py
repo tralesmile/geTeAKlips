@@ -8,7 +8,7 @@ import sys
 import time
 from pathlib import Path
 
-from . import analyze, edit
+from . import analyze, edit, popular
 from .common import (WORK, ensure_queue_release, load_config, load_state,
                      queued_clip_count, run, save_state, ytdlp_base)
 
@@ -88,24 +88,85 @@ def process_window(streamer, vod, start, end, cfg):
     stamp = time.strftime("%Y%m%d%H%M%S", time.gmtime())
     made = 0
     for i, c in enumerate(clips):
-        try:
-            raw = download_section(vod["url"], c["start"], c["end"], folder / f"raw{i}.mp4")
-            words = clip_words(raw, cfg, streamer)
-            base = f"{stamp}_{i:02d}_{streamer['name']}_{vod['id']}_{int(start)}"
-            peak = c["peak"] - c["start"] if c.get("peak") else None
-            out, layout = edit.render(raw, folder / f"{base}.mp4", words, c["hook"], credit,
-                                      peak=peak, facecam=streamer.get("facecam"))
-            meta = dict(c, credit=credit, streamer=streamer["name"], vod=vod["url"],
-                        layout=layout)
-            (folder / f"{base}.json").write_text(json.dumps(meta, indent=2))
-            run(["gh", "release", "upload", "queue", out, folder / f"{base}.json",
-                 "--clobber"])
-            made += 1
-            raw.unlink(missing_ok=True)
-        except Exception as e:  # one bad clip shouldn't kill the run
-            print(f"clip {i} failed: {e}", file=sys.stderr)
+        base = f"{stamp}_{i:02d}_{streamer['name']}_{vod['id']}_{int(start)}"
+        made += render_clip(streamer, vod["url"], c, folder, base, cfg)
     shutil.rmtree(folder, ignore_errors=True)
     return f"ok:{made}"
+
+
+def render_clip(streamer, url, c, folder, base, cfg):
+    """Download, caption, edit and queue one clip. Returns 1 on success."""
+    credit = streamer.get("credit") or "@" + streamer["name"]
+    try:
+        raw = download_section(url, c["start"], c["end"], folder / f"{base}_raw.mp4")
+        words = clip_words(raw, cfg, streamer)
+        peak = c["peak"] - c["start"] if c.get("peak") else None
+        out, layout = edit.render(raw, folder / f"{base}.mp4", words, c["hook"], credit,
+                                  peak=peak, facecam=streamer.get("facecam"))
+        meta = dict(c, credit=credit, streamer=streamer["name"], vod=url, layout=layout)
+        (folder / f"{base}.json").write_text(json.dumps(meta, indent=2))
+        run(["gh", "release", "upload", "queue", out, folder / f"{base}.json", "--clobber"])
+        raw.unlink(missing_ok=True)
+        return 1
+    except Exception as e:  # one bad clip shouldn't kill the run
+        print(f"clip {base} failed: {str(e)[:500]}", file=sys.stderr)
+        return 0
+
+
+def process_moment(streamer, m, cfg, index):
+    """Cut the best 15-35 s from one popular stretch of a stream."""
+    folder = WORK / f"m{index}"
+    shutil.rmtree(folder, ignore_errors=True)
+    folder.mkdir(parents=True)
+    credit = streamer.get("credit") or "@" + streamer["name"]
+    audio = download_audio(m["url"], m["start"], m["end"], folder)
+    transcript = analyze.build_transcript(audio, cfg, offset=m["start"])
+    clips = analyze.pick_clips(transcript, cfg, credit, m["end"], window_start=m["start"],
+                               n=1, hint=m["hint"])
+    if not clips:
+        return 0
+    c = dict(clips[0], source=m["source"], popularity=m["score"])
+    stamp = time.strftime("%Y%m%d%H%M%S", time.gmtime())
+    base = f"{stamp}_{index:02d}_{streamer['name']}_{m['vod']}_{int(c['start'])}"
+    made = render_clip(streamer, m["url"], c, folder, base, cfg)
+    shutil.rmtree(folder, ignore_errors=True)
+    return made
+
+
+def overlaps(m, done_windows):
+    for a, b in done_windows.get(m["vod"], []):
+        inter = min(b, m["end"]) - max(a, m["start"])
+        if inter > 0.4 * (m["end"] - m["start"]):
+            return True
+    return False
+
+
+def clip_popular(streamer, need, state, cfg):
+    """Make up to `need` clips from the most popular moments. Returns clips made."""
+    done = set(state.setdefault("moments_done", []))
+    windows = state.setdefault("moment_windows", {})
+    try:
+        moments = popular.popular_moments(streamer)
+    except Exception as e:
+        print(f"{streamer['name']}: popularity lookup failed: {e}", file=sys.stderr)
+        return 0
+    fresh = [m for m in moments if m["key"] not in done and not overlaps(m, windows)]
+    print(f"{streamer['name']}: {len(moments)} popular moments, {len(fresh)} new")
+    made = 0
+    for i, m in enumerate(fresh[: cfg.get("moments_per_run", 5)]):
+        if made >= need:
+            break
+        print(f"== {streamer['name']} popular ({m['source']}, score {m['score']:.0f}): "
+              f"{m['hint'][:80]}")
+        try:
+            made += process_moment(streamer, m, cfg, i)
+        except Exception as e:
+            print(f"moment failed: {str(e)[:300]}", file=sys.stderr)
+        state["moments_done"] = (state["moments_done"] + [m["key"]])[-500:]
+        windows.setdefault(m["vod"], []).append([m["start"], m["end"]])
+        windows[m["vod"]] = windows[m["vod"]][-100:]
+        save_state(state)
+    return made
 
 
 def next_window(vod, duration, progress, cfg):
@@ -159,6 +220,10 @@ def main():
         if have >= target:
             print(f"{streamer['name']}: {have} clips waiting, enough for now")
             continue
+        # 1) moments viewers liked most (Twitch clips, YouTube most-replayed)
+        if clip_popular(streamer, target - have, state, cfg) > 0:
+            continue
+        # 2) backup: let Claude scan the newest stretch of the stream
         for vod in candidate_videos(streamer, cfg):
             try:
                 info = video_info(vod["url"])

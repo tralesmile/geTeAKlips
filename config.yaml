@@ -35,6 +35,7 @@ streamers:
     # (@KaiCenatLive), so the bot reads his YouTube streams (needs YTDLP_COOKIES).
     # Extra links can go under videos: (newest at the bottom).
     url: https://www.youtube.com/@KaiCenatLive/streams
+    twitch: kaicenat         # his Twitch community clips are used too
     videos:
       # - https://www.youtube.com/watch?v=XXXXXXXXXXX
     facecam: null
@@ -52,6 +53,9 @@ min_new_minutes: 20
 clips_per_vod: 8
 clip_min_seconds: 15
 clip_max_seconds: 35
+# Moments are picked by popularity first (Twitch community clips by views,
+# YouTube most-replayed). At most this many popular moments per streamer per run.
+moments_per_run: 5
 # Keep this many clips waiting per streamer (posting takes turns between streamers).
 clips_per_streamer: 8
 

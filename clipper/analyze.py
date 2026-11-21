@@ -62,7 +62,7 @@ PROMPT = """You are an expert short-form video editor making viral GTA 6 clips \
 for TikTok, Instagram Reels and YouTube Shorts from a stream by {credit}.
 
 Below is the timestamped transcript of the stream. [LOUD] marks screaming, \
-laughing or big reactions. Pick the {n} best self-contained moments while they are playing GTA 6: \
+laughing or big reactions.{hint} Pick the {n} best self-contained moments while they are playing GTA 6: \
 funny fails, crazy chases, big reactions, surprising game moments, memorable \
 quotes. The streamer ({credit}) must be the main focus: their words and reactions \
 drive the clip. Never pick moments that make them look bad. \
@@ -127,8 +127,11 @@ def parse_clips(text, cfg, duration, window_start=0.0):
     return clips[: cfg["clips_per_vod"]]
 
 
-def pick_clips(transcript, cfg, credit, duration, window_start=0.0):
-    prompt = PROMPT.format(credit=credit, n=cfg["clips_per_vod"],
+def pick_clips(transcript, cfg, credit, duration, window_start=0.0, n=None, hint=""):
+    n = n or cfg["clips_per_vod"]
+    hint = (f"\nIMPORTANT: this part of the stream is popular: {hint}. Find exactly "
+            "that moment and cut it so it works on its own.") if hint else ""
+    prompt = PROMPT.format(credit=credit, n=n, hint=hint,
                            min_s=cfg["clip_min_seconds"],
                            max_s=cfg["clip_max_seconds"], transcript=transcript)
     resp = requests.post(
@@ -142,4 +145,4 @@ def pick_clips(transcript, cfg, credit, duration, window_start=0.0):
         timeout=300)
     resp.raise_for_status()
     text = "".join(b.get("text", "") for b in resp.json()["content"])
-    return parse_clips(text, cfg, duration, window_start)
+    return parse_clips(text, dict(cfg, clips_per_vod=n), duration, window_start)

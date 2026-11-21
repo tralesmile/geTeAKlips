@@ -19,6 +19,9 @@ jobs:
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2   # YouTube needs a JS runtime for yt-dlp
+        with:
+          deno-version: v2.x
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
