@@ -5,10 +5,10 @@ Fully automatic short-form clipping, running free on GitHub Actions:
 1. **Every 6 hours** (`make-clips.yml`): checks your streamers for new VODs, transcribes
    the stream, has Claude pick the 10 best moments, cuts them to 1080x1920 with
    captions, a hook and a credit, and puts them in a queue (a GitHub release called `queue`).
-2. **4 times a day** (`post.yml`): posts the oldest queued clip to TikTok, Instagram
+2. **6 times a day** (`post.yml`): posts the next streamer's newest clip to TikTok, Instagram
    Reels and YouTube Shorts through [Upload-Post](https://upload-post.com).
 
-It stops making clips while 16 are already queued, so it only uses runner minutes when needed.
+It keeps up to 8 clips waiting per streamer and posts 6 times a day, taking turns between streamers (newest clip first).
 
 ## Setup (about 15 minutes, once)
 

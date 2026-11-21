@@ -11,7 +11,10 @@ import uuid
 
 import requests
 
-from .common import WORK, load_config, queue_assets, run, QUEUE_TAG
+from .common import (ROOT, WORK, QUEUE_TAG, clip_streamer, load_config,
+                     queue_assets, run)
+
+POSTING_STATE = ROOT / "state" / "posting.json"
 
 
 def build_fields(meta, cfg):
@@ -50,6 +53,31 @@ def notify(meta, response_text):
         print(f"notification failed: {e}")
 
 
+def newest_first(name):
+    stamp, index = name.split("_")[:2]
+    return (-int(stamp), int(index))  # newest batch first, best clip of the batch first
+
+
+def pick_clip(clips, cfg):
+    """Take turns between streamers; post each streamer's newest clip."""
+    order = [s["name"] for s in cfg["streamers"]]
+    last = None
+    if POSTING_STATE.exists():
+        last = json.loads(POSTING_STATE.read_text()).get("last")
+    start = order.index(last) + 1 if last in order else 0
+    for k in range(len(order)):
+        who = order[(start + k) % len(order)]
+        mine = [c for c in clips if clip_streamer(c) == who]
+        if mine:
+            choice = sorted(mine, key=newest_first)[0]
+            break
+    else:  # clips from streamers no longer in config
+        choice = sorted(clips, key=newest_first)[0]
+    POSTING_STATE.parent.mkdir(parents=True, exist_ok=True)
+    POSTING_STATE.write_text(json.dumps({"last": clip_streamer(choice)}))
+    return choice
+
+
 def wait_for_links(resp, max_wait=600):
     """Background uploads: poll Upload-Post until post URLs appear (max 10 min)."""
     text = resp.text
@@ -83,7 +111,7 @@ def main():
     if not clips:
         print("queue is empty, nothing to post")
         return
-    name = clips[0]
+    name = pick_clip(clips, cfg)
     meta_name = name[:-4] + ".json"
 
     WORK.mkdir(exist_ok=True)

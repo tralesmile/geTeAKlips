@@ -26,7 +26,7 @@ def list_vods(url, n):
     return vods
 
 
-def vod_duration(url):
+def vod_duration(url):  # kept for compatibility
     out = run(ytdlp_base() + ["-J", "--no-playlist", url], capture=True)
     info = json.loads(out)
     return float(info.get("duration") or 0)
@@ -108,31 +108,55 @@ def next_window(vod, duration, progress, cfg):
     return start, duration
 
 
+def video_info(url):
+    out = run(ytdlp_base() + ["-J", "--no-playlist", url], capture=True)
+    info = json.loads(out)
+    return {"id": str(info.get("id")), "url": url, "title": info.get("title") or "",
+            "duration": float(info.get("duration") or 0)}
+
+
+def is_gta(title):
+    t = (title or "").lower()
+    return "gta" in t or "grand theft auto" in t
+
+
+def candidate_videos(streamer, cfg):
+    """Videos you added by hand (newest added first), then the channel's newest
+    VODs. GTA videos go before the rest; otherwise order is kept."""
+    vids = [{"url": u, "id": None, "title": ""} for u in reversed(streamer.get("videos") or [])]
+    if streamer.get("url"):
+        try:
+            listed = list_vods(streamer["url"], cfg.get("look_back_vods", 2))
+            if not listed:
+                print(f"{streamer['name']}: no public videos found at {streamer['url']}")
+            vids += listed
+        except Exception as e:
+            print(f"could not list {streamer['name']}: {e}", file=sys.stderr)
+    manual = [v for v in vids if v["id"] is None]
+    listed = sorted([v for v in vids if v["id"] is not None], key=lambda v: not is_gta(v["title"]))
+    return manual + listed
+
+
 def main():
     cfg = load_config()
     state = load_state()
     progress = state.setdefault("progress", {})
     ensure_queue_release()
+    target = cfg.get("clips_per_streamer", 8)
 
     for streamer in cfg["streamers"]:
-        queued = queued_clip_count()
-        if queued >= cfg["queue_target"]:
-            print(f"queue has {queued} clips, enough for now")
-            break
-        try:
-            vods = list_vods(streamer["url"], cfg.get("look_back_vods", 2))
-        except Exception as e:
-            print(f"could not list {streamer['name']}: {e}", file=sys.stderr)
+        have = queued_clip_count(streamer["name"])
+        if have >= target:
+            print(f"{streamer['name']}: {have} clips waiting, enough for now")
             continue
-        if not vods:
-            print(f"{streamer['name']}: no public videos found at {streamer['url']}")
-        for vod in vods:  # newest first
+        for vod in candidate_videos(streamer, cfg):
             try:
-                duration = vod_duration(vod["url"])
+                info = video_info(vod["url"])
             except Exception as e:
-                print(f"could not read {vod['id']}: {e}", file=sys.stderr)
+                print(f"could not read {vod['url']}: {str(e)[:300]}", file=sys.stderr)
                 continue
-            window = next_window(vod, duration, progress, cfg) if duration else None
+            vod = dict(vod, id=info["id"], title=vod["title"] or info["title"])
+            window = next_window(vod, info["duration"], progress, cfg) if info["duration"] else None
             if not window:
                 continue
             start, end = window

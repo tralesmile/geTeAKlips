@@ -2,9 +2,9 @@ name: Post clip
 
 on:
   schedule:
-    # 4 posts a day (UTC), all while you're awake to submit links within 30 min:
-    # 14:07, 18:07, 21:07, 23:07 Skopje = 8am, noon, 3pm, 5pm US Eastern.
-    - cron: "7 13,17,20,22 * * *"
+    # 6 posts a day, taking turns between streamers (times are UTC):
+    # 14:07 16:07 18:07 20:07 22:07 00:07 Skopje = 8am-6pm US Eastern.
+    - cron: "7 13,15,17,19,21,23 * * *"
   workflow_dispatch:
 
 permissions:
@@ -30,3 +30,10 @@ jobs:
           UPLOAD_POST_API_KEY: ${{ secrets.UPLOAD_POST_API_KEY }}
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
         run: python -m clipper.post
+      - name: Save whose turn it is
+        if: always()
+        run: |
+          git config user.name "clip-bot"
+          git config user.email "clip-bot@users.noreply.github.com"
+          git add state/posting.json 2>/dev/null || exit 0
+          git diff --cached --quiet || (git commit -m "Update posting turn" && git pull --rebase -X theirs && git push)

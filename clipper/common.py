@@ -72,5 +72,12 @@ def queue_assets():
     return sorted(assets, key=lambda a: a["name"])
 
 
-def queued_clip_count():
-    return sum(1 for a in queue_assets() if a["name"].endswith(".mp4"))
+def clip_streamer(name):
+    """Clip files are named <stamp>_<index>_<streamer>_<video id>_<start>.mp4"""
+    parts = name.split("_")
+    return parts[2] if len(parts) > 2 else ""
+
+
+def queued_clip_count(streamer=None):
+    return sum(1 for a in queue_assets() if a["name"].endswith(".mp4")
+               and (streamer is None or clip_streamer(a["name"]) == streamer))

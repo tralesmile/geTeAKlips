@@ -5,6 +5,9 @@
 # Streamers to clip. Use channels that allow clipping (e.g. ones running a
 # clipping campaign on Whop Content Rewards) so your accounts don't get strikes.
 #
+#   name:    lowercase, no spaces or underscores.
+#   videos:  optional list of video links you add by hand (YouTube, Twitch, Kick).
+#            They are clipped before the channel's own VODs, newest added first.
 #   url:     Twitch:  https://www.twitch.tv/<name>/videos?filter=archive
 #            Kick:    https://kick.com/<name>/videos
 #            YouTube: https://www.youtube.com/@<name>/streams   (needs YTDLP_COOKIES secret)
@@ -32,7 +35,11 @@ streamers:
     hashtags: "#Clix"        # campaign: required hashtag
     zoom: 1.0                # full frame so Clix is always visible
   - name: kaicenat
+    # Kai's Twitch has no public VODs, so paste YouTube links of his GTA 6
+    # marathon streams below (newest at the bottom). Newest one is clipped first.
     url: https://www.twitch.tv/kaicenat/videos?filter=all
+    videos:
+      # - https://www.youtube.com/watch?v=XXXXXXXXXXX
     facecam: null
     credit: "Kai Cenat"      # campaign: name must be in caption/overlay
     hashtags: "#KAICENAT"    # campaign: required hashtag
@@ -49,8 +56,8 @@ min_new_minutes: 20
 clips_per_vod: 8
 clip_min_seconds: 20
 clip_max_seconds: 58
-# Stop making new clips while this many are already waiting to be posted.
-queue_target: 16
+# Keep this many clips waiting per streamer (posting takes turns between streamers).
+clips_per_streamer: 8
 
 # Speech-to-text model (faster-whisper): tiny, base, small. Bigger = slower, better.
 whisper_model: base
