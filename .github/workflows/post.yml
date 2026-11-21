@@ -2,9 +2,9 @@ name: Post clip
 
 on:
   schedule:
-    # 4 posts a day (UTC). 12:07, 16:07, 20:07, 00:07 UTC = 13:07, 17:07,
-    # 21:07, 01:07 in Skopje, and 7am / 11am / 3pm / 7pm US Eastern.
-    - cron: "7 0,12,16,20 * * *"
+    # 4 posts a day (UTC), all while you're awake to submit links within 30 min:
+    # 14:07, 18:07, 21:07, 23:07 Skopje = 8am, noon, 3pm, 5pm US Eastern.
+    - cron: "7 13,17,20,22 * * *"
   workflow_dispatch:
 
 permissions:
@@ -28,4 +28,5 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           UPLOAD_POST_API_KEY: ${{ secrets.UPLOAD_POST_API_KEY }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
         run: python -m clipper.post

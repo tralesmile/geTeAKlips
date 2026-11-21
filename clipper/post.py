@@ -4,6 +4,7 @@ Run by .github/workflows/post.yml a few times a day.
 """
 import json
 import os
+import re
 import sys
 import uuid
 
@@ -29,6 +30,22 @@ def build_fields(meta, cfg):
               ("categoryId", "20")]  # 20 = Gaming
     fields += [("platform[]", p) for p in posting["platforms"]]
     return fields
+
+
+def notify(meta, response_text):
+    """Push a phone notification (ntfy app) with the post links to submit."""
+    topic = os.environ.get("NTFY_TOPIC", "").strip()
+    if not topic:
+        return
+    links = sorted(set(re.findall(r"https://[^\s\"'\\]+", response_text)))
+    body = (f"Submit to the {meta.get('credit') or meta.get('streamer')} campaign "
+            f"within 30 min:\n" + ("\n".join(links) or "check your profiles for the new post"))
+    try:
+        requests.post(f"https://ntfy.sh/{topic}", data=body.encode(),
+                      headers={"Title": f"New clip posted: {meta.get('title', '')[:60]}",
+                               "Priority": "high", "Tags": "movie_camera"}, timeout=20)
+    except requests.RequestException as e:
+        print(f"notification failed: {e}")
 
 
 def main():
@@ -61,6 +78,7 @@ def main():
     if resp.status_code >= 300:
         sys.exit("upload failed; clip stays in the queue for the next run")
 
+    notify(meta, resp.text)
     for n in (name, meta_name):
         if n in names:
             run(["gh", "release", "delete-asset", QUEUE_TAG, n, "-y"])

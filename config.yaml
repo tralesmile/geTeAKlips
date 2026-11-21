@@ -20,7 +20,9 @@ streamers:
   - name: lacy
     url: https://www.twitch.tv/lacy/videos?filter=archive
     facecam: null
-    credit: "@lacy"
+    credit: "LACY"           # campaign: name must be in caption/overlay
+    hashtags: "#LACY"        # campaign: required hashtag
+    zoom: 1.0                # full frame so Lacy is always visible
   - name: clix
     url: https://www.twitch.tv/clix/videos?filter=archive
     facecam: null
