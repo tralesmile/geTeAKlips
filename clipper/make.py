@@ -29,13 +29,13 @@ def list_vods(url, n):
 def vod_duration(url):
     out = run(ytdlp_base() + ["-J", "--no-playlist", url], capture=True)
     info = json.loads(out)
-    if info.get("is_live"):
-        return None
     return float(info.get("duration") or 0)
 
 
-def download_audio(url, folder):
-    run(ytdlp_base() + ["-f", "bestaudio/worst", "-o", str(folder / "audio.%(ext)s"), url])
+def download_audio(url, start, end, folder):
+    run(ytdlp_base() + ["-f", "bestaudio/worst",
+                        "--download-sections", f"*{start:.0f}-{end:.0f}",
+                        "-o", str(folder / "audio.%(ext)s"), url])
     return next(folder.glob("audio.*"))
 
 
@@ -61,24 +61,17 @@ def media_duration(path):
     return float(out.strip())
 
 
-def process_vod(streamer, vod, cfg):
+def process_window(streamer, vod, start, end, cfg):
+    """Clip the part of a VOD between start and end (seconds)."""
     folder = WORK / vod["id"]
     shutil.rmtree(folder, ignore_errors=True)
     folder.mkdir(parents=True)
     credit = streamer.get("credit") or "@" + streamer["name"]
 
-    duration = vod_duration(vod["url"])
-    if duration is None:
-        print("still live, try later")
-        return "live"
-    if duration > cfg["max_vod_hours"] * 3600:
-        print(f"skipping: {duration / 3600:.1f}h is too long")
-        return "too_long"
-
-    audio = download_audio(vod["url"], folder)
-    transcript = analyze.build_transcript(audio, cfg)
+    audio = download_audio(vod["url"], start, end, folder)
+    transcript = analyze.build_transcript(audio, cfg, offset=start)
     (folder / "transcript.txt").write_text(transcript)
-    clips = analyze.pick_clips(transcript, cfg, credit, duration)
+    clips = analyze.pick_clips(transcript, cfg, credit, end, window_start=start)
     print(f"picked {len(clips)} clips")
     audio.unlink(missing_ok=True)
 
@@ -89,7 +82,7 @@ def process_vod(streamer, vod, cfg):
             raw = download_section(vod["url"], c["start"], c["end"], folder / f"raw{i}.mp4")
             dur = media_duration(raw)
             words = clip_words(raw, cfg)
-            base = f"{stamp}_{i:02d}_{streamer['name']}_{vod['id']}"
+            base = f"{stamp}_{i:02d}_{streamer['name']}_{vod['id']}_{int(start)}"
             out = render.render(raw, folder / f"{base}.mp4", words, c["hook"], credit,
                                 dur, streamer.get("facecam"), cfg.get("zoom", 1.45))
             meta = dict(c, credit=credit, streamer=streamer["name"], vod=vod["url"])
@@ -104,10 +97,20 @@ def process_vod(streamer, vod, cfg):
     return f"ok:{made}"
 
 
+def next_window(vod, duration, progress, cfg):
+    """Newest unclipped stretch of a VOD, at most chunk_hours long."""
+    chunk = cfg.get("chunk_hours", 3) * 3600
+    done_until = progress.get(vod["id"], 0.0)
+    start = max(done_until, duration - chunk)
+    if duration - start < cfg.get("min_new_minutes", 20) * 60:
+        return None
+    return start, duration
+
+
 def main():
     cfg = load_config()
     state = load_state()
-    done = {p["id"] for p in state["processed"]}
+    progress = state.setdefault("progress", {})
     ensure_queue_release()
 
     for streamer in cfg["streamers"]:
@@ -116,25 +119,34 @@ def main():
             print(f"queue has {queued} clips, enough for now")
             break
         try:
-            vods = list_vods(streamer["url"], cfg.get("look_back_vods", 3))
+            vods = list_vods(streamer["url"], cfg.get("look_back_vods", 2))
         except Exception as e:
             print(f"could not list {streamer['name']}: {e}", file=sys.stderr)
             continue
-        for vod in vods:
-            if vod["id"] in done:
-                continue
-            print(f"== {streamer['name']}: {vod['title']} ({vod['id']})")
+        for vod in vods:  # newest first
             try:
-                result = process_vod(streamer, vod, cfg)
+                duration = vod_duration(vod["url"])
             except Exception as e:
-                print(f"VOD failed: {e}", file=sys.stderr)
+                print(f"could not read {vod['id']}: {e}", file=sys.stderr)
+                continue
+            window = next_window(vod, duration, progress, cfg) if duration else None
+            if not window:
+                continue
+            start, end = window
+            print(f"== {streamer['name']}: {vod['title'][:80]} "
+                  f"({vod['id']}) {start / 3600:.1f}h-{end / 3600:.1f}h")
+            try:
+                result = process_window(streamer, vod, start, end, cfg)
+            except Exception as e:
+                print(f"window failed: {e}", file=sys.stderr)
                 result = f"error:{str(e)[:120]}"
-            if result != "live":
-                state["processed"].append({"id": vod["id"], "streamer": streamer["name"],
-                                           "result": result,
-                                           "at": time.strftime("%Y-%m-%d %H:%M")})
-                save_state(state)
-            break  # one VOD per streamer per run keeps runs short
+            progress[vod["id"]] = end
+            state["processed"].append({"id": vod["id"], "streamer": streamer["name"],
+                                       "window": [int(start), int(end)], "result": result,
+                                       "at": time.strftime("%Y-%m-%d %H:%M")})
+            state["processed"] = state["processed"][-200:]
+            save_state(state)
+            break  # one window per streamer per run keeps runs short
 
 
 if __name__ == "__main__":

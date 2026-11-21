@@ -36,7 +36,7 @@ def fmt(t):
     return f"{t // 3600:d}:{t % 3600 // 60:02d}:{t % 60:02d}"
 
 
-def build_transcript(audio_path, cfg):
+def build_transcript(audio_path, cfg, offset=0.0):
     model = whisper_model(cfg.get("whisper_model", "base"))
     segments, _ = model.transcribe(str(audio_path), language=cfg.get("language"),
                                    vad_filter=True, beam_size=1)
@@ -46,7 +46,7 @@ def build_transcript(audio_path, cfg):
     for s in segments:
         window = loud[int(s.start): int(s.end) + 1]
         tag = " [LOUD]" if len(window) and window.max() >= threshold else ""
-        lines.append(f"[{fmt(s.start)}] {s.text.strip()}{tag}")
+        lines.append(f"[{fmt(s.start + offset)}] {s.text.strip()}{tag}")
     return "\n".join(lines)
 
 
@@ -77,7 +77,7 @@ def to_seconds(ts):
     return total
 
 
-def parse_clips(text, cfg, duration):
+def parse_clips(text, cfg, duration, window_start=0.0):
     match = re.search(r"\[.*\]", text, re.S)
     if not match:
         raise ValueError("model did not return a JSON array")
@@ -93,7 +93,7 @@ def parse_clips(text, cfg, duration):
             end = start + lo
         if end - start > hi:
             end = start + hi
-        if start < 0 or (duration and end > duration):
+        if start < window_start or (duration and end > duration):
             continue
         if any(start < e and end > s for s, e in taken):
             continue
@@ -105,7 +105,7 @@ def parse_clips(text, cfg, duration):
     return clips[: cfg["clips_per_vod"]]
 
 
-def pick_clips(transcript, cfg, credit, duration):
+def pick_clips(transcript, cfg, credit, duration, window_start=0.0):
     prompt = PROMPT.format(credit=credit, n=cfg["clips_per_vod"],
                            min_s=cfg["clip_min_seconds"],
                            max_s=cfg["clip_max_seconds"], transcript=transcript)
@@ -120,4 +120,4 @@ def pick_clips(transcript, cfg, credit, duration):
         timeout=300)
     resp.raise_for_status()
     text = "".join(b.get("text", "") for b in resp.json()["content"])
-    return parse_clips(text, cfg, duration)
+    return parse_clips(text, cfg, duration, window_start)

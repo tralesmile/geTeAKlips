@@ -13,17 +13,30 @@
 #            Leave null for streamers without a cam (gameplay-only layout).
 #   credit:  shown on every clip and in captions.
 streamers:
-  - name: example_streamer
-    url: https://www.twitch.tv/example_streamer/videos?filter=archive
+  # GTA 6 launch marathons with paid clipping campaigns on Whop (pool prizes).
+  # Join each campaign before posting their clips.
+  - name: lacy
+    url: https://www.twitch.tv/lacy/videos?filter=archive
     facecam: null
-    credit: "@example_streamer"
+    credit: "@lacy"
+  - name: clix
+    url: https://www.twitch.tv/clix/videos?filter=archive
+    facecam: null
+    credit: "@clix"
+  - name: kaicenat
+    url: https://www.twitch.tv/kaicenat/videos?filter=archive
+    facecam: null
+    credit: "@kaicenat"
 
 # Only look at the newest N VODs of each channel.
-look_back_vods: 3
-# Skip VODs longer than this (hours) to stay inside GitHub's 6h job limit.
-max_vod_hours: 8
-# How many clips to cut from one VOD.
-clips_per_vod: 10
+look_back_vods: 2
+# Long streams (24/7 marathons) are clipped in chunks of this many hours,
+# newest part first. Each run handles one chunk per streamer.
+chunk_hours: 3
+# Wait until a stream has at least this many new minutes before clipping again.
+min_new_minutes: 20
+# How many clips to cut from each chunk.
+clips_per_vod: 8
 clip_min_seconds: 20
 clip_max_seconds: 58
 # Stop making new clips while this many are already waiting to be posted.
@@ -45,5 +58,5 @@ hashtags: "#gta6 #gtavi #gta #gaming #fyp"
 posting:
   # Profile name you created in Upload-Post (upload-post.com) and linked your
   # TikTok, Instagram and YouTube accounts to.
-  upload_post_user: my_profile
-  platforms: [tiktok, instagram, youtube]
+  upload_post_user: gta
+  platforms: [instagram, youtube]   # add tiktok after upgrading to a paid Upload-Post plan
