@@ -193,17 +193,18 @@ def layout_graph(layout, p, sw, sh, src="[vc]", out="[lay]"):
         cx = int(np.clip((x0 + x1) / 2 - cw / 2, 0, sw - cw)) // 2 * 2
         return (f"{src}crop={cw}:{sh}:{cx}:0,split=2[a][b];[a]{blur_bg}[bg];"
                 f"[b]scale={W}:-2[fg];[bg][fg]overlay=0:(H-h)/2{out}")
-    side = min(sw, sh) // 2 * 2                    # gameplay: square centre crop
-    gx = (sw - side) // 2 // 2 * 2
+    gh_out = 1350                                  # gameplay: tall 4:5 centre crop
+    cw = int(sh * W / gh_out) // 2 * 2
+    gx = (sw - cw) // 2 // 2 * 2
     return (f"{src}split=2[a][b];[a]{blur_bg}[bg];"
-            f"[b]crop={side}:{side}:{gx}:0,scale={W}:{W}[fg];"
-            f"[bg][fg]overlay=0:{(H - W) // 2}{out}")
+            f"[b]crop={cw}:{sh}:{gx}:0,scale={W}:{gh_out}[fg];"
+            f"[bg][fg]overlay=0:{(H - gh_out) // 2}{out}")
 
 
 TEXT_Y = {  # (captions, hook, credit) y positions per layout
     "split": (1185, CAM_H, 1855),
     "irl": (1330, 300, 1855),
-    "gameplay": (1395, 270, 1855),
+    "gameplay": (1160, 210, 1855),
 }
 
 
