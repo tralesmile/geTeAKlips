@@ -112,7 +112,9 @@ posting:
       times: ["14:07", "17:07", "20:07", "23:07"]
     kai:                           # Kai Cenat
       platforms: [tiktok, youtube]
+      mirror: {profile: default, platforms: [instagram, x]}   # also to carczarr IG + X
       times: ["15:07", "18:07", "21:07", "00:07"]
     dom:                           # Dom + Clix
       platforms: [tiktok, youtube]
+      mirror: {profile: default, platforms: [instagram, x]}   # also to carczarr IG + X
       times: ["13:07", "16:07", "19:07", "22:07"]

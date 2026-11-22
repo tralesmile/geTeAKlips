@@ -207,7 +207,8 @@ def profiles(cfg):
     out = {}
     for name, p in (posting.get("profiles") or {}).items():
         out[name] = {"platforms": p.get("platforms", posting.get("platforms", [])),
-                     "times": p.get("times", posting.get("times", [])), "streamers": []}
+                     "times": p.get("times", posting.get("times", [])), "streamers": [],
+                     "mirror": p.get("mirror")}
     if not out:  # old single-account config
         out[posting.get("upload_post_user", "default")] = {
             "platforms": posting.get("platforms", []), "times": posting.get("times", []),
@@ -237,6 +238,32 @@ def in_window(times, cfg, now=None):
 
 
 MIN_GAP_MINUTES = 75  # the backup trigger fires right after GitHub's: never post twice
+
+
+def mirror(name, meta, cfg, spec):
+    """Also post the clip to another profile's accounts (e.g. one shared Instagram
+    and X). Not for campaigns, so no alert; a failure here never blocks anything."""
+    if not spec or not spec.get("profile"):
+        return
+    plats = list(spec.get("platforms", []))
+    for attempt in (plats, [p for p in plats if p != "x"]):
+        if not attempt:
+            return
+        try:
+            with open(WORK / name, "rb") as video:
+                r = requests.post(
+                    "https://api.upload-post.com/api/upload",
+                    headers={"Authorization": f"Apikey {os.environ['UPLOAD_POST_API_KEY']}",
+                             "Idempotency-Key": str(uuid.uuid5(
+                                 uuid.NAMESPACE_URL, "mirror" + name + ",".join(attempt)))},
+                    data=build_fields(meta, cfg, attempt, spec["profile"]),
+                    files={"video": (name, video, "video/mp4")}, timeout=600)
+        except requests.RequestException as e:
+            print(f"mirror to {spec['profile']} failed: {e}")
+            return
+        print(f"mirror to {spec['profile']} {attempt}:", r.status_code, r.text[:300])
+        if r.status_code < 300 or "x" not in attempt:
+            return
 
 
 def post_one(profile, acct, cfg, assets, turns):
@@ -283,6 +310,7 @@ def post_one(profile, acct, cfg, assets, turns):
     final = wait_for_links(resp, len(platforms))
     notify(meta, final, cfg)
     log_post(name, meta, resp, platforms)
+    mirror(name, meta, cfg, acct.get("mirror"))
     for n in (name, meta_name):
         if n in names:
             run(["gh", "release", "delete-asset", QUEUE_TAG, n, "-y"])
