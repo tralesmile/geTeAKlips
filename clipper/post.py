@@ -131,7 +131,14 @@ def wait_for_links(resp, platforms=3, max_wait=600):
             continue
         print("status:", r.text[:800])
         links = re.findall(r"https://[^\s\"']*(?:instagram\.com|youtube\.com|youtu\.be|tiktok\.com|x\.com|twitter\.com)[^\s\"']*", r.text)
-        if len(set(links)) >= platforms or '"completed"' in r.text or '"failed"' in r.text:
+        try:
+            job = r.json()
+        except ValueError:
+            job = {}
+        # the job's own status, not a platform's: one platform "completed"
+        # while Instagram is still processing must not stop the wait
+        job_done = job.get("status") in ("completed", "failed", "partial", "error", "done")
+        if len(set(links)) >= platforms or job_done:
             return r.text
     return text
 

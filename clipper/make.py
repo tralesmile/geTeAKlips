@@ -157,6 +157,8 @@ def clip_popular(streamer, need, state, cfg):
     for i, m in enumerate(fresh[: cfg.get("moments_per_run", 5)]):
         if made >= need:
             break
+        if overlaps(m, windows):  # same moment as one clipped earlier in this run
+            continue
         print(f"== {streamer['name']} popular ({m['source']}, score {m['score']:.0f}): "
               f"{m['hint'][:80]}")
         try:
