@@ -77,3 +77,8 @@ posting:
   # TikTok, Instagram and YouTube accounts to.
   upload_post_user: default
   platforms: [tiktok, instagram, youtube, x]
+  # Only post within window_minutes after one of these times (your time zone).
+  # Stops late GitHub runs from posting in the middle of the night.
+  timezone: Europe/Skopje
+  times: ["14:07", "16:07", "18:07", "20:07", "22:07", "00:07"]
+  window_minutes: 45

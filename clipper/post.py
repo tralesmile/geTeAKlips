@@ -104,6 +104,26 @@ def wait_for_links(resp, platforms=3, max_wait=600):
     return text
 
 
+def in_posting_window(cfg, now=None):
+    """True if now is within window_minutes after one of the posting times."""
+    from datetime import datetime, timedelta
+    from zoneinfo import ZoneInfo
+    posting = cfg["posting"]
+    times = posting.get("times")
+    if not times:
+        return True
+    tz = ZoneInfo(posting.get("timezone", "UTC"))
+    now = now or datetime.now(tz)
+    window = timedelta(minutes=posting.get("window_minutes", 45))
+    for t in times:
+        hh, mm = (int(x) for x in t.split(":"))
+        for day in (-1, 0):
+            slot = (now + timedelta(days=day)).replace(hour=hh, minute=mm, second=0, microsecond=0)
+            if slot <= now <= slot + window:
+                return True
+    return False
+
+
 MIN_GAP_MINUTES = 75  # the backup trigger fires right after GitHub's: never post twice
 
 
@@ -116,7 +136,11 @@ def posted_recently():
 
 def main():
     cfg = load_config()
-    if posted_recently() and os.environ.get("FORCE_POST") != "1":
+    force = os.environ.get("FORCE_POST") == "1"
+    if not force and not in_posting_window(cfg):
+        print("outside the posting times (late or extra run); skipping")
+        return
+    if posted_recently() and not force:
         print("a clip was posted less than 75 minutes ago; skipping this run")
         return
     assets = queue_assets()
