@@ -105,7 +105,7 @@ def render_clip(streamer, url, c, folder, base, cfg):
         peak = c["peak"] - c["start"] if c.get("peak") else None
         out, layout = edit.render(raw, folder / f"{base}.mp4", words, c["hook"], credit,
                                   peak=peak, facecam=streamer.get("facecam"),
-                                  streamer=streamer["name"])
+                                  streamer=streamer.get("cam_key", streamer["name"]))
         meta = dict(c, credit=credit, streamer=streamer["name"], vod=url, layout=layout,
                     cover_ms=getattr(edit.render, "cover_ms", 500),
                     made_at=int(time.time()))
@@ -166,8 +166,11 @@ def clip_popular(streamer, need, state, cfg):
             continue
         print(f"== {streamer['name']} popular ({m['source']}, score {m['score']:.0f}): "
               f"{m['hint'][:80]}")
+        who = streamer
+        if m.get("credit"):  # pooled account: credit the streamer in this moment
+            who = dict(streamer, credit=m["credit"], cam_key=m.get("login", streamer["name"]))
         try:
-            made += process_moment(streamer, m, cfg, i)
+            made += process_moment(who, m, cfg, i)
         except Exception as e:
             print(f"moment failed: {str(e)[:300]}", file=sys.stderr)
         state["moments_done"] = (state["moments_done"] + [m["key"]])[-500:]

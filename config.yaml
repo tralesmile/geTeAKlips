@@ -67,6 +67,21 @@ streamers:
     credit: "Dom"
     hashtags: "#dasgasdom3"
     paid_partnership: true
+  - name: gtatop
+    profile: gta
+    # "GTA 6 Top Moments" account: the most-viewed fresh GTA 6 moments from
+    # streamers who openly allow clipping (Reach / Content Rewards campaigns).
+    # Not for campaign submissions, so no phone alerts.
+    pool:
+      lacy: "Lacy"
+      clix: "Clix"
+      kaicenat: "Kai Cenat"
+      jasontheween: "JasonTheWeen"
+      stableronaldo: "Stable Ronaldo"
+      yourragegaming: "YourRAGE"
+    gta_only: true
+    credit: "GTA 6"
+    notify: false
 
 # Only look at the newest N VODs of each channel.
 look_back_vods: 2
@@ -114,6 +129,9 @@ posting:
       platforms: [tiktok, youtube]
       mirror: {profile: default, platforms: [instagram, x]}   # also to carczarr IG + X
       times: ["15:07", "18:07", "21:07", "00:07"]
+    gta:                           # GTA 6 Top Moments (many streamers)
+      platforms: [tiktok]
+      times: ["13:07", "15:07", "17:07", "19:07", "21:07", "23:07"]
     dom:                           # Dom + Clix
       platforms: [tiktok, youtube]
       mirror: {profile: default, platforms: [instagram, x]}   # also to carczarr IG + X

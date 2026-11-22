@@ -62,7 +62,8 @@ def twitch_vods(login, n=3):
         except Exception:
             continue
         if info.get("timestamp") and info.get("duration"):
-            vods.append({"url": link, "id": str(info["id"]), "start": float(info["timestamp"]),
+            vods.append({"url": link, "id": str(info["id"]), "title": info.get("title") or "",
+                         "start": float(info["timestamp"]),
                          "duration": float(info["duration"])})
     return vods
 
@@ -87,12 +88,14 @@ def twitch_moments(login):
         if vod:
             end_off = ts - vod["start"]
             moments.append({"key": f"tw:{c['id']}", "url": vod["url"], "vod": vod["id"],
+                            "about": f"{vod.get('title', '')} {c.get('title') or ''}",
                             "start": max(0.0, end_off - PAD_BEFORE - dur / 2),
                             "end": min(vod["duration"], end_off + PAD_AFTER),
                             "score": fresh_score(c.get("view_count"), ts), "hint": hint,
                             "created": ts, "source": "twitch-vod"})
         else:  # VOD not public: use the community clip itself
             moments.append({"key": f"tw:{c['id']}", "url": c["url"], "vod": f"clip{c['id']}",
+                            "about": c.get("title") or "",
                             "start": 0.0, "end": dur, "score": fresh_score(c.get("view_count"), ts),
                             "hint": hint, "created": ts, "source": "twitch-clip"})
     return moments
@@ -134,8 +137,33 @@ def youtube_moments(channel_url, n=3, max_age_days=4):
     return moments
 
 
+def is_gta(text):
+    t = (text or "").lower()
+    return any(k in t for k in ("gta", "grand theft", "vice city", "leonida"))
+
+
+def pool_moments(streamer):
+    """Moments from a pool of streamers (e.g. a 'GTA 6 top moments' account).
+    pool: {twitch_login: "Display Name"}. Each moment carries its own credit."""
+    out = []
+    for login, display in (streamer.get("pool") or {}).items():
+        try:
+            ms = twitch_moments(login)
+        except Exception as e:
+            print(f"pool {login} failed: {str(e)[:200]}", file=sys.stderr)
+            continue
+        for m in ms:
+            if streamer.get("gta_only") and not is_gta(m.get("about")):
+                continue
+            m.update(credit=display, login=login)
+            out.append(m)
+    return sorted(out, key=lambda m: -m["score"])
+
+
 def popular_moments(streamer):
     """All popularity-ranked moments for a streamer, best first."""
+    if streamer.get("pool"):
+        return pool_moments(streamer)
     moments = []
     login = twitch_login(streamer.get("url")) or streamer.get("twitch")
     if login:

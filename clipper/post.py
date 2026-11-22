@@ -308,7 +308,9 @@ def post_one(profile, acct, cfg, assets, turns):
         print(f"[{profile}] upload failed; clip stays in the queue for the next slot")
         return False
     final = wait_for_links(resp, len(platforms))
-    notify(meta, final, cfg)
+    st = next((x for x in cfg["streamers"] if x["name"] == meta.get("streamer")), {})
+    if st.get("notify", True):
+        notify(meta, final, cfg)
     log_post(name, meta, resp, platforms)
     mirror(name, meta, cfg, acct.get("mirror"))
     for n in (name, meta_name):
