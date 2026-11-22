@@ -81,7 +81,8 @@ def process_window(streamer, vod, start, end, cfg):
     audio = download_audio(vod["url"], start, end, folder)
     transcript = analyze.build_transcript(audio, cfg, offset=start)
     (folder / "transcript.txt").write_text(transcript)
-    clips = analyze.pick_clips(transcript, cfg, credit, end, window_start=start)
+    clips = analyze.pick_clips(transcript, cfg, credit, end, window_start=start,
+                               focus=streamer.get("focus", "while they are playing GTA 6"))
     print(f"picked {len(clips)} clips")
     audio.unlink(missing_ok=True)
 
@@ -125,6 +126,7 @@ def process_moment(streamer, m, cfg, index):
     audio = download_audio(m["url"], m["start"], m["end"], folder)
     transcript = analyze.build_transcript(audio, cfg, offset=m["start"])
     clips = analyze.pick_clips(transcript, cfg, credit, m["end"], window_start=m["start"],
+                               focus=streamer.get("focus", "while they are playing GTA 6"),
                                n=1, hint=m["hint"])
     if not clips:
         return 0

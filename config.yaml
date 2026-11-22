@@ -14,7 +14,8 @@
 #   facecam: optional [x, y, width, height] of the webcam (fractions of the frame).
 #            Leave null: the bot finds the facecam itself (face detection).
 #   credit:  shown on every clip and in captions.
-#   campaign: Whop campaign page; the phone alert gets a button that opens it.
+#   campaign / campaigns: Whop campaign page(s); the phone alert gets a button per campaign.
+#   focus:   what kind of moments to pick (default: "while they are playing GTA 6").
 #   hashtags: extra hashtags for this streamer (campaign requirements).
 streamers:
   # GTA 6 launch marathons with Reach / Content Rewards pool campaigns on Whop.
@@ -23,14 +24,22 @@ streamers:
   # Join each campaign before posting their clips.
   - name: lacy
     profile: default
-    campaign: https://whop.com/experiences/exp_KZckYGtrnbujDg/campaigns/a5c63fad-cd53-4b81-9305-4a2d1696872a
+    campaigns:
+      - {label: "Lacy 30-Day", url: "https://whop.com/experiences/exp_6DJh0DkDMhATvG/campaigns/dc7183a8-7779-4b54-99a8-b7ac8c8452ec"}
+      - {label: "Lacy GTA", url: "https://whop.com/experiences/exp_KZckYGtrnbujDg/campaigns/a5c63fad-cd53-4b81-9305-4a2d1696872a"}
+      - {label: "CORE", url: "https://whop.com/experiences/exp_6DJh0DkDMhATvG/campaigns/2886f500-f062-48dd-a9b4-9de5725f8186", note: "only if 2+ CORE members are in the clip"}
+    # $25K Lacy 30-Day campaign accepts any Lacy content (until Dec 21), not just GTA
+    focus: "featuring Lacy (GTA 6, IRL, just chatting or with his CORE friends)"
+    youtube: https://www.youtube.com/@LacyHimself/videos
     url: https://www.twitch.tv/lacy/videos?filter=archive
     facecam: null
     credit: "LACY"           # campaign: name must be in caption/overlay
     hashtags: "#LACY"        # campaign: required hashtag
   - name: clix
     profile: dom
-    campaign: https://whop.com/experiences/exp_KZckYGtrnbujDg/campaigns/985dc674-c75e-44fc-ac87-1b1506324389
+    campaigns:
+      - {label: "Clix", url: "https://whop.com/experiences/exp_KZckYGtrnbujDg/campaigns/985dc674-c75e-44fc-ac87-1b1506324389"}
+      - {label: "CORE", url: "https://whop.com/experiences/exp_6DJh0DkDMhATvG/campaigns/2886f500-f062-48dd-a9b4-9de5725f8186", note: "only if 2+ CORE members are in the clip"}
     url: https://www.twitch.tv/clix/videos?filter=archive
     facecam: null
     credit: "Clix"           # campaign: name must be in caption/overlay

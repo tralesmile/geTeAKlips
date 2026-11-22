@@ -119,17 +119,21 @@ def notify(meta, response_text, cfg=None):
     lines += [f"{label}: {url}" for label, url in links.items()] or [
         "Links not ready yet: copy them from your profiles."]
     actions = []
-    if streamer.get("campaign"):
-        actions.append({"action": "view", "label": f"Submit on Whop ({who})",
-                        "url": streamer["campaign"], "clear": False})
-    for label, url in list(links.items())[:2]:
+    camps = streamer.get("campaigns") or (
+        [{"label": who, "url": streamer["campaign"]}] if streamer.get("campaign") else [])
+    for c in camps[:3]:
+        actions.append({"action": "view", "label": f"Submit: {c['label']}", "url": c["url"],
+                        "clear": False})
+    if any(c.get("note") for c in camps):
+        lines += [""] + [f"• {c['label']}: {c['note']}" for c in camps if c.get("note")]
+    for label, url in list(links.items())[:max(0, 3 - len(actions))]:
         actions.append({"action": "view", "label": f"Open {label}", "url": url})
     msg = {"topic": topic, "title": f"New {who} clip: {meta.get('title', '')[:50]}",
            "message": "\n".join(lines), "priority": 4, "tags": ["movie_camera"]}
     if actions:
         msg["actions"] = actions[:3]
-    if streamer.get("campaign"):
-        msg["click"] = streamer["campaign"]
+    if camps:
+        msg["click"] = camps[0]["url"]
     try:
         requests.post("https://ntfy.sh/", json=msg, timeout=20).raise_for_status()
     except requests.RequestException as e:

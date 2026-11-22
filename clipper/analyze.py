@@ -62,8 +62,8 @@ PROMPT = """You are an expert short-form video editor making viral GTA 6 clips \
 for TikTok, Instagram Reels and YouTube Shorts from a stream by {credit}.
 
 Below is the timestamped transcript of the stream. [LOUD] marks screaming, \
-laughing or big reactions.{hint} Pick the {n} best self-contained moments while they are playing GTA 6: \
-funny fails, crazy chases, big reactions, surprising game moments, memorable \
+laughing or big reactions.{hint} Pick the {n} best self-contained moments {focus}: \
+funny fails, crazy chases, big reactions, surprising moments, memorable \
 quotes. The streamer ({credit}) must be the main focus: their words and reactions \
 drive the clip. Never pick moments that make them look bad. \
 {learn}Viewers decide in the first 2 seconds, and clips that are watched to the end \
@@ -77,7 +77,8 @@ Return ONLY a JSON array, best clip first, each item:
   "peak": "H:MM:SS of the single funniest/loudest second inside the clip",
   "hook": "on-screen hook that makes people stay, names the streamer, max 7 words, \
 no emojis, e.g. 'Lacy did NOT expect this' or 'Clix finds the worst car in Vice City'",
-  "title": "YouTube title, max 70 chars, includes the streamer name and 'GTA 6'",
+  "title": "YouTube title, max 70 chars: name the moment, include the streamer name \
+(and 'GTA 6' if it is GTA content), no story spoilers",
   "comment": "a short, fun question to post as the first comment, max 12 words, \
 e.g. 'Who's watching the whole marathon?'",
   "caption": "80-150 characters, natural English for TikTok/Instagram search: \
@@ -145,11 +146,12 @@ def winners_note():
             f"similar style (don't copy them):\n{lines}\n\n") if lines else ""
 
 
-def pick_clips(transcript, cfg, credit, duration, window_start=0.0, n=None, hint=""):
+def pick_clips(transcript, cfg, credit, duration, window_start=0.0, n=None, hint="",
+               focus="while they are playing GTA 6"):
     n = n or cfg["clips_per_vod"]
     hint = (f"\nIMPORTANT: this part of the stream is popular: {hint}. Find exactly "
             "that moment and cut it so it works on its own.") if hint else ""
-    prompt = PROMPT.format(credit=credit, n=n, hint=hint, learn=winners_note(),
+    prompt = PROMPT.format(credit=credit, n=n, hint=hint, learn=winners_note(), focus=focus,
                            min_s=cfg["clip_min_seconds"],
                            max_s=cfg["clip_max_seconds"], transcript=transcript)
     resp = requests.post(
