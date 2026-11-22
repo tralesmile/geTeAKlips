@@ -34,7 +34,9 @@ def main():
                                 st.get("credit", name), peak=peak, facecam=st.get("facecam"))
         info = WORK / f"preview_{i}_{name}.json"
         info.write_text(json.dumps({"layout": layout, "words": [list(w) for w in words]}, indent=1))
-        run(["gh", "release", "upload", TAG, out, info, "--clobber"])
+        src = WORK / f"preview_{i}_{name}_source.mp4"
+        raw.rename(src)
+        run(["gh", "release", "upload", TAG, out, info, src, "--clobber"])
 
 
 if __name__ == "__main__":
