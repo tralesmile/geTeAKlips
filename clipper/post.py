@@ -37,19 +37,51 @@ def build_fields(meta, cfg, platforms=None):
     return fields
 
 
-def notify(meta, response_text):
-    """Push a phone notification (ntfy app) with the post links to submit."""
+PLATFORM_NAMES = [("tiktok.com", "TikTok"), ("instagram.com", "Instagram"),
+                  ("youtube.com", "YouTube"), ("youtu.be", "YouTube"),
+                  ("x.com", "X"), ("twitter.com", "X")]
+
+
+def post_links(response_text):
+    """Real post links (one per platform) from Upload-Post's response."""
+    found = {}
+    for url in re.findall(r"https://[^\s\"'\\,]+", response_text):
+        if "upload-post.com" in url:
+            continue
+        for domain, label in PLATFORM_NAMES:
+            if domain in url and label not in found:
+                found[label] = url
+    return found
+
+
+def notify(meta, response_text, cfg=None):
+    """Phone alert (ntfy app): one link per line + a button that opens the
+    streamer's campaign page, ready to paste."""
     topic = os.environ.get("NTFY_TOPIC", "").strip()
     if not topic:
         return
-    links = sorted(set(re.findall(r"https://[^\s\"'\\]+", response_text)))
-    body = (f"Submit to the {meta.get('credit') or meta.get('streamer')} campaign "
-            f"within 30 min:\n" + ("\n".join(links) or "check your profiles for the new post"))
+    streamer = next((x for x in (cfg or {}).get("streamers", [])
+                     if x["name"] == meta.get("streamer")), {})
+    who = meta.get("credit") or meta.get("streamer")
+    links = post_links(response_text)
+    lines = [f"Submit to the {who} campaign within 30 min.",
+             "Long-press a link to copy it, then tap Submit on Whop:", ""]
+    lines += [f"{label}: {url}" for label, url in links.items()] or [
+        "Links not ready yet: copy them from your profiles."]
+    actions = []
+    if streamer.get("campaign"):
+        actions.append({"action": "view", "label": f"Submit on Whop ({who})",
+                        "url": streamer["campaign"], "clear": False})
+    for label, url in list(links.items())[:2]:
+        actions.append({"action": "view", "label": f"Open {label}", "url": url})
+    msg = {"topic": topic, "title": f"New {who} clip: {meta.get('title', '')[:50]}",
+           "message": "\n".join(lines), "priority": 4, "tags": ["movie_camera"]}
+    if actions:
+        msg["actions"] = actions[:3]
+    if streamer.get("campaign"):
+        msg["click"] = streamer["campaign"]
     try:
-        requests.post("https://ntfy.sh/", json={
-            "topic": topic, "title": f"New clip posted: {meta.get('title', '')[:60]}",
-            "message": body, "priority": 4, "tags": ["movie_camera"]},
-            timeout=20).raise_for_status()
+        requests.post("https://ntfy.sh/", json=msg, timeout=20).raise_for_status()
     except requests.RequestException as e:
         print(f"notification failed: {e}")
 
@@ -183,7 +215,7 @@ def main():
     if resp.status_code >= 300:
         sys.exit("upload failed; clip stays in the queue for the next run")
 
-    notify(meta, wait_for_links(resp, len(platforms)))
+    notify(meta, wait_for_links(resp, len(platforms)), cfg)
     for n in (name, meta_name):
         if n in names:
             run(["gh", "release", "delete-asset", QUEUE_TAG, n, "-y"])

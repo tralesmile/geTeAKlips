@@ -14,6 +14,7 @@
 #   facecam: optional [x, y, width, height] of the webcam (fractions of the frame).
 #            Leave null: the bot finds the facecam itself (face detection).
 #   credit:  shown on every clip and in captions.
+#   campaign: Whop campaign page; the phone alert gets a button that opens it.
 #   hashtags: extra hashtags for this streamer (campaign requirements).
 streamers:
   # GTA 6 launch marathons with Reach / Content Rewards pool campaigns on Whop.
@@ -21,16 +22,19 @@ streamers:
   # audience, submit each post link within 30 minutes.
   # Join each campaign before posting their clips.
   - name: lacy
+    campaign: https://whop.com/experiences/exp_KZckYGtrnbujDg/campaigns/a5c63fad-cd53-4b81-9305-4a2d1696872a
     url: https://www.twitch.tv/lacy/videos?filter=archive
     facecam: null
     credit: "LACY"           # campaign: name must be in caption/overlay
     hashtags: "#LACY"        # campaign: required hashtag
   - name: clix
+    campaign: https://whop.com/experiences/exp_KZckYGtrnbujDg/campaigns/985dc674-c75e-44fc-ac87-1b1506324389
     url: https://www.twitch.tv/clix/videos?filter=archive
     facecam: null
     credit: "Clix"           # campaign: name must be in caption/overlay
     hashtags: "#Clix"        # campaign: required hashtag
   - name: kaicenat
+    campaign: https://whop.com/experiences/exp_KZckYGtrnbujDg/campaigns/1d2bcb00-c904-415f-aa82-f95b96baad86
     # Kai's Twitch has no public VODs; his marathon is also live on YouTube
     # (@KaiCenatLive), so the bot reads his YouTube streams (needs YTDLP_COOKIES).
     # Extra links can go under videos: (newest at the bottom).
