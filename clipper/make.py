@@ -223,7 +223,7 @@ def main():
     target = cfg.get("clips_per_streamer", 8)
 
     for streamer in cfg["streamers"]:
-        have = queued_clip_count(streamer["name"])
+        have = queued_clip_count(streamer["name"], cfg.get("max_clip_age_hours", 36))
         if have >= target:
             print(f"{streamer['name']}: {have} clips waiting, enough for now")
             continue

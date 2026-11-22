@@ -78,6 +78,19 @@ def clip_streamer(name):
     return parts[2] if len(parts) > 2 else ""
 
 
-def queued_clip_count(streamer=None):
+def clip_age_hours(name):
+    """Clip names start with the UTC time they were made: YYYYmmddHHMMSS."""
+    from datetime import datetime, timezone
+    try:
+        made = datetime.strptime(name[:14], "%Y%m%d%H%M%S").replace(tzinfo=timezone.utc)
+    except ValueError:
+        return 0
+    return (datetime.now(timezone.utc) - made).total_seconds() / 3600
+
+
+def queued_clip_count(streamer=None, max_age_hours=None):
+    """Clips waiting for this streamer. With max_age_hours, clips that the
+    poster will drop as stale don't count (so fresh ones get made in time)."""
     return sum(1 for a in queue_assets() if a["name"].endswith(".mp4")
-               and (streamer is None or clip_streamer(a["name"]) == streamer))
+               and (streamer is None or clip_streamer(a["name"]) == streamer)
+               and (max_age_hours is None or clip_age_hours(a["name"]) <= max_age_hours))
