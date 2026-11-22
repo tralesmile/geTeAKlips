@@ -67,6 +67,13 @@ def twitch_vods(login, n=3):
     return vods
 
 
+def fresh_score(views, created_ts):
+    """Views, discounted by age: a moment from 2 h ago beats an older one with a few
+    more views (clip views are winner-take-most while a moment is fresh)."""
+    age_h = max((time.time() - float(created_ts)) / 3600, 0)
+    return float(views or 0) / (1 + age_h / 6)
+
+
 def twitch_moments(login):
     clips = twitch_clips(login)
     if not clips:
@@ -82,12 +89,12 @@ def twitch_moments(login):
             moments.append({"key": f"tw:{c['id']}", "url": vod["url"], "vod": vod["id"],
                             "start": max(0.0, end_off - PAD_BEFORE - dur / 2),
                             "end": min(vod["duration"], end_off + PAD_AFTER),
-                            "score": float(c.get("view_count") or 0), "hint": hint,
-                            "source": "twitch-vod"})
+                            "score": fresh_score(c.get("view_count"), ts), "hint": hint,
+                            "created": ts, "source": "twitch-vod"})
         else:  # VOD not public: use the community clip itself
             moments.append({"key": f"tw:{c['id']}", "url": c["url"], "vod": f"clip{c['id']}",
-                            "start": 0.0, "end": dur, "score": float(c.get("view_count") or 0),
-                            "hint": hint, "source": "twitch-clip"})
+                            "start": 0.0, "end": dur, "score": fresh_score(c.get("view_count"), ts),
+                            "hint": hint, "created": ts, "source": "twitch-clip"})
     return moments
 
 

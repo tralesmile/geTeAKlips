@@ -44,5 +44,5 @@ jobs:
         run: |
           git config user.name "clip-bot"
           git config user.email "clip-bot@users.noreply.github.com"
-          git add state/posting.json 2>/dev/null || exit 0
+          git add state/ 2>/dev/null || exit 0
           git diff --cached --quiet || (git commit -m "Update posting turn" && git pull --rebase -X theirs && git push)

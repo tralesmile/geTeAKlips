@@ -430,7 +430,7 @@ def write_ass(path, words, hook, credit, out_dur, layout, hook_until):
         "0,0,0,0,100,100,1,0,1,8,4,5,60,60,0,1",
         f"Style: Hook,{FONT},58,&H00101010,&H00101010,&H00FFFFFF,&H00FFFFFF,"
         "0,0,0,0,100,100,0,0,3,20,0,5,70,70,0,1",
-        f"Style: Credit,{FONT},34,&H00FFFFFF,&H00FFFFFF,&H00000000,&H64000000,"
+        f"Style: Credit,{FONT},36,&H00FFFFFF,&H00FFFFFF,&H00000000,&H64000000,"
         "0,0,0,0,100,100,2,0,1,3,1,5,40,40,0,1",
         "", "[Events]",
         "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text",
@@ -461,7 +461,8 @@ def write_ass(path, words, hook, credit, out_dur, layout, hook_until):
 
 # ── render ─────────────────────────────────────────────────────────────
 
-def render(src, dst, words, hook, credit, peak=None, facecam=None, streamer=None):
+def render(src, dst, words, hook, credit, peak=None, facecam=None, streamer=None,
+           tag="GTA 6"):
     """src: 16:9 clip. words: [(start, end, text)] in src time. peak: src time of
     the best moment (for the cold-open teaser). Returns (dst, layout)."""
     dst = Path(dst)
@@ -485,7 +486,9 @@ def render(src, dst, words, hook, credit, peak=None, facecam=None, streamer=None
     layout, params = detect_layout(src, facecam, streamer)
     print(f"layout: {layout} {params}")
     ass = dst.with_suffix(".ass")
-    write_ass(ass, out_words, hook, credit, out_dur, layout, hook_until=teaser + 2.6)
+    # on-screen keyword tag (TikTok reads on-screen text for search)
+    label = f"{credit} \u2022 {tag}" if credit and tag else credit
+    write_ass(ass, out_words, hook, label, out_dur, layout, hook_until=teaser + 2.6)
 
     parts, labels = [], []
     for i, (a, b) in enumerate(segments):
@@ -509,4 +512,11 @@ def render(src, dst, words, hook, credit, peak=None, facecam=None, streamer=None
          "-pix_fmt", "yuv420p", "-profile:v", "high", "-c:a", "aac", "-b:a", "192k",
          "-movflags", "+faststart", dst])
     ass.unlink(missing_ok=True)
+    # cover frame: the peak of the cold-open teaser, else the loudest moment
+    if teaser:
+        cover = 0.5
+    else:
+        pk = punch_times(loud, segments, skip, out_dur, teaser)
+        cover = pk[0] if pk else min(1.0, out_dur / 2)
+    render.cover_ms = int(cover * 1000)
     return dst, layout

@@ -66,7 +66,7 @@ laughing or big reactions.{hint} Pick the {n} best self-contained moments while 
 funny fails, crazy chases, big reactions, surprising game moments, memorable \
 quotes. The streamer ({credit}) must be the main focus: their words and reactions \
 drive the clip. Never pick moments that make them look bad. \
-Viewers decide in the first 2 seconds, and clips that are watched to the end \
+{learn}Viewers decide in the first 2 seconds, and clips that are watched to the end \
 get shown to more people. So each clip must be {min_s}-{max_s} seconds (shorter \
 is better when the moment allows), start the instant the action or line begins \
 (no greetings, no setup, no dead air) and end right after the payoff, ideally \
@@ -78,7 +78,9 @@ Return ONLY a JSON array, best clip first, each item:
   "hook": "on-screen hook that makes people stay, names the streamer, max 7 words, \
 no emojis, e.g. 'Lacy did NOT expect this' or 'Clix finds the worst car in Vice City'",
   "title": "YouTube title, max 70 chars, includes the streamer name and 'GTA 6'",
-  "caption": "1-2 natural sentences in English for TikTok/Instagram search: \
+  "comment": "a short, fun question to post as the first comment, max 12 words, \
+e.g. 'Who's watching the whole marathon?'",
+  "caption": "80-150 characters, natural English for TikTok/Instagram search: \
 include the streamer name, 'GTA 6' and what happens (e.g. police chase, mission fail, \
 Vice City). End with a short question to get comments."}}
 
@@ -123,15 +125,31 @@ def parse_clips(text, cfg, duration, window_start=0.0):
         clips.append({"start": start, "end": end, "peak": peak,
                       "hook": str(c.get("hook", ""))[:60],
                       "title": str(c.get("title", ""))[:90],
-                      "caption": str(c.get("caption", ""))[:500]})
+                      "comment": str(c.get("comment", ""))[:150],
+                      "caption": str(c.get("caption", ""))[:220]})
     return clips[: cfg["clips_per_vod"]]
+
+
+def winners_note():
+    """Hooks/titles that got the most views on our own accounts (state/winners.json,
+    written by the daily stats job), so new clips learn from what works."""
+    try:
+        from .common import ROOT
+        best = json.loads((ROOT / "state" / "winners.json").read_text())[:6]
+    except (OSError, ValueError):
+        return ""
+    if not best:
+        return ""
+    lines = "\n".join(f'- "{w["hook"]}" ({w["views"]} views)' for w in best if w.get("hook"))
+    return (f"On our own accounts these hooks got the most views, so write hooks in a "
+            f"similar style (don't copy them):\n{lines}\n\n") if lines else ""
 
 
 def pick_clips(transcript, cfg, credit, duration, window_start=0.0, n=None, hint=""):
     n = n or cfg["clips_per_vod"]
     hint = (f"\nIMPORTANT: this part of the stream is popular: {hint}. Find exactly "
             "that moment and cut it so it works on its own.") if hint else ""
-    prompt = PROMPT.format(credit=credit, n=n, hint=hint,
+    prompt = PROMPT.format(credit=credit, n=n, hint=hint, learn=winners_note(),
                            min_s=cfg["clip_min_seconds"],
                            max_s=cfg["clip_max_seconds"], transcript=transcript)
     resp = requests.post(

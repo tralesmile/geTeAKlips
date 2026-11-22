@@ -60,8 +60,10 @@ clip_max_seconds: 35
 # Moments are picked by popularity first (Twitch community clips by views,
 # YouTube most-replayed). At most this many popular moments per streamer per run.
 moments_per_run: 5
+# Clips older than this are dropped instead of posted (fresh moments win).
+max_clip_age_hours: 36
 # Keep this many clips waiting per streamer (posting takes turns between streamers).
-clips_per_streamer: 8
+clips_per_streamer: 3
 
 # Speech-to-text model (faster-whisper): tiny, base, small. Bigger = slower, better.
 whisper_model: base

@@ -1,0 +1,32 @@
+name: Daily stats
+
+on:
+  schedule:
+    - cron: "41 20 * * *"   # 21:41 Skopje time
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  stats:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pyyaml requests
+      - name: Collect stats and send report
+        env:
+          UPLOAD_POST_API_KEY: ${{ secrets.UPLOAD_POST_API_KEY }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+        run: python -m clipper.stats
+      - name: Save stats
+        if: always()
+        run: |
+          git config user.name "clip-bot"
+          git config user.email "clip-bot@users.noreply.github.com"
+          git add state/
+          git diff --cached --quiet || (git commit -m "Update stats" && git pull --rebase -X theirs && git push)

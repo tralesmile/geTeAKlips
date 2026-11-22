@@ -104,7 +104,9 @@ def render_clip(streamer, url, c, folder, base, cfg):
         out, layout = edit.render(raw, folder / f"{base}.mp4", words, c["hook"], credit,
                                   peak=peak, facecam=streamer.get("facecam"),
                                   streamer=streamer["name"])
-        meta = dict(c, credit=credit, streamer=streamer["name"], vod=url, layout=layout)
+        meta = dict(c, credit=credit, streamer=streamer["name"], vod=url, layout=layout,
+                    cover_ms=getattr(edit.render, "cover_ms", 500),
+                    made_at=int(time.time()))
         (folder / f"{base}.json").write_text(json.dumps(meta, indent=2))
         run(["gh", "release", "upload", "queue", out, folder / f"{base}.json", "--clobber"])
         raw.unlink(missing_ok=True)

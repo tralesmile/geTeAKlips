@@ -15,6 +15,48 @@ from .common import (ROOT, WORK, QUEUE_TAG, clip_streamer, load_config,
                      queue_assets, run)
 
 POSTING_STATE = ROOT / "state" / "posting.json"
+POSTS_LOG = ROOT / "state" / "posts.json"
+
+
+def clip_age_hours(name):
+    """Clip names start with the UTC time they were made: YYYYmmddHHMMSS."""
+    from datetime import datetime, timezone
+    try:
+        made = datetime.strptime(name[:14], "%Y%m%d%H%M%S").replace(tzinfo=timezone.utc)
+    except ValueError:
+        return 0
+    return (datetime.now(timezone.utc) - made).total_seconds() / 3600
+
+
+def drop_stale(assets, cfg):
+    """Delete queued clips older than max_clip_age_hours (fresh moments win)."""
+    limit = cfg.get("max_clip_age_hours", 36)
+    kept = []
+    for a in assets:
+        if a["name"].endswith((".mp4", ".json")) and clip_age_hours(a["name"]) > limit:
+            run(["gh", "release", "delete-asset", QUEUE_TAG, a["name"], "-y"], check=False)
+            print(f"dropped stale clip file {a['name']}")
+        else:
+            kept.append(a)
+    return kept
+
+
+def log_post(name, meta, resp, platforms):
+    """Remember each post (for the daily stats job)."""
+    try:
+        request_id = resp.json().get("request_id")
+    except ValueError:
+        request_id = None
+    try:
+        log = json.loads(POSTS_LOG.read_text())
+    except (OSError, ValueError):
+        log = []
+    log.append({"name": name, "request_id": request_id, "posted_at": int(time.time()),
+                "streamer": meta.get("streamer"), "hook": meta.get("hook"),
+                "title": meta.get("title"), "layout": meta.get("layout"),
+                "source": meta.get("source"), "platforms": platforms,
+                "links": post_links(resp.text)})
+    POSTS_LOG.write_text(json.dumps(log[-400:], indent=1))
 
 
 def build_fields(meta, cfg, platforms=None):
@@ -33,6 +75,10 @@ def build_fields(meta, cfg, platforms=None):
               ("youtube_description", f"{meta['caption']}\n\nCredit: {credit}\n{tags}"),
               ("privacyStatus", "public"),
               ("categoryId", "20")]  # 20 = Gaming
+    cover = int(meta.get("cover_ms") or 500)          # peak frame as the cover
+    fields += [("cover_timestamp", str(cover)), ("thumb_offset", str(cover))]
+    comment = meta.get("comment") or f"Best {credit or 'GTA 6'} moment so far? 👀"
+    fields.append(("first_comment", comment))
     fields += [("platform[]", p) for p in (platforms or posting["platforms"])]
     return fields
 
@@ -182,7 +228,7 @@ def main():
     if posted_recently() and not force:
         print("a clip was posted less than 75 minutes ago; skipping this run")
         return
-    assets = queue_assets()
+    assets = drop_stale(queue_assets(), cfg)
     names = {a["name"] for a in assets}
     clips = [a["name"] for a in assets if a["name"].endswith(".mp4")]
     if not clips:
@@ -222,7 +268,9 @@ def main():
     if resp.status_code >= 300:
         sys.exit("upload failed; clip stays in the queue for the next run")
 
-    notify(meta, wait_for_links(resp, len(platforms)), cfg)
+    final = wait_for_links(resp, len(platforms))
+    notify(meta, final, cfg)
+    log_post(name, meta, resp, platforms)
     for n in (name, meta_name):
         if n in names:
             run(["gh", "release", "delete-asset", QUEUE_TAG, n, "-y"])

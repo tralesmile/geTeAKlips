@@ -2,7 +2,7 @@ name: Make clips
 
 on:
   schedule:
-    - cron: "23 */6 * * *"   # every 6 hours (UTC)
+    - cron: "23 */2 * * *"   # every 2 hours (UTC): keeps clips fresh
   workflow_dispatch:
 
 permissions:
