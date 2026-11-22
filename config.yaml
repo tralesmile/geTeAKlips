@@ -22,18 +22,21 @@ streamers:
   # audience, submit each post link within 30 minutes.
   # Join each campaign before posting their clips.
   - name: lacy
+    profile: default
     campaign: https://whop.com/experiences/exp_KZckYGtrnbujDg/campaigns/a5c63fad-cd53-4b81-9305-4a2d1696872a
     url: https://www.twitch.tv/lacy/videos?filter=archive
     facecam: null
     credit: "LACY"           # campaign: name must be in caption/overlay
     hashtags: "#LACY"        # campaign: required hashtag
   - name: clix
+    profile: dom
     campaign: https://whop.com/experiences/exp_KZckYGtrnbujDg/campaigns/985dc674-c75e-44fc-ac87-1b1506324389
     url: https://www.twitch.tv/clix/videos?filter=archive
     facecam: null
     credit: "Clix"           # campaign: name must be in caption/overlay
     hashtags: "#Clix"        # campaign: required hashtag
   - name: kaicenat
+    profile: kai
     campaign: https://whop.com/experiences/exp_KZckYGtrnbujDg/campaigns/1d2bcb00-c904-415f-aa82-f95b96baad86
     # Kai's Twitch has no public VODs; his marathon is also live on YouTube
     # (@KaiCenatLive), so the bot reads his YouTube streams (needs YTDLP_COOKIES).
@@ -45,6 +48,16 @@ streamers:
     facecam: null
     credit: "Kai Cenat"      # campaign: name must be in caption/overlay
     hashtags: "#KAICENAT"    # campaign: required hashtag
+  - name: dom
+    profile: dom
+    campaign: https://contentrewards.com/c/campaigns/051002dd-5c46-43d0-a446-43f2957ba3a9
+    # RUCKUS campaign: footage from Dom's GTA 6 streams on Kick (Nov 18 onward),
+    # TikTok + YouTube Shorts only, paid-partnership disclosure required.
+    url: https://kick.com/dasgasd3m/videos
+    facecam: null
+    credit: "Dom"
+    hashtags: "#dasgasdom3"
+    paid_partnership: true
 
 # Only look at the newest N VODs of each channel.
 look_back_vods: 2
@@ -79,12 +92,18 @@ llm_model: claude-sonnet-5-5
 hashtags: "#gta6 #gtavi"
 
 posting:
-  # Profile name you created in Upload-Post (upload-post.com) and linked your
-  # TikTok, Instagram and YouTube accounts to.
-  upload_post_user: default
-  platforms: [tiktok, instagram, youtube, x]
-  # Only post within window_minutes after one of these times (your time zone).
-  # Stops late GitHub runs from posting in the middle of the night.
+  # One Upload-Post profile per account set. Each streamer above says which
+  # profile it posts to. times = when that account posts (your time zone);
+  # a run only posts within window_minutes after one of its times.
   timezone: Europe/Skopje
-  times: ["14:07", "16:07", "18:07", "20:07", "22:07", "00:07"]
   window_minutes: 45
+  profiles:
+    default:                       # Lacy
+      platforms: [tiktok, instagram, youtube, x]
+      times: ["14:07", "17:07", "20:07", "23:07"]
+    kai:                           # Kai Cenat
+      platforms: [tiktok, youtube]
+      times: ["15:07", "18:07", "21:07", "00:07"]
+    dom:                           # Dom + Clix
+      platforms: [tiktok, youtube]
+      times: ["13:07", "16:07", "19:07", "22:07"]

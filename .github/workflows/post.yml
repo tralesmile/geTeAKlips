@@ -2,15 +2,19 @@ name: Post clip
 
 on:
   schedule:
-    # 6 posts a day, taking turns between streamers (times are UTC):
-    # 14:07 16:07 18:07 20:07 22:07 00:07 Skopje = 8am-6pm US Eastern.
-    - cron: "7 13,15,17,19,21,23 * * *"
+    # every hour 13:07-00:07 Skopje; each account only posts at its own times
+    # (see posting.profiles in config.yaml)
+    - cron: "7 12-23 * * *"
   workflow_dispatch:
     inputs:
       force:
         description: "Post now even outside the posting times"
         type: boolean
         default: false
+      profile:
+        description: "Only this account (default, kai, dom). Empty = all"
+        required: false
+        default: ""
 
 permissions:
   contents: write
@@ -38,6 +42,7 @@ jobs:
           UPLOAD_POST_API_KEY: ${{ secrets.UPLOAD_POST_API_KEY }}
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
           FORCE_POST: ${{ inputs.force && '1' || '0' }}
+          POST_PROFILE: ${{ inputs.profile }}
         run: python -m clipper.post
       - name: Save whose turn it is
         if: always()

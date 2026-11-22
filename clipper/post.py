@@ -59,14 +59,16 @@ def log_post(name, meta, resp, platforms):
     POSTS_LOG.write_text(json.dumps(log[-400:], indent=1))
 
 
-def build_fields(meta, cfg, platforms=None):
+def build_fields(meta, cfg, platforms=None, profile=None):
     streamer = next((x for x in cfg["streamers"] if x["name"] == meta.get("streamer")), {})
     tags = " ".join(t for t in (streamer.get("hashtags", ""), cfg.get("hashtags", "")) if t)
     credit = meta.get("credit", "")
-    caption = f"{meta['caption']} 🎥 {credit}\n{tags}".strip()
+    paid = bool(streamer.get("paid_partnership"))
+    disclosure = "Paid partnership. " if paid else ""
+    caption = f"{disclosure}{meta['caption']} 🎥 {credit}\n{tags}".strip()
     title = meta["title"] or meta["hook"] or "GTA 6 moment"
     posting = cfg["posting"]
-    fields = [("user", posting["upload_post_user"]),
+    fields = [("user", profile or streamer.get("profile") or posting.get("upload_post_user", "default")),
               # generic title = the X (Twitter) post text, max 280 characters
               ("title", f"{meta['caption'] or title} {tags}"[:280]),
               ("tiktok_title", caption[:2200]),
@@ -79,7 +81,9 @@ def build_fields(meta, cfg, platforms=None):
     fields += [("cover_timestamp", str(cover)), ("thumb_offset", str(cover))]
     comment = meta.get("comment") or f"Best {credit or 'GTA 6'} moment so far? 👀"
     fields.append(("first_comment", comment))
-    fields += [("platform[]", p) for p in (platforms or posting["platforms"])]
+    if paid:  # platform "paid partnership" labels (campaign requires disclosure)
+        fields += [("brand_content_toggle", "true"), ("hasPaidProductPlacement", "true")]
+    fields += [("platform[]", p) for p in (platforms or posting.get("platforms", []))]
     return fields
 
 
@@ -137,24 +141,28 @@ def newest_first(name):
     return (-int(stamp), int(index))  # newest batch first, best clip of the batch first
 
 
-def pick_clip(clips, cfg):
-    """Take turns between streamers; post each streamer's newest clip."""
-    order = [s["name"] for s in cfg["streamers"]]
-    last = None
-    if POSTING_STATE.exists():
-        last = json.loads(POSTING_STATE.read_text()).get("last")
-    start = order.index(last) + 1 if last in order else 0
-    for k in range(len(order)):
-        who = order[(start + k) % len(order)]
+def load_turns():
+    try:
+        data = json.loads(POSTING_STATE.read_text())
+    except (OSError, ValueError):
+        data = {}
+    return data.get("profiles", {})
+
+
+def save_turns(turns):
+    POSTING_STATE.parent.mkdir(parents=True, exist_ok=True)
+    POSTING_STATE.write_text(json.dumps({"profiles": turns}, indent=1))
+
+
+def pick_clip(clips, names, last=None):
+    """Take turns between this account's streamers; post each one's newest clip."""
+    start = names.index(last) + 1 if last in names else 0
+    for k in range(len(names)):
+        who = names[(start + k) % len(names)]
         mine = [c for c in clips if clip_streamer(c) == who]
         if mine:
-            choice = sorted(mine, key=newest_first)[0]
-            break
-    else:  # clips from streamers no longer in config
-        choice = sorted(clips, key=newest_first)[0]
-    POSTING_STATE.parent.mkdir(parents=True, exist_ok=True)
-    POSTING_STATE.write_text(json.dumps({"last": clip_streamer(choice), "at": int(time.time())}))
-    return choice
+            return sorted(mine, key=newest_first)[0]
+    return None
 
 
 def wait_for_links(resp, platforms=3, max_wait=600):
@@ -189,17 +197,32 @@ def wait_for_links(resp, platforms=3, max_wait=600):
     return text
 
 
-def in_posting_window(cfg, now=None):
-    """True if now is within window_minutes after one of the posting times."""
+def profiles(cfg):
+    """Posting accounts: {profile: {"platforms": [...], "times": [...], "streamers": [...]}}"""
+    posting = cfg["posting"]
+    out = {}
+    for name, p in (posting.get("profiles") or {}).items():
+        out[name] = {"platforms": p.get("platforms", posting.get("platforms", [])),
+                     "times": p.get("times", posting.get("times", [])), "streamers": []}
+    if not out:  # old single-account config
+        out[posting.get("upload_post_user", "default")] = {
+            "platforms": posting.get("platforms", []), "times": posting.get("times", []),
+            "streamers": []}
+    first = next(iter(out))
+    for st in cfg["streamers"]:
+        out.get(st.get("profile", first), out[first])["streamers"].append(st["name"])
+    return out
+
+
+def in_window(times, cfg, now=None):
+    """True if now is within window_minutes after one of these times."""
     from datetime import datetime, timedelta
     from zoneinfo import ZoneInfo
-    posting = cfg["posting"]
-    times = posting.get("times")
     if not times:
         return True
-    tz = ZoneInfo(posting.get("timezone", "UTC"))
+    tz = ZoneInfo(cfg["posting"].get("timezone", "UTC"))
     now = now or datetime.now(tz)
-    window = timedelta(minutes=posting.get("window_minutes", 45))
+    window = timedelta(minutes=cfg["posting"].get("window_minutes", 45))
     for t in times:
         hh, mm = (int(x) for x in t.split(":"))
         for day in (-1, 0):
@@ -212,31 +235,15 @@ def in_posting_window(cfg, now=None):
 MIN_GAP_MINUTES = 75  # the backup trigger fires right after GitHub's: never post twice
 
 
-def posted_recently():
-    if not POSTING_STATE.exists():
-        return False
-    at = json.loads(POSTING_STATE.read_text()).get("at", 0)
-    return time.time() - at < MIN_GAP_MINUTES * 60
-
-
-def main():
-    cfg = load_config()
-    force = os.environ.get("FORCE_POST") == "1"
-    if not force and not in_posting_window(cfg):
-        print("outside the posting times (late or extra run); skipping")
-        return
-    if posted_recently() and not force:
-        print("a clip was posted less than 75 minutes ago; skipping this run")
-        return
-    assets = drop_stale(queue_assets(), cfg)
+def post_one(profile, acct, cfg, assets, turns):
+    """Post this account's next clip. Returns True if something was posted."""
     names = {a["name"] for a in assets}
     clips = [a["name"] for a in assets if a["name"].endswith(".mp4")]
-    if not clips:
-        print("queue is empty, nothing to post")
-        return
-    name = pick_clip(clips, cfg)
+    name = pick_clip(clips, acct["streamers"], turns.get(profile, {}).get("last"))
+    if not name:
+        print(f"[{profile}] no clips waiting for {', '.join(acct['streamers'])}")
+        return False
     meta_name = name[:-4] + ".json"
-
     WORK.mkdir(exist_ok=True)
     run(["gh", "release", "download", QUEUE_TAG, "-p", name, "-D", WORK, "--clobber"])
     meta = {"caption": "", "title": "", "hook": "", "credit": ""}
@@ -244,7 +251,7 @@ def main():
         run(["gh", "release", "download", QUEUE_TAG, "-p", meta_name, "-D", WORK, "--clobber"])
         meta.update(json.loads((WORK / meta_name).read_text()))
 
-    platforms = list(cfg["posting"]["platforms"])
+    platforms = list(acct["platforms"])
 
     def upload(plats):
         with open(WORK / name, "rb") as video:
@@ -253,28 +260,57 @@ def main():
                 headers={"Authorization": f"Apikey {os.environ['UPLOAD_POST_API_KEY']}",
                          "Idempotency-Key": str(uuid.uuid5(uuid.NAMESPACE_URL,
                                                            name + ",".join(plats)))},
-                data=build_fields(meta, cfg, plats),
+                data=build_fields(meta, cfg, plats, profile),
                 files={"video": (name, video, "video/mp4")},
                 timeout=600)
-        print(r.status_code, r.text[:2000])
+        print(f"[{profile}]", r.status_code, r.text[:2000])
         return r
 
     resp = upload(platforms)
     if resp.status_code >= 300 and "x" in platforms:
-        # never let X block a post: retry on the other platforms
-        platforms = [p for p in platforms if p != "x"]
+        platforms = [p for p in platforms if p != "x"]   # never let X block a post
         print("retrying without X")
         resp = upload(platforms)
+    turns[profile] = {"last": clip_streamer(name), "at": int(time.time())}
+    save_turns(turns)
     if resp.status_code >= 300:
-        sys.exit("upload failed; clip stays in the queue for the next run")
-
+        print(f"[{profile}] upload failed; clip stays in the queue for the next slot")
+        return False
     final = wait_for_links(resp, len(platforms))
     notify(meta, final, cfg)
     log_post(name, meta, resp, platforms)
     for n in (name, meta_name):
         if n in names:
             run(["gh", "release", "delete-asset", QUEUE_TAG, n, "-y"])
-    print(f"posted {name}; {len(clips) - 1} clips left in queue")
+    print(f"[{profile}] posted {name}")
+    return True
+
+
+def main():
+    cfg = load_config()
+    force = os.environ.get("FORCE_POST") == "1"
+    only = os.environ.get("POST_PROFILE", "").strip()
+    turns = load_turns()
+    assets = drop_stale(queue_assets(), cfg)
+    failed = False
+    for profile, acct in profiles(cfg).items():
+        if only and profile != only:
+            continue
+        if not force and not in_window(acct["times"], cfg):
+            print(f"[{profile}] not this account's posting time; skipping")
+            continue
+        last_at = turns.get(profile, {}).get("at", 0)
+        if not force and time.time() - last_at < MIN_GAP_MINUTES * 60:
+            print(f"[{profile}] posted less than {MIN_GAP_MINUTES} min ago; skipping")
+            continue
+        try:
+            if post_one(profile, acct, cfg, assets, turns):
+                assets = queue_assets()
+        except Exception as e:  # one account's problem shouldn't block the others
+            print(f"[{profile}] error: {e}", file=sys.stderr)
+            failed = True
+    if failed:
+        sys.exit(1)
 
 
 if __name__ == "__main__":
