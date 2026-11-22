@@ -22,7 +22,8 @@ def list_vods(url, n):
         vid = e.get("id")
         link = e.get("url") or e.get("webpage_url")
         if vid and link:
-            vods.append({"id": str(vid), "url": link, "title": e.get("title", "")})
+            vods.append({"id": str(vid), "url": link, "title": e.get("title", ""),
+                         "duration": float(e.get("duration") or 0)})
     return vods
 
 
@@ -238,7 +239,9 @@ def main():
                 print(f"could not read {vod['url']}: {str(e)[:300]}", file=sys.stderr)
                 continue
             vod = dict(vod, id=info["id"], title=vod["title"] or info["title"])
-            window = next_window(vod, info["duration"], progress, cfg) if info["duration"] else None
+            # some sites (Kick) give the length only in the channel listing
+            duration = info["duration"] or vod.get("duration") or 0
+            window = next_window(vod, duration, progress, cfg) if duration else None
             if not window:
                 continue
             start, end = window
