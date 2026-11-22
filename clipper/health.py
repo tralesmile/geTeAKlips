@@ -31,8 +31,10 @@ def main():
         stats = by_name.setdefault(r["name"], {"ok": 0, "failed": [], "running": 0})
         if r["status"] != "completed":
             stats["running"] += 1
-        elif r["conclusion"] == "success":
+        elif r["conclusion"] in ("success", "skipped", "neutral"):
             stats["ok"] += 1
+        elif r["conclusion"] == "cancelled":
+            continue  # replaced by a newer run or stopped on purpose: not a problem
         else:
             stats["failed"].append(r["html_url"])
 
