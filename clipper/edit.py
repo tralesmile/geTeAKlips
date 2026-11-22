@@ -66,12 +66,24 @@ def _stable_faces(frames):
     """Faces that stay in the same place across frames (a facecam or a fixed camera).
     Returns clusters [(cx, cy, size, hits)] in 0..1 units, biggest support first."""
     import cv2
-    cascade = cv2.CascadeClassifier(str(ROOT / "models" / "haarcascade_frontalface_default.xml"))
+    front = cv2.CascadeClassifier(str(ROOT / "models" / "haarcascade_frontalface_default.xml"))
+    side = cv2.CascadeClassifier(str(ROOT / "models" / "haarcascade_profileface.xml"))
+    clahe = cv2.createCLAHE(clipLimit=3.0, tileGridSize=(8, 8))
     dets = []
     for i, g in enumerate(frames):
         fh, fw = g.shape
-        for (x, y, w, h) in cascade.detectMultiScale(g, 1.1, 4, minSize=(18, 18)):
-            dets.append((i, (x + w / 2) / fw, (y + h / 2) / fh, h / fh))
+        g = clahe.apply(g)                     # lifts faces out of dark, coloured lighting
+        found = list(front.detectMultiScale(g, 1.1, 4, minSize=(18, 18)))
+        if not side.empty():                   # faces turned sideways, both directions
+            found += list(side.detectMultiScale(g, 1.1, 5, minSize=(18, 18)))
+            for (x, y, w, h) in side.detectMultiScale(cv2.flip(g, 1), 1.1, 5, minSize=(18, 18)):
+                found.append((fw - x - w, y, w, h))
+        seen = []
+        for (x, y, w, h) in found:             # one detection per face per frame
+            c = ((x + w / 2) / fw, (y + h / 2) / fh, h / fh)
+            if all(abs(c[0] - o[0]) > 0.03 or abs(c[1] - o[1]) > 0.04 for o in seen):
+                seen.append(c)
+                dets.append((i,) + c)
     clusters = []
     for i, cx, cy, s in dets:
         for c in clusters:
@@ -121,17 +133,92 @@ def _find_cam_box(frames, face):
     left, sl = (0, 9.0) if x0 < 0.05 * fw else _edge(col, int(x0 - 0.35 * cam_w), int(cx - s), int(x0))
     right, sr = (fw, 9.0) if x0 + cam_w > 0.95 * fw else _edge(col, int(cx + s), int(x0 + 1.35 * cam_w), int(x0 + cam_w))
     top, st = (0, 9.0) if y0 < 0.05 * fh else _edge(row, int(y0 - 0.35 * cam_h), int(cy - s), int(y0))
-    bottom, sb = (fh, 9.0) if y0 + cam_h > 0.95 * fh else _edge(row, int(cy + s), int(y0 + 1.4 * cam_h), int(y0 + cam_h))
+    # webcams are 16:9 .. 4:3, so the bottom edge must sit 0.5-0.78 x width below the
+    # top (this stops chat boxes or alerts under the cam being included)
+    wpx = right - left
+    if top + 0.5 * wpx >= 0.97 * fh:
+        bottom, sb = fh, 9.0
+    else:
+        # try a 16:9 cam first, then 4:3, else assume 16:9
+        bottom, sb = _edge(row, int(top + 0.53 * wpx), min(int(top + 0.6 * wpx), fh - 1),
+                           int(top + 0.5625 * wpx))
+        if sb < 2.2:
+            b43, s43 = _edge(row, int(top + 0.72 * wpx), min(int(top + 0.78 * wpx), fh - 1),
+                             int(top + 0.75 * wpx))
+            bottom, sb = (b43, s43) if s43 >= 2.2 else (int(top + 0.5625 * wpx), 2.3)
+        bottom = min(bottom, fh)
     box = [left / fw, top / fh, (right - left) / fw, (bottom - top) / fh]
     edges_ok = sum(v > 2.2 for v in (sl, sr, st, sb)) >= 2
     sane = 0.1 < box[2] < 0.45 and 0.1 < box[3] < 0.55
     return box, edges_ok and sane
 
 
-def detect_layout(path, override=None):
-    """Returns (layout, params). override = config facecam [x, y, w, h]."""
+CAM_MEMORY = ROOT / "state" / "facecams.json"
+
+
+def remembered_cam(streamer):
+    import json
+    try:
+        return json.loads(CAM_MEMORY.read_text()).get(streamer)
+    except (OSError, ValueError):
+        return None
+
+
+def remember_cam(streamer, box):
+    import json
+    try:
+        data = json.loads(CAM_MEMORY.read_text())
+    except (OSError, ValueError):
+        data = {}
+    data[streamer] = [round(v, 4) for v in box]
+    CAM_MEMORY.parent.mkdir(parents=True, exist_ok=True)
+    CAM_MEMORY.write_text(json.dumps(data, indent=2))
+
+
+def _cam_visible(frames, box):
+    """Is a facecam still showing at a remembered position? Checks for its stable
+    border edges (a cutscene or full-screen game hides them)."""
+    import cv2
+    fh, fw = frames[0].shape
+    x, y, w, h = box
+    gx = np.mean([np.abs(cv2.Sobel(g, cv2.CV_32F, 1, 0, ksize=3)) for g in frames], axis=0)
+    gy = np.mean([np.abs(cv2.Sobel(g, cv2.CV_32F, 0, 1, ksize=3)) for g in frames], axis=0)
+    base = float(np.median(gx) + np.median(gy)) / 2 + 1e-6
+    r0, r1 = int(y * fh), int((y + h) * fh)
+    c0, c1 = int(x * fw), int((x + w) * fw)
+    scores = []
+    for col in (c0, c1):                      # vertical borders not on the frame edge
+        if 3 < col < fw - 3:
+            band = gx[r0:r1, max(col - 3, 0):col + 4].mean(axis=0).max()
+            scores.append(band / base)
+    for row in (r0, r1):
+        if 3 < row < fh - 3:
+            band = gy[max(row - 3, 0):row + 4, c0:c1].mean(axis=1).max()
+            scores.append(band / base)
+    return sum(v > 2.5 for v in scores) >= max(1, len(scores) - 1)
+
+
+def detect_layout(path, override=None, streamer=None):
+    """Returns (layout, params). override = config facecam [x, y, w, h].
+    streamer: name used to remember where that streamer's facecam sits."""
     if override:
         return "split", {"cam": list(override)}
+    layout, params = _detect(path, streamer)
+    if layout == "split" and streamer and params.get("confident"):
+        remember_cam(streamer, params["cam"])
+    return layout, params
+
+
+def _fallback(frames, streamer):
+    """No usable face found: reuse the streamer's remembered facecam if it's on screen."""
+    box = remembered_cam(streamer) if streamer else None
+    if box and frames and _cam_visible(frames, box):
+        print(f"using remembered facecam for {streamer}: {box}")
+        return "split", {"cam": box}
+    return "gameplay", {}
+
+
+def _detect(path, streamer=None):
     try:
         frames = _frames(path)
     except Exception as e:  # OpenCV missing or unreadable video
@@ -142,10 +229,10 @@ def detect_layout(path, override=None):
     try:
         faces = _stable_faces(frames)
     except Exception as e:
-        print(f"face detection failed ({e}); using gameplay layout")
-        return "gameplay", {}
+        print(f"face detection failed ({e})")
+        return _fallback(frames, streamer)
     if not faces:
-        return "gameplay", {}
+        return _fallback(frames, streamer)
     main = faces[0]
     others = [f for f in faces[1:] if f[3] >= 0.6 * main[3]]
     if others:  # several people on screen: a camera scene, not a facecam
@@ -156,13 +243,20 @@ def detect_layout(path, override=None):
     if main[2] < 0.16:
         box, ok = _find_cam_box(frames, main)
         if ok:
-            return "split", {"cam": box}
+            return "split", {"cam": box, "confident": True}
+        known = remembered_cam(streamer) if streamer else None
+        if known and abs(known[0] + known[2] / 2 - main[0]) < 0.12 \
+                and abs(known[1] + known[3] / 2 - main[1]) < 0.15:
+            return "split", {"cam": known}      # face sits inside the known cam
     big = [f for f in faces if f[2] >= 0.09]
     if big:
         xs = [f[0] for f in big]
         pad = max(f[2] for f in big) * 0.9
         return "irl", {"x0": max(min(xs) - pad, 0.0), "x1": min(max(xs) + pad, 1.0),
                        "cx": float(np.mean(xs))}
+    fb = _fallback(frames, streamer)
+    if fb[0] == "split":
+        return fb
     box, _ = _find_cam_box(frames, main)  # small face, weak edges: still best guess
     return "split", {"cam": box}
 
@@ -172,6 +266,8 @@ def layout_graph(layout, p, sw, sh, src="[vc]", out="[lay]"):
                f"boxblur=30:3,eq=brightness=-0.18:saturation=1.2")
     if layout == "split":
         x, y, w, h = p["cam"]
+        ix, iy = w * 0.03, h * 0.04             # trim inside the cam border / overlays
+        x, y, w, h = x + ix, y + iy, w - 2 * ix, h - 2 * iy
         cx, cy = int(x * sw) // 2 * 2, int(y * sh) // 2 * 2
         cw, ch = int(w * sw) // 2 * 2, int(h * sh) // 2 * 2
         game_h = H - CAM_H
@@ -365,7 +461,7 @@ def write_ass(path, words, hook, credit, out_dur, layout, hook_until):
 
 # ── render ─────────────────────────────────────────────────────────────
 
-def render(src, dst, words, hook, credit, peak=None, facecam=None):
+def render(src, dst, words, hook, credit, peak=None, facecam=None, streamer=None):
     """src: 16:9 clip. words: [(start, end, text)] in src time. peak: src time of
     the best moment (for the cold-open teaser). Returns (dst, layout)."""
     dst = Path(dst)
@@ -386,7 +482,7 @@ def render(src, dst, words, hook, credit, peak=None, facecam=None):
             t1 = map_time(min(w[1], dur), segments, skip) or t0 + 0.3
             out_words.append((t0, max(t1, t0 + 0.08), w[2], w[3]))
 
-    layout, params = detect_layout(src, facecam)
+    layout, params = detect_layout(src, facecam, streamer)
     print(f"layout: {layout} {params}")
     ass = dst.with_suffix(".ass")
     write_ass(ass, out_words, hook, credit, out_dur, layout, hook_until=teaser + 2.6)

@@ -31,7 +31,8 @@ def main():
         words = clip_words(raw, cfg, st)
         out = WORK / f"preview_{i}_{name}.mp4"
         _, layout = edit.render(raw, out, words, f"{st.get('credit', name)} test clip",
-                                st.get("credit", name), peak=peak, facecam=st.get("facecam"))
+                                st.get("credit", name), peak=peak, facecam=st.get("facecam"),
+                                streamer=name)
         info = WORK / f"preview_{i}_{name}.json"
         info.write_text(json.dumps({"layout": layout, "words": [list(w) for w in words]}, indent=1))
         src = WORK / f"preview_{i}_{name}_source.mp4"

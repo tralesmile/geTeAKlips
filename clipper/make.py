@@ -102,7 +102,8 @@ def render_clip(streamer, url, c, folder, base, cfg):
         words = clip_words(raw, cfg, streamer)
         peak = c["peak"] - c["start"] if c.get("peak") else None
         out, layout = edit.render(raw, folder / f"{base}.mp4", words, c["hook"], credit,
-                                  peak=peak, facecam=streamer.get("facecam"))
+                                  peak=peak, facecam=streamer.get("facecam"),
+                                  streamer=streamer["name"])
         meta = dict(c, credit=credit, streamer=streamer["name"], vod=url, layout=layout)
         (folder / f"{base}.json").write_text(json.dumps(meta, indent=2))
         run(["gh", "release", "upload", "queue", out, folder / f"{base}.json", "--clobber"])
