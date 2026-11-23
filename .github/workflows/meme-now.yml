@@ -1,0 +1,45 @@
+name: Post meme now
+
+on:
+  workflow_dispatch:
+    inputs:
+      format:
+        description: "tweet, big, list, carousel, chat or breaking (empty = Claude picks)"
+        required: false
+        default: ""
+      mode:
+        description: "reality or relatable"
+        required: false
+        default: "reality"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: meme-now
+  cancel-in-progress: false
+
+jobs:
+  meme:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pyyaml requests pillow
+      - name: Make and post a meme
+        env:
+          UPLOAD_POST_API_KEY: ${{ secrets.UPLOAD_POST_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          MEME_FORMAT: ${{ inputs.format }}
+          MEME_MODE: ${{ inputs.mode }}
+        run: python -m clipper.memes
+      - name: Save meme history
+        if: always()
+        run: |
+          git config user.name "clip-bot"
+          git config user.email "clip-bot@users.noreply.github.com"
+          git add state/
+          git diff --cached --quiet || (git commit -m "Update meme history" && git pull --rebase -X theirs && git push)

@@ -120,7 +120,7 @@ MODES = {
 }
 
 
-def write_meme(cfg, news, history, mode="reality"):
+def write_meme(cfg, news, history, mode="reality", force_format=None):
     m = cfg.get("memes", {})
     learn = ""
     best = [h for h in history if h.get("likes")]
@@ -136,6 +136,8 @@ def write_meme(cfg, news, history, mode="reality"):
         history="\n".join(f"- {h.get('topic')}" for h in history[-20:]) or "- (nema)",
         recent_formats=", ".join(h.get("format", "?") for h in history[-3:]) or "nema",
         learn=learn)
+    if force_format:
+        prompt += f'\n\nOVAJ PUT format MORA biti "{force_format}".'
     resp = requests.post(
         "https://api.anthropic.com/v1/messages",
         headers={"x-api-key": os.environ["ANTHROPIC_API_KEY"],
@@ -426,17 +428,17 @@ def _upload(profile, platforms, photos, caption, comment=None, story=False):
     return r
 
 
-def make_and_post(profile, acct, cfg):
+def make_and_post(profile, acct, cfg, mode=None, force_format=None):
     m = cfg.get("memes", {})
     history = load_history()
-    mode = pick_mode(cfg)
+    mode = mode or pick_mode(cfg)
     news = headlines(m.get("queries", ["Zadruga", "Pinkove zvezde", "rijaliti Pink"]),
                      max_age_h=6 if mode == "bonus" else 36)
     print(f"[{profile}] mode {mode}, {len(news)} headlines")
     if mode == "bonus" and not is_hot(news):
         print(f"[{profile}] no big reality moment tonight; skipping the bonus meme")
         return False
-    meme = write_meme(cfg, news, history, mode)
+    meme = write_meme(cfg, news, history, mode, force_format)
     print(f"[{profile}] meme: {json.dumps(meme, ensure_ascii=False)[:500]}")
     WORK.mkdir(exist_ok=True)
     photos = render(meme, cfg, str(WORK / f"meme_{int(time.time())}"))
@@ -458,3 +460,21 @@ def make_and_post(profile, acct, cfg):
     HISTORY.parent.mkdir(parents=True, exist_ok=True)
     HISTORY.write_text(json.dumps(history[-200:], ensure_ascii=False, indent=1))
     return True
+
+
+def main():
+    """Post one meme now (manual run): env MEME_FORMAT, MEME_MODE, MEME_PROFILE."""
+    from .common import load_config
+    from .post import profiles
+    cfg = load_config()
+    name = os.environ.get("MEME_PROFILE") or next(
+        k for k, v in profiles(cfg).items() if v["kind"] == "memes")
+    acct = profiles(cfg)[name]
+    ok = make_and_post(name, acct, cfg, mode=os.environ.get("MEME_MODE") or "reality",
+                       force_format=os.environ.get("MEME_FORMAT") or None)
+    if not ok:
+        raise SystemExit("meme not posted")
+
+
+if __name__ == "__main__":
+    main()
