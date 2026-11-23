@@ -118,8 +118,8 @@ MODES = {
                  "u većini slučajeva. NE pravi memeove o rijalitiju (Zadruga, Elita) ni o "
                  "poznatim ličnostima.",
     "vicevi": "Napravi \"jokes\" objavu: 3 do 5 kratkih, stvarno smešnih ORIGINALNIH viceva "
-              "u balkanskom duhu (Perica, Mujo i Haso, baba i deda, ćale, komšija, učiteljica, "
-              "policajac, Crnogorac koji se odmara...), svaki max 260 znakova, sa jasnom poentom "
+              "u balkanskom duhu (Perica, baba i deda, ćale i sin, komšija, učiteljica, "
+              "policajac, doktor, taksista, svekrva...), svaki max 260 znakova, sa jasnom poentom "
               "na kraju. Bez vređanja nacionalnosti, vere i seksualnog sadržaja. Plus naslov "
               "koji tera na prevlačenje (npr. \"5 viceva za danas, treći me ubio\").",
     "reality": "Napravi JEDAN originalan, smešan meme o nečemu iz ovih vesti.",
@@ -145,16 +145,24 @@ def write_meme(cfg, news, history, mode="reality", force_format=None):
     force_format = force_format or ("jokes" if mode == "vicevi" else None)
     if force_format:
         prompt += f'\n\nOVAJ PUT format MORA biti "{force_format}".'
-    resp = requests.post(
-        "https://api.anthropic.com/v1/messages",
-        headers={"x-api-key": os.environ["ANTHROPIC_API_KEY"],
-                 "anthropic-version": "2023-06-01", "content-type": "application/json"},
-        json={"model": cfg.get("llm_model", "claude-sonnet-5-5"), "max_tokens": 1500,
-              "messages": [{"role": "user", "content": prompt}]},
-        timeout=120)
-    resp.raise_for_status()
-    text = "".join(b.get("text", "") for b in resp.json()["content"])
-    return json.loads(re.search(r"\{.*\}", text, re.S).group(0))
+    for attempt in range(2):
+        resp = requests.post(
+            "https://api.anthropic.com/v1/messages",
+            headers={"x-api-key": os.environ["ANTHROPIC_API_KEY"],
+                     "anthropic-version": "2023-06-01", "content-type": "application/json"},
+            json={"model": cfg.get("llm_model", "claude-sonnet-5-5"), "max_tokens": 3000,
+                  "messages": [{"role": "user", "content": prompt}]},
+            timeout=180)
+        resp.raise_for_status()
+        text = "".join(b.get("text", "") for b in resp.json()["content"])
+        match = re.search(r"\{.*\}", text, re.S)
+        if match:
+            try:
+                return json.loads(match.group(0))
+            except ValueError:
+                pass
+        print(f"meme reply not usable (attempt {attempt + 1}): {text[:600]}")
+    raise RuntimeError("Claude did not return a usable meme")
 
 
 # ── 3. the image ───────────────────────────────────────────────────────
