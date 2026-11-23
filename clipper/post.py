@@ -208,7 +208,8 @@ def profiles(cfg):
     for name, p in (posting.get("profiles") or {}).items():
         out[name] = {"platforms": p.get("platforms", posting.get("platforms", [])),
                      "times": p.get("times", posting.get("times", [])), "streamers": [],
-                     "mirror": p.get("mirror"), "kind": p.get("kind", "clips")}
+                     "mirror": p.get("mirror"), "kind": p.get("kind", "clips"),
+                     "upload_user": p.get("upload_user", name)}
     if not out:  # old single-account config
         out[posting.get("upload_post_user", "default")] = {
             "platforms": posting.get("platforms", []), "times": posting.get("times", []),
@@ -281,9 +282,12 @@ def all_failed(resp):
 
 def post_one(profile, acct, cfg, assets, turns):
     """Post this account's next clip. Returns True if something was posted."""
-    if acct.get("kind") == "memes":  # image meme account: make a fresh meme and post it
-        from . import memes
-        ok = memes.make_and_post(profile, acct, cfg)
+    if acct.get("kind") in ("memes", "betting"):  # image accounts: make a fresh post
+        if acct["kind"] == "memes":
+            from . import memes as maker
+        else:
+            from . import betting as maker
+        ok = maker.make_and_post(profile, acct, cfg)
         if ok:
             turns[profile] = {"last": "meme", "at": int(time.time())}
             save_turns(turns)
@@ -311,7 +315,7 @@ def post_one(profile, acct, cfg, assets, turns):
                 headers={"Authorization": f"Apikey {os.environ['UPLOAD_POST_API_KEY']}",
                          "Idempotency-Key": str(uuid.uuid5(uuid.NAMESPACE_URL,
                                                            name + ",".join(plats)))},
-                data=build_fields(meta, cfg, plats, profile),
+                data=build_fields(meta, cfg, plats, acct.get("upload_user", profile)),
                 files={"video": (name, video, "video/mp4")},
                 timeout=600)
         print(f"[{profile}]", r.status_code, r.text[:2000])

@@ -136,6 +136,11 @@ posting:
       kind: memes
       platforms: [instagram]
       times: ["13:07", "18:07", "22:07"]
+    gtatips:                       # football tips (Serbian) on the gta profile's Instagram
+      upload_user: gta
+      kind: betting
+      platforms: [instagram]
+      times: ["13:07", "16:07", "19:07"]
     dom:                           # Dom + Clix
       platforms: [tiktok, youtube]
       mirror: {profile: default, platforms: [instagram, x]}   # also to carczarr IG + X
@@ -153,3 +158,10 @@ memes:
   # (reality = Zadruga/Elita memes: switched off, they didn't land)
   slots: {"13:07": relatable, "18:07": vicevi, "22:07": relatable}
   story: true            # also put each meme in the Instagram Story
+
+# Football tips page (Instagram of Upload-Post profile "gta"): 3 tips a day from
+# today's real fixtures (Claude web search), short analysis, yesterday's record.
+betting:
+  handle: ""
+  hashtags: "#tipovi #tipdana #fudbal #klađenje #tiket #srbija #ligašampiona #premierliga"
+  story: true

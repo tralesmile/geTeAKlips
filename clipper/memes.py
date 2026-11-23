@@ -478,7 +478,8 @@ def make_and_post(profile, acct, cfg, mode=None, force_format=None):
     WORK.mkdir(exist_ok=True)
     photos = render(meme, cfg, str(WORK / f"meme_{int(time.time())}"))
     caption = f"{meme.get('caption', '')}\n\n{m.get('hashtags', '')}".strip()
-    r = _upload(profile, acct["platforms"], photos, caption, meme.get("comment", "Šta mislite? 👇"))
+    user = acct.get("upload_user", profile)
+    r = _upload(user, acct["platforms"], photos, caption, meme.get("comment", "Šta mislite? 👇"))
     if r.status_code >= 300:
         return False
     try:
@@ -487,7 +488,7 @@ def make_and_post(profile, acct, cfg, mode=None, force_format=None):
         request_id = None
     if m.get("story", True):  # same meme to the Story (never blocks the post)
         try:
-            _upload(profile, ["instagram"], [story_version(photos[0], photos[0] + "_story.jpg")],
+            _upload(user, ["instagram"], [story_version(photos[0], photos[0] + "_story.jpg")],
                     "", story=True)
         except Exception as e:
             print(f"[{profile}] story failed: {e}")
