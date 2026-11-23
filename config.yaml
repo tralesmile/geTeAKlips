@@ -162,6 +162,6 @@ memes:
 # Football tips page (Instagram of Upload-Post profile "gta"): 3 tips a day from
 # today's real fixtures (Claude web search), short analysis, yesterday's record.
 betting:
-  handle: ""
-  hashtags: "#tipovi #tipdana #fudbal #klađenje #tiket #srbija #ligašampiona #premierliga"
+  handle: "@tipsterko"
+  hashtags: "#tipsterko #tipovi #tipdana #fudbal #klađenje #tiket #srbija #ligašampiona #premierliga"
   story: true
