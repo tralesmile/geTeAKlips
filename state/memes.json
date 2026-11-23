@@ -153,5 +153,46 @@
   "mode": "vicevi",
   "posted_at": 1795474019,
   "request_id": "5ae99cf82cab4a9ba863fda503fa77e5"
+ },
+ {
+  "format": "chat",
+  "topic": "plata stiže, ćale pita",
+  "label": "PORODICA",
+  "text": "",
+  "title": "",
+  "items": [],
+  "slides": [],
+  "chat": [
+   {
+    "from": "Ćale",
+    "text": "Stigla plata?"
+   },
+   {
+    "from": "Mama",
+    "text": "Stigla. I već je otišla."
+   },
+   {
+    "from": "Ćale",
+    "text": "Kako otišla, pa juče je legla?"
+   },
+   {
+    "from": "Mama",
+    "text": "Struja, internet, komšinica za zimnicu i Baba je tražila nešto sitno za apoteku"
+   },
+   {
+    "from": "Baba",
+    "text": "Samo za vitamine, sine"
+   },
+   {
+    "from": "Ja",
+    "text": "A meni ko da uplati za izlazak u subotu?"
+   }
+  ],
+  "jokes": [],
+  "caption": "Plata kod nas ne legne, nego samo navrati na čaj pa ode 😭 Ko vam u kući prvi pita 'je l' stigla plata'?",
+  "comment": "Za koliko dana plata nestane kod vas? 🅰️ 3 dana ili 🅱️ Do kraja nedelje",
+  "mode": "relatable",
+  "posted_at": 1795474077,
+  "request_id": "571c553844e8409a85ddfaa942287e61"
  }
 ]
