@@ -161,7 +161,8 @@ def write_meme(cfg, news, history, mode="reality", force_format=None):
                 return json.loads(match.group(0))
             except ValueError:
                 pass
-        print(f"meme reply not usable (attempt {attempt + 1}): {text[:600]}")
+        print(f"meme reply not usable (attempt {attempt + 1}): {text[:600]} | "
+              f"raw: {json.dumps(resp.json(), ensure_ascii=False)[:800]}")
     raise RuntimeError("Claude did not return a usable meme")
 
 
