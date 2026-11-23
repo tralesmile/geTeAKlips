@@ -104,6 +104,21 @@ def main():
         time.sleep(0.5)
     STATS.write_text(json.dumps({"updated": int(time.time()), "posts": rows}, indent=1))
 
+    # meme page: store likes per meme so the meme writer learns what works
+    mem_path = ROOT / "state" / "memes.json"
+    try:
+        memes = json.loads(mem_path.read_text())
+    except (OSError, ValueError):
+        memes = []
+    for mm in memes:
+        if mm.get("request_id") and mm.get("posted_at", 0) >= week_ago:
+            per = fetch(mm["request_id"])
+            if per:
+                mm["likes"] = sum(v.get("likes", 0) for v in per.values())
+                mm["views"] = sum(v.get("views", 0) for v in per.values())
+    if memes:
+        mem_path.write_text(json.dumps(memes, ensure_ascii=False, indent=1))
+
     # winners: hooks that got the most views (the picker copies their style)
     ranked = sorted(rows, key=lambda r: -r["views"])
     WINNERS.write_text(json.dumps([{"hook": r.get("hook"), "title": r.get("title"),

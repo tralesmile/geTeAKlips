@@ -208,12 +208,12 @@ def profiles(cfg):
     for name, p in (posting.get("profiles") or {}).items():
         out[name] = {"platforms": p.get("platforms", posting.get("platforms", [])),
                      "times": p.get("times", posting.get("times", [])), "streamers": [],
-                     "mirror": p.get("mirror")}
+                     "mirror": p.get("mirror"), "kind": p.get("kind", "clips")}
     if not out:  # old single-account config
         out[posting.get("upload_post_user", "default")] = {
             "platforms": posting.get("platforms", []), "times": posting.get("times", []),
             "streamers": []}
-    first = next(iter(out))
+    first = next(k for k, v in out.items() if v["kind"] == "clips")
     for st in cfg["streamers"]:
         out.get(st.get("profile", first), out[first])["streamers"].append(st["name"])
     return out
@@ -268,6 +268,13 @@ def mirror(name, meta, cfg, spec):
 
 def post_one(profile, acct, cfg, assets, turns):
     """Post this account's next clip. Returns True if something was posted."""
+    if acct.get("kind") == "memes":  # image meme account: make a fresh meme and post it
+        from . import memes
+        ok = memes.make_and_post(profile, acct, cfg)
+        if ok:
+            turns[profile] = {"last": "meme", "at": int(time.time())}
+            save_turns(turns)
+        return False  # nothing taken from the clip queue
     names = {a["name"] for a in assets}
     clips = [a["name"] for a in assets if a["name"].endswith(".mp4")]
     name = pick_clip(clips, acct["streamers"], turns.get(profile, {}).get("last"))

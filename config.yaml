@@ -132,7 +132,19 @@ posting:
     gta:                           # GTA 6 Top Moments (many streamers)
       platforms: [tiktok]
       times: ["13:07", "15:07", "17:07", "19:07", "21:07", "23:07"]
+    tips:                          # Yugoslovenko: original Serbian memes (no clips)
+      kind: memes
+      platforms: [instagram]
+      times: ["13:07", "18:07", "22:07"]
     dom:                           # Dom + Clix
       platforms: [tiktok, youtube]
       mirror: {profile: default, platforms: [instagram, x]}   # also to carczarr IG + X
       times: ["13:07", "16:07", "19:07", "22:07"]
+
+# Yugoslovenko meme page (profile "tips"): original memes about trending
+# reality-TV news. No TV footage is used; Claude writes the joke, we design it.
+memes:
+  name: "Yugoslovenko"
+  handle: "@yugoslovenko"
+  queries: ["Zadruga", "Pinkove zvezde", "rijaliti Pink", "Zadruga svađa"]
+  hashtags: "#zadruga #rijaliti #pinkovezvezde #memes #srbija #balkan #humor #yugoslovenko"

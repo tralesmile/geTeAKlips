@@ -35,11 +35,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install pyyaml requests
+      - run: pip install pyyaml requests pillow
       - name: Post next clip
         env:
           GH_TOKEN: ${{ github.token }}
           UPLOAD_POST_API_KEY: ${{ secrets.UPLOAD_POST_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
           FORCE_POST: ${{ inputs.force && '1' || '0' }}
           POST_PROFILE: ${{ inputs.profile }}
