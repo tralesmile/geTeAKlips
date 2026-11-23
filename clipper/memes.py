@@ -88,6 +88,8 @@ Izaberi format:
 - "big": jedna jaka rečenica/POV/"Kad..." (max 110 znakova), plus kratka oznaka teme
 - "list": naslov + 3 kratke stavke (rangiranje, "tipovi ljudi kad...", itd.)
 
+Na slici (text/title/items/label) NE koristi emoji, emoji samo u caption i comment.
+
 Vrati SAMO JSON:
 {{"format": "tweet|big|list", "topic": "tema u 3-5 reči",
   "label": "OZNAKA TEME do 2 reči, npr. ZADRUGA",
@@ -184,7 +186,18 @@ def _pill(draw, text, xy, fill, color):
     draw.text((x, y), text, font=font, fill=color, anchor="mm")
 
 
+EMOJI = re.compile("[\U0001F000-\U0001FAFF\u2600-\u27BF\uFE0F\u200D\u2B00-\u2BFF]+")
+
+
+def _plain(text):
+    """Image fonts have no emoji glyphs: drop them from on-image text (they stay in
+    the caption) and tidy the spaces left behind."""
+    return re.sub(r"[ \t]+", " ", EMOJI.sub("", text or "")).strip()
+
+
 def render(meme, cfg, path):
+    meme = dict(meme, **{k: _plain(meme.get(k, "")) for k in ("text", "title", "label")},
+                items=[_plain(i) for i in meme.get("items") or []])
     m = cfg.get("memes", {})
     handle, name = m.get("handle", "@yugoslovenko"), m.get("name", "Yugoslovenko")
     fmt = meme.get("format", "big")
