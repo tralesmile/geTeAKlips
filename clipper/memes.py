@@ -145,7 +145,7 @@ def write_meme(cfg, news, history, mode="reality", force_format=None):
     force_format = force_format or ("jokes" if mode == "vicevi" else None)
     if force_format:
         prompt += f'\n\nOVAJ PUT format MORA biti "{force_format}".'
-    for attempt in range(2):
+    for attempt in range(3):
         resp = requests.post(
             "https://api.anthropic.com/v1/messages",
             headers={"x-api-key": os.environ["ANTHROPIC_API_KEY"],
