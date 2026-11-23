@@ -266,6 +266,19 @@ def mirror(name, meta, cfg, spec):
             return
 
 
+def all_failed(resp):
+    """A 200 can still mean every platform failed (e.g. an account banned from posting)."""
+    try:
+        body = resp.json()
+    except ValueError:
+        return False
+    results = body.get("results") or {}
+    if body.get("status") == "failed":
+        return True
+    return bool(results) and all(isinstance(r, dict) and r.get("success") is False
+                                 for r in results.values())
+
+
 def post_one(profile, acct, cfg, assets, turns):
     """Post this account's next clip. Returns True if something was posted."""
     if acct.get("kind") == "memes":  # image meme account: make a fresh meme and post it
@@ -311,7 +324,7 @@ def post_one(profile, acct, cfg, assets, turns):
         resp = upload(platforms)
     turns[profile] = {"last": clip_streamer(name), "at": int(time.time())}
     save_turns(turns)
-    if resp.status_code >= 300:
+    if resp.status_code >= 300 or all_failed(resp):
         print(f"[{profile}] upload failed; clip stays in the queue for the next slot")
         return False
     final = wait_for_links(resp, len(platforms))
