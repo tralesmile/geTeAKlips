@@ -25,5 +25,49 @@
   "mode": "reality",
   "posted_at": 1795472623,
   "request_id": "31f1cff4593242fe831494e6c9d182bc"
+ },
+ {
+  "format": "chat",
+  "topic": "Porodični čet o slavi",
+  "label": "SLAVA",
+  "text": "",
+  "title": "",
+  "items": [],
+  "slides": [],
+  "chat": [
+   {
+    "from": "Mama",
+    "text": "Slava je u subotu, nema odlaganja"
+   },
+   {
+    "from": "Ćale",
+    "text": "Ko dolazi?"
+   },
+   {
+    "from": "Mama",
+    "text": "Samo uža porodica"
+   },
+   {
+    "from": "Baba",
+    "text": "Ja sam pozvala komšije, rodbinu iz Kraljeva i onog što je jednom popravio šporet"
+   },
+   {
+    "from": "Ćale",
+    "text": "To je 47 ljudi"
+   },
+   {
+    "from": "Ja",
+    "text": "A ja sam mislio da ću samo da pojedem kolač i idem"
+   },
+   {
+    "from": "Mama",
+    "text": "Dođi u 8 da pomogneš oko stolova"
+   }
+  ],
+  "caption": "Uža porodica na srpskom znači 47 ljudi i jedan nepoznati stric 🍰😂 Koliko vas je bilo na poslednjoj slavi?",
+  "comment": "Koliko ljudi je došlo na vašu slavu? 🅰️ do 20 ili 🅱️ ko ih broji",
+  "mode": "relatable",
+  "posted_at": 1795472704,
+  "request_id": "125e5311d02e41648b07adc1dbef2c41"
  }
 ]
