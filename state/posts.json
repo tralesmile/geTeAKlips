@@ -166,5 +166,34 @@
    "youtube"
   ],
   "links": {}
+ },
+ {
+  "name": "20261123171523_00_gtatop_clip2392892739_2.mp4",
+  "request_id": "9cf6fa11db3c4d3f838df150dfad75b4",
+  "posted_at": 1795457596,
+  "streamer": "gtatop",
+  "hook": "Kai Cenat was NOT ready for this",
+  "title": "Kai Cenat Gets Caught Off Guard in GTA 6 Gone Wild Moment",
+  "layout": "split",
+  "source": "twitch-clip",
+  "platforms": [
+   "tiktok"
+  ],
+  "links": {}
+ },
+ {
+  "name": "20261123131157_00_clix_clip2818019548_4.mp4",
+  "request_id": "55bc79a5c7ca46e7ad7d0244cca72ca1",
+  "posted_at": 1795457680,
+  "streamer": "clix",
+  "hook": "Clix street racing goes off the rails",
+  "title": "Clix Street Racing Gets Out of Hand in GTA 6",
+  "layout": "split",
+  "source": "twitch-clip",
+  "platforms": [
+   "tiktok",
+   "youtube"
+  ],
+  "links": {}
  }
 ]
