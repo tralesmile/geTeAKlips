@@ -30,5 +30,34 @@
    "youtube"
   ],
   "links": {}
+ },
+ {
+  "name": "20261122234425_04_gtatop_v2937465519_5132.mp4",
+  "request_id": "6883589af37b4a18ba78e65f781b2a81",
+  "posted_at": 1795435935,
+  "streamer": "gtatop",
+  "hook": "Lacy asks what BBL stands for",
+  "title": "Lacy Asks What BBL Stands For in GTA 6 Cutscene",
+  "layout": "split",
+  "source": "twitch-vod",
+  "platforms": [
+   "tiktok"
+  ],
+  "links": {}
+ },
+ {
+  "name": "20261123111615_02_clix_clip4264715549_5.mp4",
+  "request_id": "d21edf09e2ef476e850bf93c7eaf2899",
+  "posted_at": 1795436018,
+  "streamer": "clix",
+  "hook": "Clix never saw that coming",
+  "title": "Clix Gets Caught Off Guard in GTA 6",
+  "layout": "irl",
+  "source": "twitch-clip",
+  "platforms": [
+   "tiktok",
+   "youtube"
+  ],
+  "links": {}
  }
 ]
