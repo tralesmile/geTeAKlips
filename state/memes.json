@@ -131,5 +131,27 @@
   "mode": "relatable",
   "posted_at": 1795473879,
   "request_id": "88154797138b4eaf92dedb2298449657"
+ },
+ {
+  "format": "jokes",
+  "topic": "Novi vicevi: Perica, deda, ćale",
+  "label": "VICEVI",
+  "text": "",
+  "title": "5 viceva za danas, a peti me je ubio",
+  "items": [],
+  "slides": [],
+  "chat": [],
+  "jokes": [
+   "Taksista: Do centra je 800 dinara.\nPutnik: A do aerodroma?\nTaksista: 2000.\nPutnik: A ako ostanem ovde?\nTaksista: Onda ide čekanje, 500 na sat.",
+   "Dobio deda pametni telefon.\nDeda: Ok Google, gde su mi naočare?\nTelefon: Pogledaj u kameru.\nDeda: Pa ne vidim bez naočara!",
+   "Ćale vozi, a sin se znoji.\nSin: Ćale, uključi klimu, 38 stepeni je!\nĆale: Otvori prozor.\nSin: Ali mi vetar kvari frizuru!\nĆale: Sine, klima troši gorivo, a frizura je besplatna.",
+   "Snaja pita svekrvu:\nSnaja: Mama, kako vam se čini supa?\nSvekrva: Odlična je.\nSnaja: Stvarno?\nSvekrva: Pa jeste. Topla je.",
+   "Učiteljica: Perica, upotrebi u rečenici reč \"možda\".\nPerica: Mama kaže da ćemo možda ići na more.\nUčiteljica: A reč \"sigurno\"?\nPerica: Sigurno nećemo."
+  ],
+  "caption": "Pet svežih viceva, a ćale i klima su legenda 😂 Pošalji ovo drugaru koji se uvek smeje poslednji. Koji vic te je najviše ubio?",
+  "comment": "Koji je najjači? Piši broj od 1 do 5 👇",
+  "mode": "vicevi",
+  "posted_at": 1795474019,
+  "request_id": "5ae99cf82cab4a9ba863fda503fa77e5"
  }
 ]
