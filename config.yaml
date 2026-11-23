@@ -135,7 +135,7 @@ posting:
     tips:                          # Yugoslovenko: original Serbian memes (no clips)
       kind: memes
       platforms: [instagram]
-      times: ["13:07", "18:07", "22:07", "00:07"]   # 00:07 = bonus, only on big nights
+      times: ["13:07", "18:07", "22:07"]
     dom:                           # Dom + Clix
       platforms: [tiktok, youtube]
       mirror: {profile: default, platforms: [instagram, x]}   # also to carczarr IG + X
@@ -148,7 +148,8 @@ memes:
   handle: "@yugoslovenko"
   queries: ["Zadruga", "Pinkove zvezde", "rijaliti Pink", "Zadruga svađa"]
   hashtags: "#zadruga #rijaliti #pinkovezvezde #memes #srbija #balkan #humor #yugoslovenko"
-  # what each posting time is for: relatable = everyday Balkan life (most shared),
-  # reality = Zadruga/Pink news, bonus = only when there's a big moment tonight
-  slots: {"13:07": relatable, "18:07": reality, "22:07": reality, "00:07": bonus}
+  # what each posting time is for: relatable = everyday Balkan life, mostly family
+  # group-chat memes (best performer); vicevi = swipeable joke carousel.
+  # (reality = Zadruga/Elita memes: switched off, they didn't land)
+  slots: {"13:07": relatable, "18:07": vicevi, "22:07": relatable}
   story: true            # also put each meme in the Instagram Story

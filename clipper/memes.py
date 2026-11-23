@@ -97,26 +97,32 @@ Formati:
 - "chat": izmišljeni grupni čet sa generičkim imenima (Mama, Ćale, Baba, Drugar, Ja,
   Komšinica...), NIKAD stvarna imena; 3-6 poruka -> "chat": [{{"from": "Mama", "text": "..."}}],
   "label" = ime grupe (npr. "PORODICA")
+- "jokes": naslov + 3-5 viceva za prevlačenje -> "title", "jokes": ["vic 1", "vic 2", ...];
+  u vicu svaku repliku dijaloga stavi u novi red ("\\n"), npr. "Pita učiteljica Pericu: ...\\nPerica: ..."
 - "breaking": lažna "HITNO" vest kao šala o svakodnevnoj situaciji koja se vezuje
   za temu (npr. "HITNO: Srbija stala, Zadruga počinje za 5 minuta") -> "text"
   (očigledno šala, ne lažna vest o stvarnoj osobi)
 
 Vrati SAMO JSON:
-{{"format": "tweet|big|list|carousel|chat|breaking", "topic": "tema u 3-5 reči",
+{{"format": "tweet|big|list|carousel|chat|breaking|jokes", "topic": "tema u 3-5 reči",
   "label": "OZNAKA do 2 reči, npr. ZADRUGA",
-  "text": "...", "title": "...", "items": [], "slides": [], "chat": [],
+  "text": "...", "title": "...", "items": [], "slides": [], "chat": [], "jokes": [],
   "caption": "opis objave 1-2 rečenice + pitanje za komentare",
   "comment": "prvi komentar: kratko pitanje ili anketa (npr. 'Ko je u pravu? 🅰️ ili 🅱️')"}}"""
 
 MODES = {
-    "reality": "Napravi JEDAN originalan, stvarno smešan meme o nečemu iz ovih vesti "
-               "(izaberi temu o kojoj ljudi najviše pričaju).",
-    "relatable": "Danas NE o rijalitiju: napravi JEDAN originalan meme o svakodnevnom "
-                 "balkanskom životu sa kojim se svi poistovete (mama, ćale, baba, slava, "
-                 "plata, prevoz, komšije, škola/posao, Jugo-nostalgija). Možeš blago "
-                 "da se nadovežeš na aktuelnu temu ako se uklapa.",
-    "bonus": "Večeras se mnogo priča o jednom velikom momentu iz rijalitija (vidi vesti). "
-             "Napravi BRZ, aktuelan meme baš o tome, da budemo prvi.",
+    "relatable": "Napravi JEDAN originalan meme o svakodnevnom balkanskom životu sa kojim "
+                 "se svi poistovete: porodica (mama, ćale, baba, deda, tetke), slava, svadbe, "
+                 "komšije, plata, škola/posao, prevoz, Jugo-nostalgija. Pratiocima su "
+                 "NAJBOLJI porodični čet memeovi (format \"chat\"), pa koristi \"chat\" "
+                 "u većini slučajeva. NE pravi memeove o rijalitiju (Zadruga, Elita) ni o "
+                 "poznatim ličnostima.",
+    "vicevi": "Napravi \"jokes\" objavu: 3 do 5 kratkih, stvarno smešnih ORIGINALNIH viceva "
+              "u balkanskom duhu (Perica, Mujo i Haso, baba i deda, ćale, komšija, učiteljica, "
+              "policajac, Crnogorac koji se odmara...), svaki max 260 znakova, sa jasnom poentom "
+              "na kraju. Bez vređanja nacionalnosti, vere i seksualnog sadržaja. Plus naslov "
+              "koji tera na prevlačenje (npr. \"5 viceva za danas, treći me ubio\").",
+    "reality": "Napravi JEDAN originalan, smešan meme o nečemu iz ovih vesti.",
 }
 
 
@@ -136,6 +142,7 @@ def write_meme(cfg, news, history, mode="reality", force_format=None):
         history="\n".join(f"- {h.get('topic')}" for h in history[-20:]) or "- (nema)",
         recent_formats=", ".join(h.get("format", "?") for h in history[-3:]) or "nema",
         learn=learn)
+    force_format = force_format or ("jokes" if mode == "vicevi" else None)
     if force_format:
         prompt += f'\n\nOVAJ PUT format MORA biti "{force_format}".'
     resp = requests.post(
@@ -251,7 +258,8 @@ def render(meme, cfg, base):
                 items=[_plain(i) for i in meme.get("items") or []],
                 slides=[_plain(x) for x in meme.get("slides") or []],
                 chat=[{"from": _plain(c.get("from", "")), "text": _plain(c.get("text", ""))}
-                      for c in meme.get("chat") or [] if isinstance(c, dict)])
+                      for c in meme.get("chat") or [] if isinstance(c, dict)],
+                jokes=[_plain(j) for j in meme.get("jokes") or [] if isinstance(j, str)])
     m = cfg.get("memes", {})
     handle, name = m.get("handle", "@yugoslovenko"), m.get("name", "Yugoslovenko")
     fmt = meme.get("format", "big")
@@ -259,7 +267,25 @@ def render(meme, cfg, base):
     top, bottom, ink, accent = pal
     imgs = []
 
-    if fmt == "carousel" and len(meme["slides"]) >= 2:
+    if fmt == "jokes" and meme["jokes"]:
+        jokes = meme["jokes"][:5]
+        n = len(jokes) + 1
+        imgs.append(_big_slide(meme.get("title") or f"{len(jokes)} viceva za danas",
+                               "VICEVI", pal, handle, counter=f"1/{n}", swipe=True))
+        for i, joke in enumerate(jokes, 2):
+            img = _gradient(top, bottom)
+            d = ImageDraw.Draw(img)
+            _pill(d, f"VIC #{i - 1}", (W / 2, 170), accent, (20, 20, 20))
+            d.text((W - 90, 170), f"{i}/{n}", font=_font(FONT_BODY, 34, 700), fill=ink, anchor="rm")
+            d.rounded_rectangle([70, 270, W - 70, H - 170], 40, fill=(255, 255, 255))
+            font, lines, lh = _fit(d, joke, FONT_BODY, W - 240, H - 560, 64, 34, weight=650, spacing=1.32)
+            y = (270 + H - 170) / 2 - len(lines) * lh / 2
+            for line in lines:
+                d.text((120, y), line, font=font, fill=(20, 20, 25))
+                y += lh
+            _footer(img, handle, ink)
+            imgs.append(img)
+    elif fmt == "carousel" and len(meme["slides"]) >= 2:
         n = len(meme["slides"][:5])
         for i, text in enumerate(meme["slides"][:5]):
             imgs.append(_big_slide(text, meme.get("label") if i == 0 else "", pal, handle,
@@ -433,7 +459,7 @@ def make_and_post(profile, acct, cfg, mode=None, force_format=None):
     history = load_history()
     mode = mode or pick_mode(cfg)
     news = headlines(m.get("queries", ["Zadruga", "Pinkove zvezde", "rijaliti Pink"]),
-                     max_age_h=6 if mode == "bonus" else 36)
+                     max_age_h=6 if mode == "bonus" else 36) if mode in ("reality", "bonus") else []
     print(f"[{profile}] mode {mode}, {len(news)} headlines")
     if mode == "bonus" and not is_hot(news):
         print(f"[{profile}] no big reality moment tonight; skipping the bonus meme")
