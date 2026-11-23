@@ -256,5 +256,35 @@
    "youtube"
   ],
   "links": {}
+ },
+ {
+  "name": "20261123110146_03_lacy_v2937946695_31749.mp4",
+  "request_id": "915e8bcc434c431b876d50a47827caa3",
+  "posted_at": 1795471946,
+  "streamer": "lacy",
+  "hook": "Lacy is freaking out over his food",
+  "title": "Lacy Loses It Over Missing Food During GTA 6 Marathon",
+  "layout": "split",
+  "source": null,
+  "platforms": [
+   "tiktok",
+   "instagram",
+   "youtube"
+  ],
+  "links": {}
+ },
+ {
+  "name": "20261123202501_00_gtatop_v2937813388_430.mp4",
+  "request_id": "7c019ed2256e41248fd71fe02c6c810c",
+  "posted_at": 1795471994,
+  "streamer": "gtatop",
+  "hook": "Lacy gets the good ending in GTA 6",
+  "title": "Lacy Gets the Good Ending in GTA 6 and Loses It",
+  "layout": "split",
+  "source": "twitch-vod",
+  "platforms": [
+   "tiktok"
+  ],
+  "links": {}
  }
 ]
