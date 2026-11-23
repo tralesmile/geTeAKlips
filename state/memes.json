@@ -90,5 +90,46 @@
   "mode": "vicevi",
   "posted_at": 1795473327,
   "request_id": "04c6a39520b24eee9cc7fee6be34c9e8"
+ },
+ {
+  "format": "chat",
+  "topic": "zimnica i vraćanje tegli",
+  "label": "PORODICA",
+  "text": "",
+  "title": "",
+  "items": [],
+  "slides": [],
+  "chat": [
+   {
+    "from": "Mama",
+    "text": "Spremila sam ti ajvar, dođi po njega"
+   },
+   {
+    "from": "Ja",
+    "text": "Mama ne treba, imam još od prošle godine"
+   },
+   {
+    "from": "Mama",
+    "text": "Već sam ti spakovala 12 tegli u kesu"
+   },
+   {
+    "from": "Baba",
+    "text": "Samo vrati teglu od majoneza, ona je još iz 1987."
+   },
+   {
+    "from": "Ćale",
+    "text": "Ta tegla ima veći staž od tebe"
+   },
+   {
+    "from": "Ja",
+    "text": "Vraćam 1 teglu, nosim 12. Jedini krug koji nema kraj"
+   }
+  ],
+  "jokes": [],
+  "caption": "Tegla se uvek vraća, a ajvar ostaje zauvek 🫙😂 Označi nekoga ko ima celu policu praznih tegli kod kuće!",
+  "comment": "Koliko tegli trenutno imaš u kuhinji, a da nisu tvoje? 🫙 Piši broj!",
+  "mode": "relatable",
+  "posted_at": 1795473879,
+  "request_id": "88154797138b4eaf92dedb2298449657"
  }
 ]
