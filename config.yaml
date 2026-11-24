@@ -123,15 +123,18 @@ posting:
   window_minutes: 45
   profiles:
     default:                       # Lacy
-      platforms: [tiktok, instagram, youtube, x]
+      platforms: [tiktok, instagram, youtube]   # X dropped: ~0 views
       times: ["14:07", "17:07", "20:07", "23:07"]
     kai:                           # Kai Cenat
       platforms: [tiktok, youtube]
-      mirror: {profile: default, platforms: [instagram, x]}   # also to carczarr IG + X
-      times: ["15:07", "18:07", "21:07", "00:07"]
+      mirror: {profile: default, platforms: [instagram]}   # also to carczarr IG
+      # new account: max 3/day for the first weeks (TikTok flags new accounts that post a lot)
+      times: ["15:07", "18:07", "21:07"]
     gta:                           # GTA 6 Top Moments (many streamers)
       platforms: [tiktok]
-      times: ["13:07", "15:07", "17:07", "19:07", "21:07", "23:07"]
+      # TikTok restricted this new account for posting too much (until Nov 30);
+      # restart gently with 2/day
+      times: ["13:07", "19:07"]
     tips:                          # Yugoslovenko: original Serbian memes (no clips)
       kind: memes
       platforms: [instagram]
@@ -143,8 +146,8 @@ posting:
       times: ["13:07", "16:07", "19:07"]
     dom:                           # Dom + Clix
       platforms: [tiktok, youtube]
-      mirror: {profile: default, platforms: [instagram, x]}   # also to carczarr IG + X
-      times: ["13:07", "16:07", "19:07", "22:07"]
+      mirror: {profile: default, platforms: [instagram]}   # also to carczarr IG
+      times: ["13:07", "16:07", "19:07"]        # new account: max 3/day
 
 # Yugoslovenko meme page (profile "tips"): original memes about trending
 # reality-TV news. No TV footage is used; Claude writes the joke, we design it.

@@ -201,6 +201,40 @@ def wait_for_links(resp, platforms=3, max_wait=600):
     return text
 
 
+def platform_failures(text):
+    """Per-platform failures in an Upload-Post job result:
+    [(platform, error_code, message, restricted_until_epoch or None)]"""
+    try:
+        job = json.loads(text)
+    except ValueError:
+        return []
+    results = job.get("results")
+    items = results.items() if isinstance(results, dict) else \
+        [(r.get("platform"), r) for r in results or [] if isinstance(r, dict)]
+    out = []
+    for plat, r in items:
+        if isinstance(r, dict) and r.get("success") is False:
+            until = None
+            if r.get("restricted_until"):
+                try:
+                    from datetime import datetime
+                    until = datetime.fromisoformat(r["restricted_until"]).timestamp()
+                except ValueError:
+                    until = time.time() + 86400
+            out.append((plat or r.get("platform"), r.get("error_code") or "", r.get("error") or "", until))
+    return out
+
+
+def alert(title, message):
+    topic = os.environ.get("NTFY_TOPIC", "").strip()
+    if topic:
+        try:
+            requests.post("https://ntfy.sh/", json={"topic": topic, "title": title,
+                          "message": message, "priority": 5, "tags": ["warning"]}, timeout=20)
+        except requests.RequestException:
+            pass
+
+
 def profiles(cfg):
     """Posting accounts: {profile: {"platforms": [...], "times": [...], "streamers": [...]}}"""
     posting = cfg["posting"]
@@ -306,7 +340,11 @@ def post_one(profile, acct, cfg, assets, turns):
         run(["gh", "release", "download", QUEUE_TAG, "-p", meta_name, "-D", WORK, "--clobber"])
         meta.update(json.loads((WORK / meta_name).read_text()))
 
-    platforms = list(acct["platforms"])
+    blocked = turns.get(profile, {}).get("blocked", {})
+    platforms = [p for p in acct["platforms"] if blocked.get(p, 0) < time.time()]
+    if not platforms:
+        print(f"[{profile}] all platforms blocked for now; skipping")
+        return False
 
     def upload(plats):
         with open(WORK / name, "rb") as video:
@@ -332,6 +370,18 @@ def post_one(profile, acct, cfg, assets, turns):
         print(f"[{profile}] upload failed; clip stays in the queue for the next slot")
         return False
     final = wait_for_links(resp, len(platforms))
+    fails = platform_failures(final)
+    for plat, code, msg, until in fails:
+        print(f"[{profile}] {plat} failed: {code} {msg[:200]}")
+        if until:  # account restricted by the platform: stop trying until it ends
+            turns.setdefault(profile, {}).setdefault("blocked", {})[plat] = until
+            save_turns(turns)
+            alert(f"⚠️ {plat} blocked the '{profile}' account",
+                  f"{msg[:300]}\nThe bot pauses {plat} for this account until "
+                  f"{time.strftime('%d %b %H:%M', time.gmtime(until))} UTC.")
+    if fails and len(fails) >= len(platforms):
+        print(f"[{profile}] every platform failed; clip stays in the queue")
+        return False
     st = next((x for x in cfg["streamers"] if x["name"] == meta.get("streamer")), {})
     if st.get("notify", True):
         notify(meta, final, cfg)

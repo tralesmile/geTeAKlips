@@ -9,7 +9,7 @@ import time
 from pathlib import Path
 
 from . import analyze, edit, popular
-from .common import (WORK, ensure_queue_release, load_config, load_state,
+from .common import (STATE_FILE, WORK, ensure_queue_release, load_config, load_state,
                      queued_clip_count, run, save_state, ytdlp_base)
 
 
