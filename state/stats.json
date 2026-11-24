@@ -1,5 +1,5 @@
 {
- "updated": 1795496324,
+ "updated": 1795558645,
  "posts": [
   {
    "name": "20261122171057_00_clix_clip1749979550_32.mp4",
@@ -129,13 +129,13 @@
      "shares": 0
     },
     "tiktok": {
-     "views": 301,
+     "views": 303,
      "likes": 7,
      "comments": 1,
      "shares": 0
     }
    },
-   "views": 757,
+   "views": 759,
    "likes": 10,
    "comments": 3,
    "shares": 0
@@ -170,19 +170,19 @@
      "shares": 0
     },
     "instagram": {
-     "views": 56,
+     "views": 65,
      "likes": 0,
      "comments": 1,
      "shares": 0
     },
     "tiktok": {
-     "views": 698,
+     "views": 750,
      "likes": 4,
      "comments": 1,
      "shares": 0
     }
    },
-   "views": 754,
+   "views": 815,
    "likes": 4,
    "comments": 3,
    "shares": 0
@@ -203,7 +203,7 @@
    "links": {},
    "per_platform": {
     "youtube": {
-     "views": 1,
+     "views": 0,
      "likes": 0,
      "comments": 1,
      "shares": 0
@@ -215,7 +215,7 @@
      "shares": 0
     }
    },
-   "views": 1,
+   "views": 0,
    "likes": 0,
    "comments": 2,
    "shares": 0
@@ -262,19 +262,19 @@
    "links": {},
    "per_platform": {
     "youtube": {
-     "views": 1,
+     "views": 0,
      "likes": 0,
      "comments": 1,
      "shares": 0
     },
     "tiktok": {
-     "views": 209,
+     "views": 217,
      "likes": 7,
      "comments": 1,
      "shares": 0
     }
    },
-   "views": 210,
+   "views": 217,
    "likes": 7,
    "comments": 2,
    "shares": 0
@@ -297,7 +297,7 @@
    "links": {},
    "per_platform": {
     "youtube": {
-     "views": 24,
+     "views": 68,
      "likes": 0,
      "comments": 1,
      "shares": 0
@@ -309,20 +309,20 @@
      "shares": 0
     },
     "instagram": {
-     "views": 156,
+     "views": 239,
      "likes": 2,
      "comments": 1,
      "shares": 1
     },
     "tiktok": {
-     "views": 103,
-     "likes": 4,
+     "views": 248,
+     "likes": 6,
      "comments": 1,
      "shares": 0
     }
    },
-   "views": 283,
-   "likes": 6,
+   "views": 555,
+   "likes": 8,
    "comments": 3,
    "shares": 1
   },
@@ -433,13 +433,13 @@
      "shares": 0
     },
     "tiktok": {
-     "views": 298,
+     "views": 299,
      "likes": 11,
      "comments": 1,
      "shares": 0
     }
    },
-   "views": 298,
+   "views": 299,
    "likes": 11,
    "comments": 2,
    "shares": 0
@@ -474,20 +474,20 @@
      "shares": 0
     },
     "tiktok": {
-     "views": 89,
-     "likes": 2,
+     "views": 182,
+     "likes": 3,
      "comments": 1,
      "shares": 0
     },
     "instagram": {
-     "views": 194,
+     "views": 195,
      "likes": 0,
      "comments": 1,
      "shares": 0
     }
    },
-   "views": 283,
-   "likes": 2,
+   "views": 377,
+   "likes": 3,
    "comments": 3,
    "shares": 0
   },
@@ -572,14 +572,14 @@
      "shares": 0
     },
     "tiktok": {
-     "views": 185,
-     "likes": 1,
+     "views": 255,
+     "likes": 4,
      "comments": 1,
      "shares": 0
     }
    },
-   "views": 185,
-   "likes": 1,
+   "views": 255,
+   "likes": 4,
    "comments": 2,
    "shares": 0
   },
@@ -600,26 +600,26 @@
    "links": {},
    "per_platform": {
     "youtube": {
-     "views": 0,
+     "views": 1,
      "likes": 0,
      "comments": 1,
      "shares": 0
     },
     "tiktok": {
-     "views": 237,
-     "likes": 5,
+     "views": 679,
+     "likes": 11,
      "comments": 1,
      "shares": 0
     },
     "instagram": {
-     "views": 155,
+     "views": 160,
      "likes": 1,
      "comments": 1,
      "shares": 0
     }
    },
-   "views": 392,
-   "likes": 6,
+   "views": 840,
+   "likes": 12,
    "comments": 3,
    "shares": 0
   },
@@ -671,14 +671,433 @@
      "shares": 0
     },
     "tiktok": {
-     "views": 201,
-     "likes": 3,
+     "views": 488,
+     "likes": 8,
      "comments": 1,
      "shares": 0
     }
    },
-   "views": 201,
-   "likes": 3,
+   "views": 488,
+   "likes": 8,
+   "comments": 2,
+   "shares": 0
+  },
+  {
+   "name": "20261123191048_00_clix_clip923847244_0.mp4",
+   "request_id": "b54be026d8dd4399bd6df74939234d97",
+   "posted_at": 1795522360,
+   "streamer": "clix",
+   "hook": "Clix can't believe Rockstar did this",
+   "title": "Clix Reacts to Rockstar's Wild Detail in GTA 6",
+   "layout": "split",
+   "source": "twitch-clip",
+   "platforms": [
+    "tiktok",
+    "youtube"
+   ],
+   "links": {},
+   "per_platform": {
+    "youtube": {
+     "views": 0,
+     "likes": 0,
+     "comments": 1,
+     "shares": 0
+    },
+    "tiktok": {
+     "views": 69,
+     "likes": 2,
+     "comments": 1,
+     "shares": 0
+    }
+   },
+   "views": 69,
+   "likes": 2,
+   "comments": 2,
+   "shares": 0
+  },
+  {
+   "name": "20261123110146_04_lacy_v2937946695_31749.mp4",
+   "request_id": "0a22cc401b924a5ba54e73f0d6b3e121",
+   "posted_at": 1795525935,
+   "streamer": "lacy",
+   "hook": "Lacy learns how many birds die",
+   "title": "Lacy Finds Out How Many Birds Die in Flights | GTA 6 Stream",
+   "layout": "split",
+   "source": null,
+   "platforms": [
+    "tiktok",
+    "instagram",
+    "youtube",
+    "x"
+   ],
+   "links": {},
+   "per_platform": {
+    "youtube": {
+     "views": 0,
+     "likes": 0,
+     "comments": 1,
+     "shares": 0
+    },
+    "x": {
+     "views": 0,
+     "likes": 0,
+     "comments": 0,
+     "shares": 0
+    },
+    "instagram": {
+     "views": 174,
+     "likes": 2,
+     "comments": 1,
+     "shares": 0
+    },
+    "tiktok": {
+     "views": 698,
+     "likes": 4,
+     "comments": 1,
+     "shares": 0
+    }
+   },
+   "views": 872,
+   "likes": 6,
+   "comments": 3,
+   "shares": 0
+  },
+  {
+   "name": "20261124000754_00_kaicenat_clip57765767_0.mp4",
+   "request_id": "9d66dac0313c4f8491c3acecd2d57df4",
+   "posted_at": 1795529620,
+   "streamer": "kaicenat",
+   "hook": "Kai Cenat dragged into GTA 6 drama",
+   "title": "Kai Cenat Gets Pulled Into GTA 6 Drama",
+   "layout": "split",
+   "source": "twitch-clip",
+   "platforms": [
+    "tiktok",
+    "youtube"
+   ],
+   "links": {},
+   "per_platform": {
+    "youtube": {
+     "views": 0,
+     "likes": 0,
+     "comments": 1,
+     "shares": 0
+    },
+    "tiktok": {
+     "views": 98,
+     "likes": 1,
+     "comments": 1,
+     "shares": 0
+    }
+   },
+   "views": 98,
+   "likes": 1,
+   "comments": 2,
+   "shares": 0
+  },
+  {
+   "name": "20261124111548_00_dom_01a1f7ca-9c08-754c-a1c8-8e0ae1d416ba_0.mp4",
+   "request_id": "5d23ae9772844b05bb93693026cb91de",
+   "posted_at": 1795533142,
+   "streamer": "dom",
+   "hook": "Dom spots Bad Bunny in GTA 6",
+   "title": "Dom Spots Bad Bunny in the Strip Club | GTA 6",
+   "layout": "split",
+   "source": null,
+   "platforms": [
+    "tiktok",
+    "youtube"
+   ],
+   "links": {},
+   "per_platform": {
+    "youtube": {
+     "views": 0,
+     "likes": 0,
+     "comments": 1,
+     "shares": 0
+    },
+    "tiktok": {
+     "views": 376,
+     "likes": 1,
+     "comments": 1,
+     "shares": 1
+    }
+   },
+   "views": 376,
+   "likes": 1,
+   "comments": 2,
+   "shares": 1
+  },
+  {
+   "name": "20261123110146_05_lacy_v2937946695_31749.mp4",
+   "request_id": "2fd7830601c34bd199059bcc43285bcf",
+   "posted_at": 1795536702,
+   "streamer": "lacy",
+   "hook": "Lacy claims he's the best GTA shooter",
+   "title": "Lacy Says He's the Best Shooter in GTA 6 Stealth Mission",
+   "layout": "split",
+   "source": null,
+   "platforms": [
+    "tiktok",
+    "instagram",
+    "youtube",
+    "x"
+   ],
+   "links": {},
+   "per_platform": {
+    "youtube": {
+     "views": 0,
+     "likes": 0,
+     "comments": 1,
+     "shares": 0
+    },
+    "x": {
+     "views": 0,
+     "likes": 0,
+     "comments": 0,
+     "shares": 0
+    },
+    "instagram": {
+     "views": 30,
+     "likes": 0,
+     "comments": 1,
+     "shares": 0
+    },
+    "tiktok": {
+     "views": 603,
+     "likes": 6,
+     "comments": 1,
+     "shares": 0
+    }
+   },
+   "views": 633,
+   "likes": 6,
+   "comments": 3,
+   "shares": 0
+  },
+  {
+   "name": "20261124151053_00_kaicenat_clip3947946236_0.mp4",
+   "request_id": "0cec33dfdf1040a7a95acb89d2e41417",
+   "posted_at": 1795540286,
+   "streamer": "kaicenat",
+   "hook": "Kai Cenat crashes while searching the radio",
+   "title": "Kai Cenat Crashes Searching the Radio in GTA 6",
+   "layout": "split",
+   "source": "twitch-clip",
+   "platforms": [
+    "tiktok",
+    "youtube"
+   ],
+   "links": {},
+   "per_platform": {
+    "youtube": {
+     "views": 0,
+     "likes": 0,
+     "comments": 1,
+     "shares": 0
+    },
+    "tiktok": {
+     "views": 459,
+     "likes": 6,
+     "comments": 1,
+     "shares": 0
+    }
+   },
+   "views": 459,
+   "likes": 6,
+   "comments": 2,
+   "shares": 0
+  },
+  {
+   "name": "20261124131122_00_clix_v2938831385_555.mp4",
+   "request_id": "07f6c658a0b9415db82dcecb670d89a0",
+   "posted_at": 1795543960,
+   "streamer": "clix",
+   "hook": "Clix finds out he missed the party",
+   "title": "Clix Finds Out He Wasn't Invited to the Dallas Party | GTA 6",
+   "layout": "split",
+   "source": "twitch-vod",
+   "platforms": [
+    "tiktok",
+    "youtube"
+   ],
+   "links": {},
+   "per_platform": {
+    "youtube": {
+     "views": 0,
+     "likes": 0,
+     "comments": 1,
+     "shares": 0
+    },
+    "tiktok": {
+     "views": 206,
+     "likes": 2,
+     "comments": 1,
+     "shares": 0
+    }
+   },
+   "views": 206,
+   "likes": 2,
+   "comments": 2,
+   "shares": 0
+  },
+  {
+   "name": "20261124171110_00_lacy_clip2921346833_0.mp4",
+   "request_id": "c1b3a3debb5844b19488e45b4dfc30ae",
+   "posted_at": 1795547602,
+   "streamer": "lacy",
+   "hook": "Lacy calls GTA 6 pure ragebait",
+   "title": "Lacy Rages Over GTA 6 Grind: 'This Game Is Ragebait'",
+   "layout": "split",
+   "source": "twitch-clip",
+   "platforms": [
+    "tiktok",
+    "instagram",
+    "youtube",
+    "x"
+   ],
+   "links": {},
+   "per_platform": {
+    "youtube": {
+     "views": 0,
+     "likes": 0,
+     "comments": 1,
+     "shares": 0
+    },
+    "x": {
+     "views": 0,
+     "likes": 0,
+     "comments": 0,
+     "shares": 0
+    },
+    "instagram": {
+     "views": 159,
+     "likes": 4,
+     "comments": 1,
+     "shares": 0
+    },
+    "tiktok": {
+     "views": 227,
+     "likes": 4,
+     "comments": 0,
+     "shares": 0
+    }
+   },
+   "views": 386,
+   "likes": 8,
+   "comments": 2,
+   "shares": 0
+  },
+  {
+   "name": "20261124171303_02_kaicenat_clip2900371300_42.mp4",
+   "request_id": "05b6edb5bb414fff9cfa7122d41eb60d",
+   "posted_at": 1795551230,
+   "streamer": "kaicenat",
+   "hook": "Kai Cenat did NOT expect that",
+   "title": "Kai Cenat Reacts to the Wildest Moment in GTA 6",
+   "layout": "split",
+   "source": "twitch-clip",
+   "platforms": [
+    "tiktok",
+    "youtube"
+   ],
+   "links": {},
+   "per_platform": {
+    "youtube": {
+     "views": 0,
+     "likes": 0,
+     "comments": 1,
+     "shares": 0
+    },
+    "tiktok": {
+     "views": 511,
+     "likes": 4,
+     "comments": 0,
+     "shares": 0
+    }
+   },
+   "views": 511,
+   "likes": 4,
+   "comments": 1,
+   "shares": 0
+  },
+  {
+   "name": "20261124111548_01_dom_01a1f7ca-9c08-754c-a1c8-8e0ae1d416ba_0.mp4",
+   "request_id": "3749887cc1874038a3f598baeadfd2df",
+   "posted_at": 1795554781,
+   "streamer": "dom",
+   "hook": "Dom did NOT mean to do that",
+   "title": "Dom Accidentally Shoots Pimple the Dog | GTA 6 Fail",
+   "layout": "split",
+   "source": null,
+   "platforms": [
+    "tiktok",
+    "youtube"
+   ],
+   "links": {},
+   "per_platform": {
+    "youtube": {
+     "views": 0,
+     "likes": 0,
+     "comments": 1,
+     "shares": 0
+    },
+    "tiktok": {
+     "views": 192,
+     "likes": 7,
+     "comments": 2,
+     "shares": 0
+    }
+   },
+   "views": 192,
+   "likes": 7,
+   "comments": 3,
+   "shares": 0
+  },
+  {
+   "name": "20261124201128_00_lacy_clip1973319648_0.mp4",
+   "request_id": "4182ee080e9745b3a1dfc5763ba27f43",
+   "posted_at": 1795558396,
+   "streamer": "lacy",
+   "hook": "Lacy gets begged for meat in GTA 6",
+   "title": "Lacy Gets Hit Up By a Beggar for Meat in GTA 6",
+   "layout": "split",
+   "source": "twitch-clip",
+   "platforms": [
+    "tiktok",
+    "instagram",
+    "youtube",
+    "x"
+   ],
+   "links": {},
+   "per_platform": {
+    "youtube": {
+     "views": 0,
+     "likes": 0,
+     "comments": 1,
+     "shares": 0
+    },
+    "x": {
+     "views": 0,
+     "likes": 0,
+     "comments": 0,
+     "shares": 0
+    },
+    "instagram": {
+     "views": 1,
+     "likes": 0,
+     "comments": 1,
+     "shares": 0
+    },
+    "tiktok": {
+     "views": 2,
+     "likes": 0,
+     "comments": 0,
+     "shares": 0
+    }
+   },
+   "views": 3,
+   "likes": 0,
    "comments": 2,
    "shares": 0
   }

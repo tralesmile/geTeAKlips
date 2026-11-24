@@ -11,7 +11,7 @@
   "posted_at": 1795471716,
   "request_id": "3761d6c0df02467c81011b72f00894cd",
   "likes": 0,
-  "views": 27
+  "views": 99
  },
  {
   "format": "breaking",
@@ -28,7 +28,7 @@
   "posted_at": 1795472623,
   "request_id": "31f1cff4593242fe831494e6c9d182bc",
   "likes": 0,
-  "views": 78
+  "views": 261
  },
  {
   "format": "chat",
@@ -73,8 +73,8 @@
   "mode": "relatable",
   "posted_at": 1795472704,
   "request_id": "125e5311d02e41648b07adc1dbef2c41",
-  "likes": 0,
-  "views": 76
+  "likes": 1,
+  "views": 199
  },
  {
   "format": "jokes",
@@ -97,7 +97,7 @@
   "posted_at": 1795473327,
   "request_id": "04c6a39520b24eee9cc7fee6be34c9e8",
   "likes": 0,
-  "views": 4
+  "views": 23
  },
  {
   "format": "chat",
@@ -140,7 +140,7 @@
   "posted_at": 1795473879,
   "request_id": "88154797138b4eaf92dedb2298449657",
   "likes": 0,
-  "views": 46
+  "views": 171
  },
  {
   "format": "jokes",
@@ -164,7 +164,7 @@
   "posted_at": 1795474019,
   "request_id": "5ae99cf82cab4a9ba863fda503fa77e5",
   "likes": 0,
-  "views": 2
+  "views": 42
  },
  {
   "format": "chat",
@@ -206,8 +206,8 @@
   "mode": "relatable",
   "posted_at": 1795474077,
   "request_id": "571c553844e8409a85ddfaa942287e61",
-  "likes": 0,
-  "views": 15
+  "likes": 1,
+  "views": 124
  },
  {
   "format": "list",
@@ -227,7 +227,9 @@
   "comment": "Šta tetka iznese sa svadbe? 🅰️ kolače ili 🅱️ ceo tanjir sa stola?",
   "mode": "relatable",
   "posted_at": 1795522263,
-  "request_id": "0431dad13943443abd5abfbecd5087f2"
+  "request_id": "0431dad13943443abd5abfbecd5087f2",
+  "likes": 0,
+  "views": 40
  },
  {
   "format": "jokes",
@@ -248,7 +250,9 @@
   "comment": "Koji vic je najbolji? 1️⃣ burek, 2️⃣ inflacija, 3️⃣ komšija ili 4️⃣ taksista?",
   "mode": "vicevi",
   "posted_at": 1795540370,
-  "request_id": "d034938810aa440faf0aeaa095c7ffe8"
+  "request_id": "d034938810aa440faf0aeaa095c7ffe8",
+  "likes": 0,
+  "views": 49
  },
  {
   "format": "carousel",
@@ -270,6 +274,8 @@
   "comment": "Šta nikad ne fali u mamin gepek? 🥘 ili 🍉",
   "mode": "relatable",
   "posted_at": 1795554626,
-  "request_id": "949f602affa847bdb8d34de4b20e2106"
+  "request_id": "949f602affa847bdb8d34de4b20e2106",
+  "likes": 0,
+  "views": 51
  }
 ]
