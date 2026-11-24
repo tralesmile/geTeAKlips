@@ -44,6 +44,30 @@
    ],
    "id": "1795533054",
    "date": "2026-11-24"
+  },
+  {
+   "league": "Liga šampiona",
+   "home": "Slovan Bratislava",
+   "away": "Real Betis",
+   "kickoff": "21:00",
+   "tip": "2",
+   "tip_name": "Pobeda gosta (Betis)",
+   "confidence": 4,
+   "reasons": [
+    "Slovan: 0 bodova, 1 postignut gol i 17 primljenih u 4 kola Lige šampiona",
+    "Betis ima 3 pobede u 4 kola LŠ, 8 golova i nepobeđen je u poslednja 3 meča",
+    "Betis bez Čebaljosa, ali Slovan nema Cerepkaija, a Kamara je pod znakom pitanja"
+   ],
+   "caption": "Slovan je poslednji na tabeli Lige šampiona bez ijednog boda i sa 17 primljenih golova u 4 kola. Betis je 11. sa 9 bodova i ide po četvrtu pobedu da se vrati u top 8. Kvota na gosta je oko 1.25, ali argumenti su jasni. Igrate li i vi ovaj tip?",
+   "sources": [
+    "https://www.forebet.com/en/football-match-previews/32591-real-betis-cutting-edge-meets-slovans-resolve-in-a-pivotal-champions-league-test",
+    "https://footballwhispers.com/blog/slovan-bratislava-vs-real-betis-prediction-24-11-2026/",
+    "https://www.sportsmole.co.uk/football/slovan-bratislava/preview/slovan-bratislava-vs-betis-prediction-team-news-lineups_609622.html",
+    "https://www.sofascore.com/news/slovan-vs-real-betis-preview-form-stats-odds",
+    "https://www.svijetkladjenja.com/vesti-srbija/liga-sampiona-5-kolo-raspored-satnica-gde-gledati/"
+   ],
+   "id": "1795543880",
+   "date": "2026-11-24"
   }
  ]
 }
