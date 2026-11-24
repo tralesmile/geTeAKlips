@@ -21,6 +21,29 @@
    ],
    "id": "1795522306",
    "date": "2026-11-24"
+  },
+  {
+   "league": "Liga šampiona",
+   "home": "Manchester City",
+   "away": "Napoli",
+   "kickoff": "21:00",
+   "tip": "GG",
+   "tip_name": "Oba tima daju gol",
+   "confidence": 3,
+   "reasons": [
+    "Siti prima gol u 9 uzastopnih mečeva, a 14 golova u poslednjih 7 na Etihadu",
+    "Napoli prima gol u 7 uzastopnih gostovanja, a daje gol u 3 meča zaredom",
+    "Napoli je bez 11 igrača, ali napad (De Brujne, Mektominej, Hojlund) je u planu"
+   ],
+   "caption": "Siti nije ssačuvao mrežu u 9 uzastopnih mečeva, a Napoli prima gol u 7 uzastopnih gostovanja. Haaland će verovatno doći do šansi, ali i Napoli sa De Brujneom i Mektominejem ima kvalitet da pogodi. Zato je GG naš tip za večeras. Igrate li i vi ovaj tip?",
+   "sources": [
+    "https://sports.yahoo.com/articles/preview-manchester-city-vs-napoli-214000331.html",
+    "https://www.101greatgoals.com/match-previews/champions-league-matches/manchester-city-napoli-preview-expected-line-ups-stats-stream-where-to-watch/",
+    "https://thefootballfaithful.com/manchester-city-vs-napoli/",
+    "https://www.kurir.rs/sport/fudbal/10170086/liga-sampiona-raspored-utakmica-petog-kola"
+   ],
+   "id": "1795533054",
+   "date": "2026-11-24"
   }
  ]
 }
