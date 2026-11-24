@@ -228,5 +228,26 @@
   "mode": "relatable",
   "posted_at": 1795522263,
   "request_id": "0431dad13943443abd5abfbecd5087f2"
+ },
+ {
+  "format": "jokes",
+  "topic": "Vicevi: taksista, doktor, komšija",
+  "label": "VICEVI",
+  "text": "",
+  "title": "4 vica za danas, poslednji me uništio",
+  "items": [],
+  "slides": [],
+  "chat": [],
+  "jokes": [
+   "Doktor pita pacijenta:\nŠta jedete za doručak?\nPacijent: Burek.\nDoktor: A za ručak?\nPacijent: Burek.\nDoktor: A za večeru?\nPacijent: Pa da se ne ponavljam, burek sa sirom.",
+   "Pita sin ćaleta:\nTata, šta je inflacija?\nĆale: Sine, sećaš se kad si sa 100 dinara mogao da kupiš sladoled?\nSin: Sećam se.\nĆale: E, sad za 100 dinara možeš da kupiš samo priču kako je nekad bilo.",
+   "Zvoni komšija u 7 ujutru, u nedelju:\nKomšija: Izvini, jesi li budan?\nJa: Sad jesam.\nKomšija: Super, onda mi pozajmi bušilicu.\nJa: Pa što je ne pozajmiš od nekog ko spava?\nKomšija: Pa nema takvog, ja sam već bušio kod svih.",
+   "Putnik pita taksistu:\nKoliko košta do aerodroma?\nTaksista: 2.000 dinara.\nPutnik: A prtljag?\nTaksista: Prtljag je besplatan.\nPutnik: Onda ću ja da idem kao prtljag.\nTaksista: Nema problema, samo vi u gepek."
+  ],
+  "caption": "Vicevi bez filtera, pošalji ih drugaru koji se prepoznaje 😂 Koji ti je najjači?",
+  "comment": "Koji vic je najbolji? 1️⃣ burek, 2️⃣ inflacija, 3️⃣ komšija ili 4️⃣ taksista?",
+  "mode": "vicevi",
+  "posted_at": 1795540370,
+  "request_id": "d034938810aa440faf0aeaa095c7ffe8"
  }
 ]
