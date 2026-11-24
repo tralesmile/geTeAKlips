@@ -28,7 +28,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install pyyaml requests pillow
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg && pip install pyyaml requests pillow
       - name: Make and post a meme
         env:
           UPLOAD_POST_API_KEY: ${{ secrets.UPLOAD_POST_API_KEY }}
