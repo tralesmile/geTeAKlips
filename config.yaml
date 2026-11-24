@@ -161,6 +161,8 @@ memes:
   # (reality = Zadruga/Elita memes: switched off, they didn't land)
   slots: {"13:07": relatable, "18:07": vicevi, "22:07": relatable}
   story: true            # also put each meme in the Instagram Story
+  reels: true            # post memes as short Reels (chat reveal / zoom / joke by joke)
+  vicevi_days: [2, 6]    # vicevi carousel only on Wednesday and Sunday (Mon=0)
 
 # Football tips page (Instagram of Upload-Post profile "gta"): 3 tips a day from
 # today's real fixtures (Claude web search), short analysis, yesterday's record.

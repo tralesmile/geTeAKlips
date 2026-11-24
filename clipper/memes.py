@@ -310,26 +310,32 @@ def render(meme, cfg, base):
         d.text((160, 58), (meme.get("label") or "Grupa").title()[:26],
                font=_font(FONT_BODY, 44, 700), fill=(233, 237, 239))
         d.text((160, 112), "online", font=_font(FONT_BODY, 30, 500), fill=(134, 150, 160))
-        y = 230
-        body = _font(FONT_BODY, 40, 600)
-        for msg in meme["chat"][:6]:
+        d.text((W - 50, 87), handle, font=_font(FONT_BODY, 30, 600), fill=(134, 150, 160), anchor="rm")
+        msgs = meme["chat"][:6]
+        for size in (46, 42, 38, 34):  # biggest text that fits the screen
+            body = _font(FONT_BODY, size, 600)
+            lh, nh = int(size * 1.26), int(size * 0.74) + 20
+            heights = [60 + len(_wrap(d, m_["text"], body, 720)) * lh +
+                       (0 if m_["from"].lower() in ("ja", "me", "mi") else nh) for m_ in msgs]
+            if 210 + sum(heights) + 24 * len(msgs) <= H - 40:
+                break
+        y = 210
+        for msg, h in zip(msgs, heights):
             mine = msg["from"].lower() in ("ja", "me", "mi")
-            lines = _wrap(d, msg["text"], body, 640)
-            h = 60 + len(lines) * 52 + (0 if mine else 44)
-            x0 = W - 80 - 700 if mine else 80
+            lines = _wrap(d, msg["text"], body, 720)
+            if y + h > H - 30:
+                break
+            x0 = W - 60 - 800 if mine else 60
             fill = (0, 92, 75) if mine else (32, 44, 51)
-            d.rounded_rectangle([x0, y, x0 + 700, y + h], 28, fill=fill)
+            d.rounded_rectangle([x0, y, x0 + 800, y + h], 28, fill=fill)
             ty = y + 26
             if not mine:
-                d.text((x0 + 30, ty), msg["from"], font=_font(FONT_BODY, 32, 800), fill=accent)
-                ty += 44
+                d.text((x0 + 30, ty), msg["from"], font=_font(FONT_BODY, int(size * 0.74), 800), fill=accent)
+                ty += nh
             for line in lines:
                 d.text((x0 + 30, ty), line, font=body, fill=(233, 237, 239))
-                ty += 52
-            y += h + 26
-            if y > H - 200:
-                break
-        _footer(img, handle, (134, 150, 160))
+                ty += lh
+            y += h + 24
         imgs.append(img)
     elif fmt == "breaking":
         img = Image.new("RGB", (W, H), (12, 12, 16))
@@ -431,8 +437,11 @@ def pick_mode(cfg):
     for t, mode in slots.items():
         h = int(t.split(":")[0])
         if hour == h or (h == 0 and hour == 0):
+            days = cfg.get("memes", {}).get("vicevi_days")
+            if mode == "vicevi" and days is not None and datetime.now(tz).weekday() not in days:
+                return "relatable"
             return mode
-    return "reality"
+    return "relatable"
 
 
 def is_hot(news):
@@ -479,7 +488,18 @@ def make_and_post(profile, acct, cfg, mode=None, force_format=None):
     photos = render(meme, cfg, str(WORK / f"meme_{int(time.time())}"))
     caption = f"{meme.get('caption', '')}\n\n{m.get('hashtags', '')}".strip()
     user = acct.get("upload_user", profile)
-    r = _upload(user, acct["platforms"], photos, caption, meme.get("comment", "Šta mislite? 👇"))
+    comment = meme.get("comment", "Šta mislite? 👇")
+    r = None
+    if m.get("reels", True):  # Reels reach non-followers far more than photo posts
+        try:
+            reel = make_reel(meme, cfg, str(WORK / f"reel_{int(time.time())}"))
+            r = upload_reel(user, acct["platforms"], reel, caption, comment)
+            meme["as_reel"] = r.status_code < 300
+        except Exception as e:
+            print(f"[{profile}] reel failed, posting the image instead: {e}")
+            r = None
+    if r is None or r.status_code >= 300:
+        r = _upload(user, acct["platforms"], photos, caption, comment)
     if r.status_code >= 300:
         return False
     try:
@@ -496,6 +516,99 @@ def make_and_post(profile, acct, cfg, mode=None, force_format=None):
     HISTORY.parent.mkdir(parents=True, exist_ok=True)
     HISTORY.write_text(json.dumps(history[-200:], ensure_ascii=False, indent=1))
     return True
+
+
+# ── reels ──────────────────────────────────────────────────────────────
+
+def _sh(cmd):
+    import subprocess
+    res = subprocess.run([str(c) for c in cmd], capture_output=True, text=True)
+    if res.returncode:
+        raise RuntimeError(res.stderr[-800:])
+
+
+def _pop(path):
+    """Soft 'message pop' sound (generated, so no music rights involved)."""
+    _sh(["ffmpeg", "-y", "-v", "error", "-f", "lavfi", "-i",
+         "sine=frequency=1320:duration=0.09", "-af",
+         "afade=t=out:st=0.02:d=0.07,volume=0.35", "-ar", "44100", path])
+    return path
+
+
+def make_reel(meme, cfg, base):
+    """Turn a meme into a 9:16 Reel. Chats reveal message by message with a pop;
+    joke posts show one joke at a time; other memes get a slow zoom.
+    Returns the mp4 path."""
+    stages = []  # (image path, seconds, pop at start?)
+    fmt = meme.get("format")
+    if fmt == "chat" and meme.get("chat"):
+        msgs = [c for c in meme["chat"] if isinstance(c, dict)][:6]
+        seed = random.randint(0, 10 ** 6)
+        for k in range(1, len(msgs) + 1):
+            random.seed(seed)  # same colours in every frame (no flicker)
+            img = render(dict(meme, chat=msgs[:k]), cfg, f"{base}_c{k}")[0]
+            words = len(_plain(msgs[k - 1].get("text", "")).split())
+            secs = max(1.4, min(3.2, 0.9 + words * 0.25))
+            stages.append((story_version(img, img + "_v.jpg"), secs, True))
+        last = stages[-1]
+        stages[-1] = (last[0], last[1] + 2.2, True)
+    else:
+        imgs = render(meme, cfg, base)
+        jokes = meme.get("jokes") or meme.get("slides") or []
+        for i, img in enumerate(imgs):
+            if len(imgs) > 1:
+                text = jokes[i - 1] if (fmt == "jokes" and i > 0 and i - 1 < len(jokes)) else \
+                    (jokes[i] if i < len(jokes) else "")
+                secs = 2.5 if i == 0 else max(3.0, min(9.0, 1.5 + len(text) / 16))
+            else:
+                secs = 7.5
+            stages.append((story_version(img, img + "_v.jpg"), secs, len(imgs) > 1))
+    pop = _pop(f"{base}_pop.wav")
+    total = sum(s for _, s, _ in stages)
+    inputs, vf = [], []
+    for i, (img, secs, _) in enumerate(stages):
+        inputs += ["-loop", "1", "-t", f"{secs:.2f}", "-i", img]
+        zoom = (f"zoompan=z='min(1+0.0009*on,1.07)':d=1:x='iw/2-iw/zoom/2':y='ih/2-ih/zoom/2':"
+                f"s=1080x1920:fps=30" if len(stages) == 1 else "fps=30,scale=1080:1920")
+        vf.append(f"[{i}:v]{zoom},setsar=1[v{i}]")
+    n = len(stages)
+    graph = ";".join(vf) + ";" + "".join(f"[v{i}]" for i in range(n)) + \
+        f"concat=n={n}:v=1:a=0[v]"
+    # audio: silence + a pop at every reveal
+    inputs += ["-f", "lavfi", "-t", f"{total:.2f}", "-i", "anullsrc=r=44100:cl=mono"]
+    t, pops = 0.0, []
+    for _, secs, has_pop in stages:
+        if has_pop:
+            pops.append(int(t * 1000))
+        t += secs
+    a_parts = [f"[{n}:a]anull[base]"]
+    for j, ms in enumerate(pops):
+        inputs += ["-i", pop]
+        a_parts.append(f"[{n + 1 + j}:a]adelay={ms}|{ms}[p{j}]")
+    mix = "[base]" + "".join(f"[p{j}]" for j in range(len(pops)))
+    a_parts.append(f"{mix}amix=inputs={len(pops) + 1}:normalize=0[a]")
+    graph += ";" + ";".join(a_parts)
+    out = f"{base}_reel.mp4"
+    _sh(["ffmpeg", "-y", "-v", "error", *inputs, "-filter_complex", graph, "-map", "[v]",
+         "-map", "[a]", "-c:v", "libx264", "-preset", "medium", "-crf", "20", "-pix_fmt",
+         "yuv420p", "-c:a", "aac", "-b:a", "128k", "-t", f"{total:.2f}", "-movflags",
+         "+faststart", out])
+    return out
+
+
+def upload_reel(user, platforms, video, caption, comment):
+    with open(video, "rb") as f:
+        r = requests.post(
+            "https://api.upload-post.com/api/upload",
+            headers={"Authorization": f"Apikey {os.environ['UPLOAD_POST_API_KEY']}",
+                     "Idempotency-Key": str(uuid.uuid4())},
+            data=[("user", user), ("title", caption[:2200]), ("instagram_title", caption[:2200]),
+                  ("media_type", "REELS"), ("share_to_feed", "true"),
+                  ("first_comment", comment), ("thumb_offset", "1500")] +
+                 [("platform[]", p) for p in platforms],
+            files={"video": (os.path.basename(video), f, "video/mp4")}, timeout=600)
+    print(f"[{user}] reel:", r.status_code, r.text[:400])
+    return r
 
 
 def main():
