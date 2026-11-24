@@ -9,7 +9,9 @@
   "caption": "Kad radiš ceo mesec a para nigde, svi smo mi malo Desingerica 😅 Samo su nam nule drugačije. Ti do kog u mesecu izdržiš s platom? 👇",
   "comment": "Plata nestaje do: 🅰️ 10. u mesecu 🅱️ 15. u mesecu 🅲 Ne stigne ni da legne 💸",
   "posted_at": 1795471716,
-  "request_id": "3761d6c0df02467c81011b72f00894cd"
+  "request_id": "3761d6c0df02467c81011b72f00894cd",
+  "likes": 0,
+  "views": 27
  },
  {
   "format": "breaking",
@@ -24,7 +26,9 @@
   "comment": "Ko ulazi u Elitu sutra? 🅰️ Neko poznat ili 🅱️ Neko ko je 'čuo za nekog'?",
   "mode": "reality",
   "posted_at": 1795472623,
-  "request_id": "31f1cff4593242fe831494e6c9d182bc"
+  "request_id": "31f1cff4593242fe831494e6c9d182bc",
+  "likes": 0,
+  "views": 78
  },
  {
   "format": "chat",
@@ -68,7 +72,9 @@
   "comment": "Koliko ljudi je došlo na vašu slavu? 🅰️ do 20 ili 🅱️ ko ih broji",
   "mode": "relatable",
   "posted_at": 1795472704,
-  "request_id": "125e5311d02e41648b07adc1dbef2c41"
+  "request_id": "125e5311d02e41648b07adc1dbef2c41",
+  "likes": 0,
+  "views": 76
  },
  {
   "format": "jokes",
@@ -89,7 +95,9 @@
   "comment": "Koji vic vas je najviše pogodio? 1️⃣, 2️⃣, 3️⃣ ili 4️⃣",
   "mode": "vicevi",
   "posted_at": 1795473327,
-  "request_id": "04c6a39520b24eee9cc7fee6be34c9e8"
+  "request_id": "04c6a39520b24eee9cc7fee6be34c9e8",
+  "likes": 0,
+  "views": 4
  },
  {
   "format": "chat",
@@ -130,7 +138,9 @@
   "comment": "Koliko tegli trenutno imaš u kuhinji, a da nisu tvoje? 🫙 Piši broj!",
   "mode": "relatable",
   "posted_at": 1795473879,
-  "request_id": "88154797138b4eaf92dedb2298449657"
+  "request_id": "88154797138b4eaf92dedb2298449657",
+  "likes": 0,
+  "views": 46
  },
  {
   "format": "jokes",
@@ -152,7 +162,9 @@
   "comment": "Koji je najjači? Piši broj od 1 do 5 👇",
   "mode": "vicevi",
   "posted_at": 1795474019,
-  "request_id": "5ae99cf82cab4a9ba863fda503fa77e5"
+  "request_id": "5ae99cf82cab4a9ba863fda503fa77e5",
+  "likes": 0,
+  "views": 2
  },
  {
   "format": "chat",
@@ -193,6 +205,8 @@
   "comment": "Za koliko dana plata nestane kod vas? 🅰️ 3 dana ili 🅱️ Do kraja nedelje",
   "mode": "relatable",
   "posted_at": 1795474077,
-  "request_id": "571c553844e8409a85ddfaa942287e61"
+  "request_id": "571c553844e8409a85ddfaa942287e61",
+  "likes": 0,
+  "views": 15
  }
 ]

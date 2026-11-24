@@ -1,5 +1,5 @@
 {
- "updated": 1795396092,
+ "updated": 1795496324,
  "posts": [
   {
    "name": "20261122171057_00_clix_clip1749979550_32.mp4",
@@ -19,7 +19,7 @@
    "links": {},
    "per_platform": {
     "youtube": {
-     "views": 1,
+     "views": 0,
      "likes": 0,
      "comments": 1,
      "shares": 0
@@ -31,19 +31,19 @@
      "shares": 0
     },
     "tiktok": {
-     "views": 1,
+     "views": 2,
      "likes": 0,
      "comments": 1,
      "shares": 0
     },
     "instagram": {
-     "views": 170,
+     "views": 176,
      "likes": 0,
      "comments": 1,
      "shares": 0
     }
    },
-   "views": 173,
+   "views": 179,
    "likes": 0,
    "comments": 3,
    "shares": 0
@@ -78,6 +78,607 @@
    },
    "views": 0,
    "likes": 0,
+   "comments": 2,
+   "shares": 0
+  },
+  {
+   "name": "20261122234425_04_gtatop_v2937465519_5132.mp4",
+   "request_id": "6883589af37b4a18ba78e65f781b2a81",
+   "posted_at": 1795435935,
+   "streamer": "gtatop",
+   "hook": "Lacy asks what BBL stands for",
+   "title": "Lacy Asks What BBL Stands For in GTA 6 Cutscene",
+   "layout": "split",
+   "source": "twitch-vod",
+   "platforms": [
+    "tiktok"
+   ],
+   "links": {},
+   "per_platform": {
+    "tiktok": {
+     "views": 0,
+     "likes": 0,
+     "comments": 1,
+     "shares": 0
+    }
+   },
+   "views": 0,
+   "likes": 0,
+   "comments": 1,
+   "shares": 0
+  },
+  {
+   "name": "20261123111615_02_clix_clip4264715549_5.mp4",
+   "request_id": "d21edf09e2ef476e850bf93c7eaf2899",
+   "posted_at": 1795436018,
+   "streamer": "clix",
+   "hook": "Clix never saw that coming",
+   "title": "Clix Gets Caught Off Guard in GTA 6",
+   "layout": "irl",
+   "source": "twitch-clip",
+   "platforms": [
+    "tiktok",
+    "youtube"
+   ],
+   "links": {},
+   "per_platform": {
+    "youtube": {
+     "views": 456,
+     "likes": 3,
+     "comments": 2,
+     "shares": 0
+    },
+    "tiktok": {
+     "views": 301,
+     "likes": 7,
+     "comments": 1,
+     "shares": 0
+    }
+   },
+   "views": 757,
+   "likes": 10,
+   "comments": 3,
+   "shares": 0
+  },
+  {
+   "name": "20261123110146_00_lacy_v2937946695_31749.mp4",
+   "request_id": "43ee73e915de490a911870264cc08966",
+   "posted_at": 1795439586,
+   "streamer": "lacy",
+   "hook": "Lacy crashes the plane on camera",
+   "title": "Lacy Crashes His Plane Right After Saying 'Good Clip' | GTA 6",
+   "layout": "split",
+   "source": null,
+   "platforms": [
+    "tiktok",
+    "instagram",
+    "youtube",
+    "x"
+   ],
+   "links": {},
+   "per_platform": {
+    "youtube": {
+     "views": 0,
+     "likes": 0,
+     "comments": 1,
+     "shares": 0
+    },
+    "x": {
+     "views": 0,
+     "likes": 0,
+     "comments": 0,
+     "shares": 0
+    },
+    "instagram": {
+     "views": 56,
+     "likes": 0,
+     "comments": 1,
+     "shares": 0
+    },
+    "tiktok": {
+     "views": 698,
+     "likes": 4,
+     "comments": 1,
+     "shares": 0
+    }
+   },
+   "views": 754,
+   "likes": 4,
+   "comments": 3,
+   "shares": 0
+  },
+  {
+   "name": "20261123121129_00_kaicenat_clip3591111902_1.mp4",
+   "request_id": "d1d74025c2164205bb3ce1c011f19a0e",
+   "posted_at": 1795443172,
+   "streamer": "kaicenat",
+   "hook": "Kai Cenat did NOT expect this",
+   "title": "Kai Cenat's Wildest Reaction While Playing GTA 6",
+   "layout": "split",
+   "source": "twitch-clip",
+   "platforms": [
+    "tiktok",
+    "youtube"
+   ],
+   "links": {},
+   "per_platform": {
+    "youtube": {
+     "views": 1,
+     "likes": 0,
+     "comments": 1,
+     "shares": 0
+    },
+    "tiktok": {
+     "views": 0,
+     "likes": 0,
+     "comments": 1,
+     "shares": 0
+    }
+   },
+   "views": 1,
+   "likes": 0,
+   "comments": 2,
+   "shares": 0
+  },
+  {
+   "name": "20261123121313_00_gtatop_v2937813388_18.mp4",
+   "request_id": "750014c59398475c8dcdd7001baedd69",
+   "posted_at": 1795443283,
+   "streamer": "gtatop",
+   "hook": "Lacy hits the biggest W in GTA 6",
+   "title": "Lacy Gets the Ultimate W in GTA 6 Story Mission",
+   "layout": "split",
+   "source": "twitch-vod",
+   "platforms": [
+    "tiktok"
+   ],
+   "links": {},
+   "per_platform": {
+    "tiktok": {
+     "views": 0,
+     "likes": 0,
+     "comments": 1,
+     "shares": 0
+    }
+   },
+   "views": 0,
+   "likes": 0,
+   "comments": 1,
+   "shares": 0
+  },
+  {
+   "name": "20261122230907_00_dom_01a1fa65-9620-775a-8dc0-b3e82aa77f6c_14017.mp4",
+   "request_id": "92e52d6dde4c4dae8deedc801f826e83",
+   "posted_at": 1795446738,
+   "streamer": "dom",
+   "hook": "Dom almost lands the double backflip",
+   "title": "Dom Almost Lands the Impossible Backflip | GTA 6",
+   "layout": "split",
+   "source": null,
+   "platforms": [
+    "tiktok",
+    "youtube"
+   ],
+   "links": {},
+   "per_platform": {
+    "youtube": {
+     "views": 1,
+     "likes": 0,
+     "comments": 1,
+     "shares": 0
+    },
+    "tiktok": {
+     "views": 209,
+     "likes": 7,
+     "comments": 1,
+     "shares": 0
+    }
+   },
+   "views": 210,
+   "likes": 7,
+   "comments": 2,
+   "shares": 0
+  },
+  {
+   "name": "20261123110146_01_lacy_v2937946695_31749.mp4",
+   "request_id": "1cc3d662882b4d38bbfd7e64346ecb8c",
+   "posted_at": 1795450361,
+   "streamer": "lacy",
+   "hook": "Lacy spots a GTA 4 legend in GTA 6",
+   "title": "Lacy Recognizes Nico From GTA 4 in GTA 6 | Reaction",
+   "layout": "split",
+   "source": null,
+   "platforms": [
+    "tiktok",
+    "instagram",
+    "youtube",
+    "x"
+   ],
+   "links": {},
+   "per_platform": {
+    "youtube": {
+     "views": 24,
+     "likes": 0,
+     "comments": 1,
+     "shares": 0
+    },
+    "x": {
+     "views": 0,
+     "likes": 0,
+     "comments": 0,
+     "shares": 0
+    },
+    "instagram": {
+     "views": 156,
+     "likes": 2,
+     "comments": 1,
+     "shares": 1
+    },
+    "tiktok": {
+     "views": 103,
+     "likes": 4,
+     "comments": 1,
+     "shares": 0
+    }
+   },
+   "views": 283,
+   "likes": 6,
+   "comments": 3,
+   "shares": 1
+  },
+  {
+   "name": "20261123151419_00_gtatop_v2933798318_3136.mp4",
+   "request_id": "f2ad4bd2d9f3428abc5d466464e139a2",
+   "posted_at": 1795450445,
+   "streamer": "gtatop",
+   "hook": "Stable Ronaldo cannot believe this GTA 6 ad",
+   "title": "Stable Ronaldo's Priceless Reaction to This GTA 6 Moment",
+   "layout": "split",
+   "source": "twitch-vod",
+   "platforms": [
+    "tiktok"
+   ],
+   "links": {},
+   "per_platform": {
+    "tiktok": {
+     "views": 0,
+     "likes": 0,
+     "comments": 1,
+     "shares": 0
+    }
+   },
+   "views": 0,
+   "likes": 0,
+   "comments": 1,
+   "shares": 0
+  },
+  {
+   "name": "20261123151208_00_kaicenat_clip2209093167_0.mp4",
+   "request_id": "86fb770d327c44718b615e72a7fba40a",
+   "posted_at": 1795453942,
+   "streamer": "kaicenat",
+   "hook": "Kai Cenat could not believe this",
+   "title": "Kai Cenat's Priceless Damn Bruh Reaction in GTA 6",
+   "layout": "split",
+   "source": "twitch-clip",
+   "platforms": [
+    "tiktok",
+    "youtube"
+   ],
+   "links": {},
+   "per_platform": {
+    "youtube": {
+     "views": 0,
+     "likes": 0,
+     "comments": 1,
+     "shares": 0
+    },
+    "tiktok": {
+     "views": 0,
+     "likes": 0,
+     "comments": 1,
+     "shares": 0
+    }
+   },
+   "views": 0,
+   "likes": 0,
+   "comments": 2,
+   "shares": 0
+  },
+  {
+   "name": "20261123171523_00_gtatop_clip2392892739_2.mp4",
+   "request_id": "9cf6fa11db3c4d3f838df150dfad75b4",
+   "posted_at": 1795457596,
+   "streamer": "gtatop",
+   "hook": "Kai Cenat was NOT ready for this",
+   "title": "Kai Cenat Gets Caught Off Guard in GTA 6 Gone Wild Moment",
+   "layout": "split",
+   "source": "twitch-clip",
+   "platforms": [
+    "tiktok"
+   ],
+   "links": {},
+   "per_platform": {
+    "tiktok": {
+     "views": 0,
+     "likes": 0,
+     "comments": 0,
+     "shares": 0
+    }
+   },
+   "views": 0,
+   "likes": 0,
+   "comments": 0,
+   "shares": 0
+  },
+  {
+   "name": "20261123131157_00_clix_clip2818019548_4.mp4",
+   "request_id": "55bc79a5c7ca46e7ad7d0244cca72ca1",
+   "posted_at": 1795457680,
+   "streamer": "clix",
+   "hook": "Clix street racing goes off the rails",
+   "title": "Clix Street Racing Gets Out of Hand in GTA 6",
+   "layout": "split",
+   "source": "twitch-clip",
+   "platforms": [
+    "tiktok",
+    "youtube"
+   ],
+   "links": {},
+   "per_platform": {
+    "youtube": {
+     "views": 0,
+     "likes": 0,
+     "comments": 1,
+     "shares": 0
+    },
+    "tiktok": {
+     "views": 298,
+     "likes": 11,
+     "comments": 1,
+     "shares": 0
+    }
+   },
+   "views": 298,
+   "likes": 11,
+   "comments": 2,
+   "shares": 0
+  },
+  {
+   "name": "20261123110146_02_lacy_v2937946695_31749.mp4",
+   "request_id": "796a10dda1b84eaea7f599ae600b4fb1",
+   "posted_at": 1795461113,
+   "streamer": "lacy",
+   "hook": "Lacy did NOT mean to do that",
+   "title": "Lacy Accidentally Does the Unthinkable in GTA 6 | Bug",
+   "layout": "split",
+   "source": null,
+   "platforms": [
+    "tiktok",
+    "instagram",
+    "youtube",
+    "x"
+   ],
+   "links": {},
+   "per_platform": {
+    "youtube": {
+     "views": 0,
+     "likes": 0,
+     "comments": 1,
+     "shares": 0
+    },
+    "x": {
+     "views": 0,
+     "likes": 0,
+     "comments": 0,
+     "shares": 0
+    },
+    "tiktok": {
+     "views": 89,
+     "likes": 2,
+     "comments": 1,
+     "shares": 0
+    },
+    "instagram": {
+     "views": 194,
+     "likes": 0,
+     "comments": 1,
+     "shares": 0
+    }
+   },
+   "views": 283,
+   "likes": 2,
+   "comments": 3,
+   "shares": 0
+  },
+  {
+   "name": "20261123191243_00_kaicenat_clip4270603003_0.mp4",
+   "request_id": "c021139f543744ddae809ac76186c926",
+   "posted_at": 1795464649,
+   "streamer": "kaicenat",
+   "hook": "Kai Cenat can't believe what he just saw",
+   "title": "Kai Cenat Can't Believe What He Just Saw in GTA 6",
+   "layout": "split",
+   "source": "twitch-clip",
+   "platforms": [
+    "tiktok",
+    "youtube"
+   ],
+   "links": {},
+   "per_platform": {
+    "youtube": {
+     "views": 0,
+     "likes": 0,
+     "comments": 1,
+     "shares": 0
+    },
+    "tiktok": {
+     "views": 0,
+     "likes": 0,
+     "comments": 1,
+     "shares": 0
+    }
+   },
+   "views": 0,
+   "likes": 0,
+   "comments": 2,
+   "shares": 0
+  },
+  {
+   "name": "20261123191429_00_gtatop_v2936874294_2011.mp4",
+   "request_id": "a9f37929da184153b1b737d0e7ef46a8",
+   "posted_at": 1795464729,
+   "streamer": "gtatop",
+   "hook": "YourRAGE screams for help in GTA 6",
+   "title": "YourRAGE Screams for Help in GTA 6 and Chat Loses It",
+   "layout": "split",
+   "source": "twitch-vod",
+   "platforms": [
+    "tiktok"
+   ],
+   "links": {},
+   "per_platform": {
+    "tiktok": {
+     "views": 0,
+     "likes": 0,
+     "comments": 0,
+     "shares": 0
+    }
+   },
+   "views": 0,
+   "likes": 0,
+   "comments": 0,
+   "shares": 0
+  },
+  {
+   "name": "20261122230907_01_dom_01a1fa65-9620-775a-8dc0-b3e82aa77f6c_14017.mp4",
+   "request_id": "4a5dc29ce3de4cc593c8a27b47b39f91",
+   "posted_at": 1795468272,
+   "streamer": "dom",
+   "hook": "Dom says she runs like a demogorgon",
+   "title": "Dom Gets Chased by a Demon Runner in GTA 6",
+   "layout": "split",
+   "source": null,
+   "platforms": [
+    "tiktok",
+    "youtube"
+   ],
+   "links": {},
+   "per_platform": {
+    "youtube": {
+     "views": 0,
+     "likes": 0,
+     "comments": 1,
+     "shares": 0
+    },
+    "tiktok": {
+     "views": 185,
+     "likes": 1,
+     "comments": 1,
+     "shares": 0
+    }
+   },
+   "views": 185,
+   "likes": 1,
+   "comments": 2,
+   "shares": 0
+  },
+  {
+   "name": "20261123110146_03_lacy_v2937946695_31749.mp4",
+   "request_id": "915e8bcc434c431b876d50a47827caa3",
+   "posted_at": 1795471946,
+   "streamer": "lacy",
+   "hook": "Lacy is freaking out over his food",
+   "title": "Lacy Loses It Over Missing Food During GTA 6 Marathon",
+   "layout": "split",
+   "source": null,
+   "platforms": [
+    "tiktok",
+    "instagram",
+    "youtube"
+   ],
+   "links": {},
+   "per_platform": {
+    "youtube": {
+     "views": 0,
+     "likes": 0,
+     "comments": 1,
+     "shares": 0
+    },
+    "tiktok": {
+     "views": 237,
+     "likes": 5,
+     "comments": 1,
+     "shares": 0
+    },
+    "instagram": {
+     "views": 155,
+     "likes": 1,
+     "comments": 1,
+     "shares": 0
+    }
+   },
+   "views": 392,
+   "likes": 6,
+   "comments": 3,
+   "shares": 0
+  },
+  {
+   "name": "20261123202501_00_gtatop_v2937813388_430.mp4",
+   "request_id": "7c019ed2256e41248fd71fe02c6c810c",
+   "posted_at": 1795471994,
+   "streamer": "gtatop",
+   "hook": "Lacy gets the good ending in GTA 6",
+   "title": "Lacy Gets the Good Ending in GTA 6 and Loses It",
+   "layout": "split",
+   "source": "twitch-vod",
+   "platforms": [
+    "tiktok"
+   ],
+   "links": {},
+   "per_platform": {
+    "tiktok": {
+     "views": 0,
+     "likes": 0,
+     "comments": 0,
+     "shares": 0
+    }
+   },
+   "views": 0,
+   "likes": 0,
+   "comments": 0,
+   "shares": 0
+  },
+  {
+   "name": "20261123202330_02_kaicenat_clip692784165_0.mp4",
+   "request_id": "2a2aaaa6e114429683c7afcf9034200b",
+   "posted_at": 1795475474,
+   "streamer": "kaicenat",
+   "hook": "Kai meets female CaseOh in GTA 6",
+   "title": "Kai Cenat Meets Female CaseOh in GTA 6 - Instant Reaction",
+   "layout": "split",
+   "source": "twitch-clip",
+   "platforms": [
+    "tiktok",
+    "youtube"
+   ],
+   "links": {},
+   "per_platform": {
+    "youtube": {
+     "views": 0,
+     "likes": 0,
+     "comments": 1,
+     "shares": 0
+    },
+    "tiktok": {
+     "views": 201,
+     "likes": 3,
+     "comments": 1,
+     "shares": 0
+    }
+   },
+   "views": 201,
+   "likes": 3,
    "comments": 2,
    "shares": 0
   }
