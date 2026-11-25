@@ -28,6 +28,22 @@ def clip_age_hours(name):
     return (datetime.now(timezone.utc) - made).total_seconds() / 3600
 
 
+def drop_already_posted(assets):
+    """Clips already in posts.json whose queue delete failed (e.g. GitHub 500):
+    remove them instead of posting them again."""
+    try:
+        posted = {p.get("name") for p in json.loads(POSTS_LOG.read_text())}
+    except (OSError, ValueError):
+        return assets
+    gone = {a["name"] for a in assets if a["name"].endswith(".mp4") and a["name"] in posted}
+    gone |= {n[:-4] + ".json" for n in gone}
+    for a in assets:
+        if a["name"] in gone:
+            print(f"removing already-posted leftover {a['name']}")
+            run(["gh", "release", "delete-asset", QUEUE_TAG, a["name"], "-y"], check=False)
+    return [a for a in assets if a["name"] not in gone]
+
+
 def drop_stale(assets, cfg):
     """Delete queued clips older than max_clip_age_hours (fresh moments win)."""
     limit = cfg.get("max_clip_age_hours", 36)
@@ -403,7 +419,8 @@ def post_one(profile, acct, cfg, assets, turns):
     mirror(name, meta, cfg, acct.get("mirror"))
     for n in (name, meta_name):
         if n in names:
-            run(["gh", "release", "delete-asset", QUEUE_TAG, n, "-y"])
+            if run(["gh", "release", "delete-asset", QUEUE_TAG, n, "-y"], check=False):
+                print(f"[{profile}] could not delete {n}; next run removes it")
     print(f"[{profile}] posted {name}")
     return True
 
@@ -413,7 +430,7 @@ def main():
     force = os.environ.get("FORCE_POST") == "1"
     only = os.environ.get("POST_PROFILE", "").strip()
     turns = load_turns()
-    assets = drop_stale(queue_assets(), cfg)
+    assets = drop_stale(drop_already_posted(queue_assets()), cfg)
     failed = False
     for profile, acct in profiles(cfg).items():
         if only and profile != only:
@@ -431,7 +448,7 @@ def main():
             continue
         try:
             if post_one(profile, acct, cfg, assets, turns):
-                assets = queue_assets()
+                assets = drop_already_posted(queue_assets())
         except Exception as e:  # one account's problem shouldn't block the others
             print(f"[{profile}] error: {e}", file=sys.stderr)
             failed = True
