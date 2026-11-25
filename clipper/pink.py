@@ -11,6 +11,7 @@ Never uses Pinkove Zvezdice (the children's show).
 import json
 import os
 import re
+import subprocess
 import sys
 import time
 import urllib.parse
@@ -108,25 +109,26 @@ def moments(video, done, max_age_days):
 
 
 PROMPT = """Ti praviš Reels za srpsku meme stranicu {handle} (porodične fore, vicevi, \
-smešni momenti sa TV-a). Ovo je transkript isečka iz emisije "Pinkove zvezde" \
-(video: "{title}"). Vremena su u sekundama od početka isečka.
+smešni momenti sa TV-a). Ovo je transkript iz emisije "Pinkove zvezde" \
+(video: "{title}"). Vremena su u sekundama.
 
 {transcript}
 
-Izaberi JEDAN najsmešniji ili najdramatičniji deo (svađa žirija, smešan komentar, \
-neočekivana reakcija, ludi nastup) dužine {min_s}-{max_s} sekundi koji se razume \
-bez konteksta. Ne biraj samo pevanje bez razgovora. Ne ismevaj izgled ili telo \
-takmičara; zezaj situaciju, žiri i reakcije.
+Izaberi do {n} najsmešnijih ili najdramatičnijih delova (svađa žirija, smešan \
+komentar, neočekivana reakcija, ludi nastup), svaki {min_s}-{max_s} sekundi, koji \
+se razumeju bez konteksta i ne preklapaju se. Ne biraj samo pevanje bez razgovora. \
+Ne ismevaj izgled ili telo takmičara; zezaj situaciju, žiri i reakcije. Bolje \
+manje dobrih nego više slabih.
 
 Vrati SAMO JSON:
-{{"start": sekunde, "end": sekunde, "peak": sekunde najjačeg trenutka,
+{{"clips": [{{"start": sekunde, "end": sekunde, "peak": sekunde najjačeg trenutka,
  "hook": "meme tekst na vrhu videa, srpski latinica, max 55 karaktera, kao Balkan \
 meme (npr. 'Kad tetka na slavi kaže da i ona zna da peva')",
  "caption": "opis za Instagram, srpski latinica, 80-150 karaktera, 1-2 emoji, \
 završi pitanjem da ljudi komentarišu",
  "comment": "prvi komentar, kratko pitanje publici",
- "title": "kratak naslov"}}
-Ako nema ničeg dovoljno dobrog, vrati {{"skip": true}}."""
+ "title": "kratak naslov"}}]}}
+Ako nema ničeg dovoljno dobrog, vrati {{"clips": []}}."""
 
 
 def ask_claude(cfg, prompt):
@@ -135,19 +137,19 @@ def ask_claude(cfg, prompt):
             "https://api.anthropic.com/v1/messages",
             headers={"x-api-key": os.environ["ANTHROPIC_API_KEY"],
                      "anthropic-version": "2023-06-01", "content-type": "application/json"},
-            json={"model": cfg.get("llm_model", "claude-sonnet-5-5"), "max_tokens": 1500,
+            json={"model": cfg.get("llm_model", "claude-sonnet-5-5"), "max_tokens": 3000,
                   "messages": [{"role": "user", "content": prompt}]},
-            timeout=180)
+            timeout=300)
         r.raise_for_status()
         text = "".join(b.get("text", "") for b in r.json()["content"])
         m = re.search(r"\{.*\}", text, re.S)
         if m:
             try:
-                return json.loads(m.group(0))
+                return json.loads(m.group(0)).get("clips") or []
             except ValueError:
                 pass
         print("claude reply not JSON:", text[:300], file=sys.stderr)
-    return None
+    return []
 
 
 def transcribe(path, model, offset=0.0, words=False):
@@ -165,57 +167,111 @@ def transcribe(path, model, offset=0.0, words=False):
                      for s in segs)
 
 
+def clip_file(raw, title, source, key, cfg, pcfg, n):
+    """Pick up to n moments from a local video file and queue them. Returns count."""
+    folder = raw.parent
+    model = pcfg.get("whisper_model", "small")
+    transcript = transcribe(raw, model)
+    if len(transcript) < 40:
+        print(f"[pink] {key}: no speech; skipping")
+        return 0
+    dur = edit.probe(raw)[2]
+    picks = ask_claude(cfg, PROMPT.format(
+        handle=cfg.get("memes", {}).get("handle", ""), title=title, n=n,
+        transcript=transcript, min_s=pcfg.get("clip_min", 12), max_s=pcfg.get("clip_max", 30)))
+    if not picks:
+        print(f"[pink] {key}: Claude found nothing good")
+    made = 0
+    for j, pick in enumerate(picks[:n]):
+        try:
+            a = max(0.0, float(pick["start"]) - 0.3)
+            b = min(dur, float(pick["end"]) + 0.4, a + pcfg.get("clip_max", 30) + 2)
+            if b - a < 6:
+                continue
+            stamp = time.strftime("%Y%m%d%H%M%S", time.gmtime())
+            base = f"{stamp}_{j}_{NAME}_{re.sub(r'[^A-Za-z0-9-]', '', key)[:24]}_{int(a)}"
+            cut = folder / f"{base}_cut.mp4"
+            run(["ffmpeg", "-y", "-v", "error", "-ss", f"{a:.2f}", "-i", str(raw),
+                 "-t", f"{b - a:.2f}", "-c:v", "libx264", "-preset", "veryfast", "-crf", "18",
+                 "-c:a", "aac", str(cut)])
+            words = transcribe(cut, model, words=True)
+            peak = float(pick.get("peak", a)) - a
+            out, layout = edit.render(cut, folder / f"{base}.mp4", words, pick["hook"],
+                                      "Pinkove Zvezde",
+                                      peak=peak if 0 < peak < b - a else None,
+                                      streamer=NAME, tag="")
+            meta = {"streamer": NAME, "credit": "Pinkove Zvezde", "hook": pick["hook"],
+                    "title": pick.get("title", pick["hook"]), "caption": pick["caption"],
+                    "comment": pick.get("comment", ""), "tags": pcfg.get("hashtags", ""),
+                    "notify": False, "media_type": "REELS", "vod": source, "layout": layout,
+                    "cover_ms": getattr(edit.render, "cover_ms", 500),
+                    "made_at": int(time.time())}
+            (folder / f"{base}.json").write_text(json.dumps(meta, indent=2, ensure_ascii=False))
+            run(["gh", "release", "upload", "queue", out, folder / f"{base}.json", "--clobber"])
+            cut.unlink(missing_ok=True)
+            made += 1
+            print(f"[pink] queued {base}: {pick['hook']}")
+        except Exception as e:
+            print(f"[pink] clip {key}#{j} failed: {str(e)[:400]}", file=sys.stderr)
+    return made
+
+
 def make_one(m, cfg, pcfg, index):
     folder = WORK / "pink"
     folder.mkdir(parents=True, exist_ok=True)
-    stamp = time.strftime("%Y%m%d%H%M%S", time.gmtime())
-    base = f"{stamp}_{index}_{NAME}_{m['id']}_{int(m['start'])}"
-    raw = folder / f"{base}_raw.mp4"
+    raw = folder / f"yt_{m['id']}_{int(m['start'])}.mp4"
     run(ytdlp_base() + ["-f", "bv*[height<=1080]+ba/b[height<=1080]/b",
                         "--download-sections", f"*{m['start']:.1f}-{m['end']:.1f}",
                         "--force-keyframes-at-cuts", "--merge-output-format", "mp4",
                         "-o", str(raw), m["url"]])
-    model = pcfg.get("whisper_model", "small")
-    transcript = transcribe(raw, model)
-    if len(transcript) < 40:
-        print(f"[pink] {m['key']}: no speech; skipping")
-        return False
-    dur = edit.probe(raw)[2]
-    pick = ask_claude(cfg, PROMPT.format(
-        handle=cfg.get("memes", {}).get("handle", ""), title=m["title"],
-        transcript=transcript, min_s=pcfg.get("clip_min", 12), max_s=pcfg.get("clip_max", 30)))
-    if not pick or pick.get("skip"):
-        print(f"[pink] {m['key']}: Claude found nothing good")
-        return False
-    a = max(0.0, float(pick["start"]) - 0.3)
-    b = min(dur, float(pick["end"]) + 0.4, a + pcfg.get("clip_max", 30) + 2)
-    if b - a < 6:
-        return False
-    cut = folder / f"{base}_cut.mp4"
-    run(["ffmpeg", "-y", "-v", "error", "-ss", f"{a:.2f}", "-i", str(raw), "-t", f"{b - a:.2f}",
-         "-c:v", "libx264", "-preset", "veryfast", "-crf", "18", "-c:a", "aac", str(cut)])
-    words = transcribe(cut, model, words=True)
-    peak = float(pick.get("peak", a)) - a
-    out, layout = edit.render(cut, folder / f"{base}.mp4", words, pick["hook"],
-                              "Pinkove Zvezde", peak=peak if 0 < peak < b - a else None,
-                              streamer=NAME, tag="")
-    meta = {"streamer": NAME, "credit": "Pinkove Zvezde", "hook": pick["hook"],
-            "title": pick.get("title", pick["hook"]), "caption": pick["caption"],
-            "comment": pick.get("comment", ""), "tags": pcfg.get("hashtags", ""),
-            "notify": False, "media_type": "REELS", "vod": m["url"], "layout": layout,
-            "cover_ms": getattr(edit.render, "cover_ms", 500), "made_at": int(time.time())}
-    (folder / f"{base}.json").write_text(json.dumps(meta, indent=2, ensure_ascii=False))
-    run(["gh", "release", "upload", "queue", out, folder / f"{base}.json", "--clobber"])
-    for f in (raw, cut):
-        f.unlink(missing_ok=True)
-    print(f"[pink] queued {base}: {pick['hook']}")
-    return True
+    made = clip_file(raw, m["title"], m["url"], m["id"], cfg, pcfg, 1)
+    raw.unlink(missing_ok=True)
+    return made
+
+
+INBOX = "pink-inbox"
+VIDEO_EXT = (".mp4", ".mov", ".mkv", ".webm", ".m4v")
+
+
+def inbox(cfg, pcfg):
+    """Videos you upload to the 'pink-inbox' release (phone or PC) -> clips.
+    No YouTube needed. Each file is deleted from the inbox once processed."""
+    if subprocess.run(["gh", "release", "view", INBOX], capture_output=True).returncode:
+        run(["gh", "release", "create", INBOX, "--title", "Pinkove Zvezde inbox",
+             "--notes", "Upload Pinkove Zvezde videos here (Edit -> attach files). "
+                        "The bot clips them and deletes them.", "--prerelease"])
+        return 0
+    repo = os.environ["GITHUB_REPOSITORY"]
+    out = run(["gh", "api", f"repos/{repo}/releases/tags/{INBOX}"], capture=True)
+    files = [a for a in json.loads(out).get("assets", [])
+             if a["name"].lower().endswith(VIDEO_EXT)]
+    made = 0
+    folder = WORK / "pink"
+    folder.mkdir(parents=True, exist_ok=True)
+    for a in files[: pcfg.get("inbox_per_run", 3)]:
+        print(f"[pink] inbox: {a['name']} ({a['size'] // 1_000_000} MB)")
+        try:
+            run(["gh", "release", "download", INBOX, "-p", a["name"], "-D", folder, "--clobber"])
+            raw = folder / a["name"]
+            n = max(1, min(pcfg.get("inbox_clips_max", 4), int(edit.probe(raw)[2] // 60) + 1))
+            made += clip_file(raw, Path(a["name"]).stem, "inbox:" + a["name"],
+                              Path(a["name"]).stem, cfg, pcfg, n)
+            raw.unlink(missing_ok=True)
+        except Exception as e:
+            print(f"[pink] inbox {a['name']} failed: {str(e)[:400]}", file=sys.stderr)
+        run(["gh", "release", "delete-asset", INBOX, a["name"], "-y"], check=False)
+    return made
 
 
 def main():
     cfg = load_config()
     pcfg = cfg.get("pink") or {}
     if not pcfg.get("enabled", True):
+        return
+    made_inbox = inbox(cfg, pcfg)       # your uploads first (no YouTube needed)
+    if made_inbox:
+        print(f"[pink] {made_inbox} clips from the inbox")
+    if not pcfg.get("youtube", True):
         return
     have = queued_clip_count(NAME, cfg.get("max_clip_age_hours", 36))
     need = pcfg.get("queue_target", 4) - have

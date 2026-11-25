@@ -33,7 +33,9 @@ def drop_stale(assets, cfg):
     limit = cfg.get("max_clip_age_hours", 36)
     kept = []
     for a in assets:
-        if a["name"].endswith((".mp4", ".json")) and clip_age_hours(a["name"]) > limit:
+        lim = (cfg.get("pink") or {}).get("max_age_hours", 168) if \
+            clip_streamer(a["name"]) == "pink" else limit   # your uploads keep a week
+        if a["name"].endswith((".mp4", ".json")) and clip_age_hours(a["name"]) > lim:
             run(["gh", "release", "delete-asset", QUEUE_TAG, a["name"], "-y"], check=False)
             print(f"dropped stale clip file {a['name']}")
         else:
