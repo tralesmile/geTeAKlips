@@ -96,6 +96,28 @@
    ],
    "id": "1795608718",
    "date": "2026-11-25"
+  },
+  {
+   "league": "Liga šampiona",
+   "home": "Inter",
+   "away": "Štutgart",
+   "kickoff": "21:00",
+   "tip": "1",
+   "tip_name": "Pobeda domaćina (Inter)",
+   "confidence": 4,
+   "reasons": [
+    "Inter kod kuće: 7 pobeda u 8 mečeva ove sezone, u tim mečevima pao 34 gola",
+    "Prvi međusobni duel; Štutgart ima samo 1 pobedu u 9 gostovanja kod Italijana",
+    "Esposito u formi (hat-trik Atalanti); Čalhanoglu van, Štiler pod znakom pitanja"
+   ],
+   "caption": "Inter na San Siru igra sjajno (7 pobeda u 8 domaćih mečeva) i želi da uđe u top 8. Štutgart je loš na gostovanjima u Italiji (1 pobeda u 9 pokušaja), a Esposito je u odličnoj formi. Čalhanoglu nedostaje, ali napad Intera je dovoljno jak. Igrate li i vi ovaj tip?",
+   "sources": [
+    "https://news.bet365.com/en-gb/article/football-inter-stuttgart-prediction-and-tips/2026112412160157925",
+    "https://www.whoscored.com/matches/2029120/preview/europe-champions-league-2026-2027-inter-vfb-stuttgart",
+    "https://www.flashscore.com/match/football/inter-Iw7eKK25/vfb-stuttgart-nJQmYp1B/"
+   ],
+   "id": "1795619472",
+   "date": "2026-11-25"
   }
  ]
 }
