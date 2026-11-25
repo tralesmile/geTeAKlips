@@ -171,11 +171,12 @@ def clip_file(raw, title, source, key, cfg, pcfg, n):
     """Pick up to n moments from a local video file and queue them. Returns count."""
     folder = raw.parent
     model = pcfg.get("whisper_model", "small")
-    transcript = transcribe(raw, model)
+    dur = edit.probe(raw)[2]
+    # long episodes: fast model to find moments, accurate one only for the captions
+    transcript = transcribe(raw, pcfg.get("long_model", "base") if dur > 1200 else model)
     if len(transcript) < 40:
         print(f"[pink] {key}: no speech; skipping")
         return 0
-    dur = edit.probe(raw)[2]
     picks = ask_claude(cfg, PROMPT.format(
         handle=cfg.get("memes", {}).get("handle", ""), title=title, n=n,
         transcript=transcript, min_s=pcfg.get("clip_min", 12), max_s=pcfg.get("clip_max", 30)))
