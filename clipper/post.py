@@ -62,6 +62,8 @@ def log_post(name, meta, resp, platforms):
 def build_fields(meta, cfg, platforms=None, profile=None):
     streamer = next((x for x in cfg["streamers"] if x["name"] == meta.get("streamer")), {})
     tags = " ".join(t for t in (streamer.get("hashtags", ""), cfg.get("hashtags", "")) if t)
+    if meta.get("tags") is not None:   # e.g. Pinkove Zvezde clips: their own hashtags
+        tags = meta["tags"]
     credit = meta.get("credit", "")
     paid = bool(streamer.get("paid_partnership"))
     disclosure = "Paid partnership. " if paid else ""
@@ -83,6 +85,8 @@ def build_fields(meta, cfg, platforms=None, profile=None):
     fields.append(("first_comment", comment))
     if paid:  # platform "paid partnership" labels (campaign requires disclosure)
         fields += [("brand_content_toggle", "true"), ("hasPaidProductPlacement", "true")]
+    if meta.get("media_type"):
+        fields.append(("media_type", meta["media_type"]))
     fields += [("platform[]", p) for p in (platforms or posting.get("platforms", []))]
     return fields
 
@@ -241,7 +245,8 @@ def profiles(cfg):
     out = {}
     for name, p in (posting.get("profiles") or {}).items():
         out[name] = {"platforms": p.get("platforms", posting.get("platforms", [])),
-                     "times": p.get("times", posting.get("times", [])), "streamers": [],
+                     "times": p.get("times", posting.get("times", [])),
+                     "streamers": list(p.get("streamers", [])),   # e.g. pink
                      "mirror": p.get("mirror"), "kind": p.get("kind", "clips"),
                      "upload_user": p.get("upload_user", name),
                      # extra slots that post only to extra_platforms (no mirror)
@@ -251,7 +256,7 @@ def profiles(cfg):
         out[posting.get("upload_post_user", "default")] = {
             "platforms": posting.get("platforms", []), "times": posting.get("times", []),
             "streamers": []}
-    first = next(k for k, v in out.items() if v["kind"] == "clips")
+    first = next(k for k, v in out.items() if v["kind"] == "clips" and not v["streamers"])
     for st in cfg["streamers"]:
         out.get(st.get("profile", first), out[first])["streamers"].append(st["name"])
     return out
@@ -386,7 +391,7 @@ def post_one(profile, acct, cfg, assets, turns):
         print(f"[{profile}] every platform failed; clip stays in the queue")
         return False
     st = next((x for x in cfg["streamers"] if x["name"] == meta.get("streamer")), {})
-    if st.get("notify", True):
+    if st.get("notify", True) and meta.get("notify", True):
         notify(meta, final, cfg)
     log_post(name, meta, resp, platforms)
     mirror(name, meta, cfg, acct.get("mirror"))

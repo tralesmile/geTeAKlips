@@ -148,6 +148,11 @@ posting:
       kind: betting
       platforms: [instagram]
       times: ["13:07", "16:07", "19:07"]
+    pink:                          # Pinkove Zvezde clips -> Yugoslovenko IG (Reels)
+      upload_user: tips
+      streamers: [pink]
+      platforms: [instagram]
+      times: ["14:07", "16:07", "20:07", "23:07"]   # memes post at 13/18/22
     dom:                           # Dom + Clix
       platforms: [tiktok, youtube]
       mirror: {profile: default, platforms: [instagram]}   # also to carczarr IG
@@ -174,3 +179,16 @@ betting:
   handle: "@tipsterko"
   hashtags: "#tipsterko #tipovi #tipdana #fudbal #klađenje #tiket #srbija #ligašampiona #premierliga"
   story: true
+
+# Pinkove Zvezde clips for Yugoslovenko (clipper/pink.py, made in make-clips.yml).
+# Never the children's show (Pinkove Zvezdice).
+pink:
+  enabled: true
+  searches: ["Pinkove zvezde", "Pinkove zvezde žiri svađa", "Pinkove zvezde Karleuša Desingerica"]
+  queue_target: 4
+  max_age_days: 10
+  videos_to_check: 12
+  clip_min: 12
+  clip_max: 30
+  whisper_model: small
+  hashtags: "#pinkovezvezde #yugoslovenko #balkan #srbija #smesno #viralno"
