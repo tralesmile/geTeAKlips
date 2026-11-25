@@ -342,5 +342,28 @@
   "mode": "relatable",
   "posted_at": 1795608671,
   "request_id": "e96d807512b54546abe82ee52b94e08e"
+ },
+ {
+  "format": "jokes",
+  "topic": "Perica, baba, svekrva, policajac",
+  "label": "VICEVI",
+  "text": "",
+  "title": "5 viceva za danas, četvrti me spržio",
+  "items": [],
+  "slides": [],
+  "chat": [],
+  "jokes": [
+   "Pita učiteljica Pericu: Perice, ako ti imaš 10 jabuka, a ja ti uzmem 4, šta ostane?\nPerica: Trauma, učiteljice.",
+   "Zaustavi policajac baku na biciklu:\n- Bako, vozite bez svetla!\nBaka: Pa ne vidim ni ja vas, sinko, kvit smo.",
+   "Svekrva zove snaju:\n- Dolazim na ručak, ne kuvaj ništa posebno!\nSnaja: Dobro, mama.\nSvekrva: Eto, znala sam da ćeš tako reći. Već si počela da ne mariš.",
+   "Pita doktor dedu:\n- Deda, pijete li?\nDeda: Samo kad je neki dan.\nDoktor: A koji je to dan?\nDeda: Pa svaki, doktore, svaki je neki dan.",
+   "Sin pita ćaleta:\n- Tata, šta je to inflacija?\nĆale: Sine, to je kad ti kafa košta k'o nekad ručak.\nSin: A šta je to ručak?\nĆale: To ti je ono što je nekad bila plata."
+  ],
+  "caption": "Pet viceva, jedan bolji od drugog, a četvrti je prava istina 😂 Prosledi drugaru koji se prepoznaje! Koji vam je najjači?",
+  "comment": "Koji vic je pobedio? Napiši broj od 1 do 5 👇",
+  "as_reel": true,
+  "mode": "vicevi",
+  "posted_at": 1795626817,
+  "request_id": "4e8e27e3d5304dc283baca61903beae7"
  }
 ]
