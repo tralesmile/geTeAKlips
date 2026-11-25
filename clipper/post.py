@@ -320,8 +320,12 @@ def all_failed(resp):
     results = body.get("results") or {}
     if body.get("status") == "failed":
         return True
-    return bool(results) and all(isinstance(r, dict) and r.get("success") is False
-                                 for r in results.values())
+    # results is a dict per platform on a fresh upload, but a list when
+    # Upload-Post replays an earlier job (same Idempotency-Key)
+    items = list(results.values()) if isinstance(results, dict) else \
+        results if isinstance(results, list) else []
+    return bool(items) and all(isinstance(r, dict) and r.get("success") is False
+                               for r in items)
 
 
 def post_one(profile, acct, cfg, assets, turns):
