@@ -365,5 +365,47 @@
   "mode": "vicevi",
   "posted_at": 1795626817,
   "request_id": "4e8e27e3d5304dc283baca61903beae7"
+ },
+ {
+  "format": "chat",
+  "topic": "Babine glasovne poruke",
+  "label": "PORODICA",
+  "text": "",
+  "title": "",
+  "items": [],
+  "slides": [],
+  "chat": [
+   {
+    "from": "Baba",
+    "text": "Glasovna poruka (4:37)"
+   },
+   {
+    "from": "Ja",
+    "text": "Babo, šta je bilo? Možeš da napišeš?"
+   },
+   {
+    "from": "Baba",
+    "text": "Ne mogu, slušaj glasovnu"
+   },
+   {
+    "from": "Mama",
+    "text": "Ne moraš, samo pita jesi li jeo"
+   },
+   {
+    "from": "Ja",
+    "text": "Slušao sam svih 4 minuta. Jesi li jeo, pa kiša, pa komšinica, pa opet jesi li jeo"
+   },
+   {
+    "from": "Baba",
+    "text": "Eto, čuo si sve, a nisi odgovorio na pitanje"
+   }
+  ],
+  "jokes": [],
+  "caption": "Glasovna od babe nije poruka, to je podcast sa jednom temom 🎙️😂 Pošalji ovo babi (ili sebi, ako te zove u 6 ujutru).",
+  "comment": "Koliko je najduža glasovna koju ti je baba ikad poslala? 🅰️ do 2 min 🅱️ preko 5 min",
+  "as_reel": true,
+  "mode": "relatable",
+  "posted_at": 1795641094,
+  "request_id": "780e088cd024466d8f30bfa23748008b"
  }
 ]
