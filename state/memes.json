@@ -321,5 +321,26 @@
   "request_id": "d40e0041931942659ca35242e72e2c88",
   "likes": 1,
   "views": 169
+ },
+ {
+  "format": "list",
+  "topic": "tipovi ljudi u gradskom prevozu",
+  "label": "PREVOZ",
+  "text": "",
+  "title": "Tipovi ljudi u autobusu kad nema mesta za sedenje",
+  "items": [
+   "Baka sa tašnom: ona ne traži mesto, ona ga zahteva pogledom",
+   "Srednjoškolac: odjednom ga zanima samo prozor i njegov telefon",
+   "Ćale: stoji ceo put, a posle priča kako je 'bolje stojati, zdravije za leđa'"
+  ],
+  "slides": [],
+  "chat": [],
+  "jokes": [],
+  "caption": "Svako jutro ista predstava u gradskom 🚌 Prepoznaješ li sebe u nekom od ovih tipova? Obeleži drugara koji se pravi da spava kad uđe baka 😅",
+  "comment": "Ti si koji tip? 👵 baka, 📱 srednjoškolac ili 🧓 ćale",
+  "as_reel": true,
+  "mode": "relatable",
+  "posted_at": 1795608671,
+  "request_id": "e96d807512b54546abe82ee52b94e08e"
  }
 ]

@@ -20,7 +20,9 @@
     "https://footballwhispers.com/blog/real-madrid-vs-psv-prediction-24-11-2026/"
    ],
    "id": "1795522306",
-   "date": "2026-11-24"
+   "date": "2026-11-24",
+   "won": true,
+   "score": "5:1"
   },
   {
    "league": "Liga šampiona",
@@ -43,7 +45,9 @@
     "https://www.kurir.rs/sport/fudbal/10170086/liga-sampiona-raspored-utakmica-petog-kola"
    ],
    "id": "1795533054",
-   "date": "2026-11-24"
+   "date": "2026-11-24",
+   "won": true,
+   "score": "2:2"
   },
   {
    "league": "Liga šampiona",
@@ -67,7 +71,31 @@
     "https://www.svijetkladjenja.com/vesti-srbija/liga-sampiona-5-kolo-raspored-satnica-gde-gledati/"
    ],
    "id": "1795543880",
-   "date": "2026-11-24"
+   "date": "2026-11-24",
+   "won": true,
+   "score": "0:2"
+  },
+  {
+   "league": "Liga šampiona",
+   "home": "Sabah",
+   "away": "Barselona",
+   "kickoff": "18:45",
+   "tip": "2",
+   "tip_name": "Pobeda Barselone u gostima",
+   "confidence": 4,
+   "reasons": [
+    "Barsa je 5. na tabeli, Sabah 31.; Katalonci daju 3,5 gola po meču",
+    "Sabah bez suspendovanog stopera McCarthyja, 10 primljenih u poslednjih 5",
+    "Bez Jamala i Rodrija, ali Gordon, Rafinja i Adejemi daju dovoljno kvaliteta"
+   ],
+   "caption": "Barselona stiže u Baku kao jasan favorit protiv debitanta Sabaha, koji je pretposlednji na tabeli. Flik će rotirati i nema Jamala, ali Katalonci i bez njega imaju prevelik kvalitet, a Sabahu fali suspendovani stoper. Igrate li i vi ovaj tip?",
+   "sources": [
+    "https://www.fcbarcelona.com/en/football/first-team/news/4613170/preview-sabah-v-fc-barcelona",
+    "https://www.goal.com/en-gb/news/sabah-fk-v-barcelona-preview-team-news-injury-latest/blt4bf68fba07c3f69d",
+    "https://www.collector.com.tr/1029731579"
+   ],
+   "id": "1795608718",
+   "date": "2026-11-25"
   }
  ]
 }
