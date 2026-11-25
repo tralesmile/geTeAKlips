@@ -243,7 +243,10 @@ def profiles(cfg):
         out[name] = {"platforms": p.get("platforms", posting.get("platforms", [])),
                      "times": p.get("times", posting.get("times", [])), "streamers": [],
                      "mirror": p.get("mirror"), "kind": p.get("kind", "clips"),
-                     "upload_user": p.get("upload_user", name)}
+                     "upload_user": p.get("upload_user", name),
+                     # extra slots that post only to extra_platforms (no mirror)
+                     "extra_times": p.get("extra_times", []),
+                     "extra_platforms": p.get("extra_platforms", [])}
     if not out:  # old single-account config
         out[posting.get("upload_post_user", "default")] = {
             "platforms": posting.get("platforms", []), "times": posting.get("times", []),
@@ -405,8 +408,12 @@ def main():
         if only and profile != only:
             continue
         if not force and not in_window(acct["times"], cfg):
-            print(f"[{profile}] not this account's posting time; skipping")
-            continue
+            if acct.get("extra_times") and in_window(acct["extra_times"], cfg):
+                acct = dict(acct, platforms=acct["extra_platforms"], mirror=None)
+                print(f"[{profile}] extra slot: {', '.join(acct['platforms'])} only")
+            else:
+                print(f"[{profile}] not this account's posting time; skipping")
+                continue
         last_at = turns.get(profile, {}).get("at", 0)
         if not force and time.time() - last_at < MIN_GAP_MINUTES * 60:
             print(f"[{profile}] posted less than {MIN_GAP_MINUTES} min ago; skipping")

@@ -124,7 +124,11 @@ posting:
   profiles:
     default:                       # Lacy
       platforms: [tiktok, instagram, youtube]   # X dropped: ~0 views
-      times: ["14:07", "17:07", "20:07", "23:07"]
+      times: ["15:07", "17:07", "21:07", "23:07"]
+      # 2 extra Lacy posts a day on TikTok + YouTube only (carczarr IG already
+      # gets the Kai/Dom mirrors, so it stays at a safe number of posts)
+      extra_times: ["13:07", "19:07"]
+      extra_platforms: [tiktok, youtube]
     kai:                           # Kai Cenat
       platforms: [tiktok, youtube]
       mirror: {profile: default, platforms: [instagram]}   # also to carczarr IG
