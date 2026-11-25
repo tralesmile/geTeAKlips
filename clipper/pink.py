@@ -13,6 +13,7 @@ import os
 import re
 import sys
 import time
+import urllib.parse
 from pathlib import Path
 
 import requests
@@ -54,7 +55,11 @@ def candidates(pcfg):
     seen, out = set(), []
     for q in pcfg.get("searches", ["Pinkove zvezde"]):
         try:
-            data = _json(f"ytsearchdate{pcfg.get('search_n', 25)}:{q}", ["--flat-playlist"])
+            # YouTube search sorted by upload date (sp=CAI%3D)
+            url = ("https://www.youtube.com/results?sp=CAI%253D&search_query="
+                   + urllib.parse.quote_plus(q))
+            data = _json(url, ["--flat-playlist", "--playlist-end",
+                               str(pcfg.get("search_n", 25))])
         except Exception as e:
             print(f"search failed {q}: {str(e)[:200]}", file=sys.stderr)
             continue
