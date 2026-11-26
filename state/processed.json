@@ -79,6 +79,16 @@
       ],
       "result": "error:model did not return a JSON array",
       "at": "2026-11-26 11:45"
+    },
+    {
+      "id": "01a1fa65-9620-775a-8dc0-b3e82aa77f6c",
+      "streamer": "dom",
+      "window": [
+        3217,
+        14017
+      ],
+      "result": "ok:8",
+      "at": "2026-11-26 23:42"
     }
   ],
   "progress": {
