@@ -457,5 +457,47 @@
   "mode": "relatable",
   "posted_at": 1795713160,
   "request_id": "2c5c982627e848d1bdf4afaf30da1d7f"
+ },
+ {
+  "format": "chat",
+  "topic": "ćale i upaljeno svetlo",
+  "label": "PORODICA",
+  "text": "",
+  "title": "",
+  "items": [],
+  "slides": [],
+  "chat": [
+   {
+    "from": "Ćale",
+    "text": "Ko je ostavio svetlo u kupatilu?"
+   },
+   {
+    "from": "Ćale",
+    "text": "Nismo mi Rokfeler, struja nije džabe"
+   },
+   {
+    "from": "Ja",
+    "text": "Ćale, ti u dnevnoj imaš upaljena 3 lustera i TV na mute"
+   },
+   {
+    "from": "Ćale",
+    "text": "To je drugo, ja tu boravim"
+   },
+   {
+    "from": "Baba",
+    "text": "U moje vreme se i pišalo u mraku, pa nikom ništa"
+   },
+   {
+    "from": "Mama",
+    "text": "Samo ugasite kad završite, ja sam peglu ostavila od jutros"
+   }
+  ],
+  "jokes": [],
+  "caption": "Svako domaćinstvo ima jednog ćaleta koji obilazi stan kao inspektor za struju 💡😂 Ko kod vas gasi svetla za svima?",
+  "comment": "Ko kod vas drži stan u mraku? 🅰️ Ćale ili 🅱️ Mama",
+  "as_reel": true,
+  "mode": "relatable",
+  "posted_at": 1795727470,
+  "request_id": "da315ae8ebe549e6a9d74863d7eb2be4"
  }
 ]
