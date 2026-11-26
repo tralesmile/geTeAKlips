@@ -190,6 +190,20 @@ def next_window(vod, duration, progress, cfg):
     return start, duration
 
 
+def earlier_window(vod, duration, state, cfg):
+    """Next older unclipped stretch of a finished VOD (before the earliest
+    window already processed), at most chunk_hours long."""
+    chunk = cfg.get("chunk_hours", 3) * 3600
+    starts = [w["window"][0] for w in state.get("processed", [])
+              if w.get("id") == vod["id"] and w.get("window")]
+    if not starts:
+        return None
+    end = min(starts)
+    if end < cfg.get("min_new_minutes", 20) * 60:
+        return None
+    return max(0.0, end - chunk), end
+
+
 def video_info(url):
     out = run(ytdlp_base() + ["-J", "--no-playlist", url], capture=True)
     info = json.loads(out)
@@ -241,10 +255,15 @@ def main():
             except Exception as e:
                 print(f"could not read {vod['url']}: {str(e)[:300]}", file=sys.stderr)
                 continue
+            manual = vod["id"] is None
             vod = dict(vod, id=info["id"], title=vod["title"] or info["title"])
             # some sites (Kick) give the length only in the channel listing
             duration = info["duration"] or vod.get("duration") or 0
             window = next_window(vod, duration, progress, cfg) if duration else None
+            if not window and manual and duration:
+                # hand-added VODs are finished streams: once the newest part is
+                # done, keep going backwards chunk by chunk (older parts)
+                window = earlier_window(vod, duration, state, cfg)
             if not window:
                 continue
             start, end = window
@@ -255,7 +274,7 @@ def main():
             except Exception as e:
                 print(f"window failed: {e}", file=sys.stderr)
                 result = f"error:{str(e)[:120]}"
-            progress[vod["id"]] = end
+            progress[vod["id"]] = max(progress.get(vod["id"], 0.0), end)
             state["processed"].append({"id": vod["id"], "streamer": streamer["name"],
                                        "window": [int(start), int(end)], "result": result,
                                        "at": time.strftime("%Y-%m-%d %H:%M")})
