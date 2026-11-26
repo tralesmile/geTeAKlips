@@ -100,9 +100,14 @@ def to_seconds(ts):
 
 def parse_clips(text, cfg, duration, window_start=0.0):
     match = re.search(r"\[.*\]", text, re.S)
-    if not match:
+    if match:
+        raw = json.loads(match.group(0))
+    elif "[" in text and "}" in text:
+        # reply cut off (max_tokens): keep the complete items
+        body = text[text.index("["): text.rindex("}") + 1]
+        raw = json.loads(body + "]")
+    else:
         raise ValueError("model did not return a JSON array")
-    raw = json.loads(match.group(0))
     clips, taken = [], []
     lo, hi = cfg["clip_min_seconds"], cfg["clip_max_seconds"]
     for c in raw:
@@ -161,7 +166,7 @@ def pick_clips(transcript, cfg, credit, duration, window_start=0.0, n=None, hint
                  "anthropic-version": "2023-06-01",
                  "content-type": "application/json"},
         json={"model": cfg.get("llm_model", "claude-sonnet-5-5"),
-              "max_tokens": 4000,
+              "max_tokens": 12000,
               "messages": [{"role": "user", "content": prompt}]},
         timeout=300)
     resp.raise_for_status()
