@@ -413,5 +413,28 @@
   "request_id": "780e088cd024466d8f30bfa23748008b",
   "likes": 1,
   "views": 175
+ },
+ {
+  "format": "carousel",
+  "topic": "ćale i popravka sam",
+  "label": "ĆALE",
+  "text": "",
+  "title": "",
+  "items": [],
+  "slides": [
+   "Ćale: \"Ne treba nam majstor, ja ću to sam\" (prevuci)",
+   "Sat 1: Ćale ide po alat. Vraća se sa jednim odvijačem i velikim samopouzdanjem.",
+   "Sat 3: Po stanu leži 14 šrafova. Niko ne zna odakle su.",
+   "Sat 5: Zove komšiju \"da samo baci pogled\". Komšija ostaje do kraja dana.",
+   "Na kraju: \"Ja sam to sâm sredio.\" Mama već traži majstora da popravi popravku."
+  ],
+  "chat": [],
+  "jokes": [],
+  "caption": "Ćale i njegovo \"ja ću to sam\" 🔧😂 Pošalji ovo ćaletu (ili se prepoznaj ako si ti ćale). Šta je kod vas ćale \"sredio\" pa je posle koštalo duplo?",
+  "comment": "Koliko šrafova vam je ostalo posle ćaletove popravke? 🅰️ nijedan 🅱️ cela kesica",
+  "as_reel": true,
+  "mode": "relatable",
+  "posted_at": 1795695178,
+  "request_id": "52be3a57723843ef9dfa017ae34bc2ac"
  }
 ]

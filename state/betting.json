@@ -95,7 +95,9 @@
     "https://www.collector.com.tr/1029731579"
    ],
    "id": "1795608718",
-   "date": "2026-11-25"
+   "date": "2026-11-25",
+   "won": true,
+   "score": "1:4"
   },
   {
    "league": "Liga šampiona",
@@ -117,7 +119,9 @@
     "https://www.flashscore.com/match/football/inter-Iw7eKK25/vfb-stuttgart-nJQmYp1B/"
    ],
    "id": "1795619472",
-   "date": "2026-11-25"
+   "date": "2026-11-25",
+   "won": true,
+   "score": "2:0"
   },
   {
    "league": "Liga šampiona",
@@ -140,7 +144,32 @@
     "https://www.tapmad.com/blog/atletico-vs-viking-preview-champions-league-2026/9071-7-0"
    ],
    "id": "1795630274",
-   "date": "2026-11-25"
+   "date": "2026-11-25",
+   "won": true,
+   "score": "2:0"
+  },
+  {
+   "league": "Liga Evrope",
+   "home": "Lyon",
+   "away": "Lillestrøm",
+   "kickoff": "21:00",
+   "tip": "1",
+   "tip_name": "Pobeda domaćina (Lyon)",
+   "confidence": 4,
+   "reasons": [
+    "Lyon ima 5 uzastopnih domaćih pobeda, uvek sa 2+ gola",
+    "Lillestrøm: 1 bod iz 4 kola, 10 primljenih, 2 postignuta gola",
+    "Lyon bez Mate i Mortona, ali gost gubi beka Paintsila"
+   ],
+   "caption": "Lyon je u Evropi na svom terenu imao samo pobede, a pobeda protiv Lillestrøma vodi ga u top 8. Norvežani su na začelju tabele sa samo jednim bodom iz četiri kola, pa je domaćin jasan favorit u Lionu. Igrate li i vi ovaj tip?",
+   "sources": [
+    "https://www.sportsmole.co.uk/football/lyon/europa-league/preview/lyon-vs-lillestrom-prediction-team-news-lineups_609716.html",
+    "https://www.whoscored.com/matches/2029580/preview/europe-europa-league-2026-2027-lyon-lillestroem",
+    "https://footballwhispers.com/blog/lyon-vs-lillestrom-prediction-26-11-2026/",
+    "https://www.uefa.com/uefaeuropaleague/news/02a8-2174cafa5bb6-82bbc20c9b92-1000--2026-27-europa-league-all-the-league-phase-fixtures-and-re/"
+   ],
+   "id": "1795695224",
+   "date": "2026-11-26"
   }
  ]
 }
