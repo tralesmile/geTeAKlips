@@ -67,6 +67,8 @@ streamers:
     credit: "Dom"
     hashtags: "#dasgasdom3"
     paid_partnership: true
+    videos:
+      - https://kick.com/dasgasd3m/videos/01a1f251-0b40-71d3-989b-8dfe35e54e0f   # Nov 19 GTA 6 stream
   - name: gtatop
     profile: gta
     # "GTA 6 Top Moments" account: the most-viewed fresh GTA 6 moments from
