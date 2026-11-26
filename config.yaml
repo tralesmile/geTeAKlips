@@ -63,6 +63,9 @@ streamers:
     # RUCKUS campaign: footage from Dom's GTA 6 streams on Kick (Nov 18 onward),
     # TikTok + YouTube Shorts only, paid-partnership disclosure required.
     url: https://kick.com/dasgasd3m/videos
+    videos:
+      # Nov 22 Kick GTA 6 VOD: only its last 3h were clipped, older parts still unclipped
+      - https://kick.com/dasgasd3m/videos/01a1fa65-9620-775a-8dc0-b3e82aa77f6c
     facecam: null
     credit: "Dom"
     hashtags: "#dasgasdom3"
