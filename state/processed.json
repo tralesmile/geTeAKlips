@@ -49,6 +49,16 @@
       ],
       "result": "ok:8",
       "at": "2026-11-24 11:31"
+    },
+    {
+      "id": "01a1f251-0b40-71d3-989b-8dfe35e54e0f",
+      "streamer": "dom",
+      "window": [
+        39766,
+        50566
+      ],
+      "result": "error:model did not return a JSON array",
+      "at": "2026-11-26 11:09"
     }
   ],
   "progress": {
@@ -56,7 +66,8 @@
     "v2935804701": 1664.0,
     "01a1fa65-9620-775a-8dc0-b3e82aa77f6c": 24817.0,
     "v2937946695": 42549.0,
-    "01a1f7ca-9c08-754c-a1c8-8e0ae1d416ba": 6049.0
+    "01a1f7ca-9c08-754c-a1c8-8e0ae1d416ba": 6049.0,
+    "01a1f251-0b40-71d3-989b-8dfe35e54e0f": 50566.0
   },
   "moments_done": [
     "tw:4107031754",
