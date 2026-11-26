@@ -79,6 +79,16 @@
       ],
       "result": "error:model did not return a JSON array",
       "at": "2026-11-26 11:45"
+    },
+    {
+      "id": "01a1fa65-9620-775a-8dc0-b3e82aa77f6c",
+      "streamer": "dom",
+      "window": [
+        3217,
+        14017
+      ],
+      "result": "error:model did not return a JSON array",
+      "at": "2026-11-26 23:11"
     }
   ],
   "progress": {
@@ -177,7 +187,8 @@
     "tw:1912352959",
     "tw:3426875813",
     "tw:3091534339",
-    "tw:1806991454"
+    "tw:1806991454",
+    "tw:644010587"
   ],
   "moment_windows": {
     "v2934866208": [
@@ -667,6 +678,12 @@
       ]
     ],
     "clip1806991454": [
+      [
+        0.0,
+        30.0
+      ]
+    ],
+    "clip644010587": [
       [
         0.0,
         30.0
