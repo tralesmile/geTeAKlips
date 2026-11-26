@@ -3,6 +3,7 @@ import json
 import os
 import re
 import subprocess
+import sys
 
 import numpy as np
 import requests
@@ -164,5 +165,10 @@ def pick_clips(transcript, cfg, credit, duration, window_start=0.0, n=None, hint
               "messages": [{"role": "user", "content": prompt}]},
         timeout=300)
     resp.raise_for_status()
-    text = "".join(b.get("text", "") for b in resp.json()["content"])
+    data = resp.json()
+    text = "".join(b.get("text", "") for b in data["content"])
+    if not re.search(r"\[.*\]", text, re.S):
+        # show why (truncated, refusal, empty transcript) so failures can be fixed
+        print(f"model reply without JSON array (stop_reason={data.get('stop_reason')}, "
+              f"transcript {len(transcript)} chars): {text[:300]!r}", file=sys.stderr)
     return parse_clips(text, dict(cfg, clips_per_vod=n), duration, window_start)
