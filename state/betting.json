@@ -170,6 +170,29 @@
    ],
    "id": "1795695224",
    "date": "2026-11-26"
+  },
+  {
+   "league": "Liga Evrope",
+   "home": "Juventus",
+   "away": "Omonia",
+   "kickoff": "21:00",
+   "tip": "1",
+   "tip_name": "Pobeda domaćina (Juventus)",
+   "confidence": 4,
+   "reasons": [
+    "Juve nikad nije izgubio kod kuće u Ligi Evrope (6P, 9N od 2009/10)",
+    "Juve je dobio svih 4 ranija duela s Omonijom; Woltemade gol/asist u sva 4 EL meča",
+    "Spalletti rotira i ima povrede (Alajbegović), ali Omonija je 18. sa 6 bodova"
+   ],
+   "caption": "Juventus u Torinu nikad nije izgubio u Ligi Evrope, a Omonija je do sada bila slabija u gostima. Čak i uz rotaciju, kvalitet klupe treba da odluči. Igrate li i vi ovaj tip? 🔥⚽",
+   "sources": [
+    "https://www.juventus.com/en/news/articles/preview-juventus-omonia-26-11-26",
+    "https://www.sportsmole.co.uk/football/europa-league/preview/juventus-vs-omonia-prediction-team-news-lineups_609764.html",
+    "https://football-italia.net/uel-juventus-omonia-probable-line-ups/",
+    "https://1bet.rs/vesti/fudbal-utakmice-danas/"
+   ],
+   "id": "1795705917",
+   "date": "2026-11-26"
   }
  ]
 }
