@@ -436,5 +436,26 @@
   "mode": "relatable",
   "posted_at": 1795695178,
   "request_id": "52be3a57723843ef9dfa017ae34bc2ac"
+ },
+ {
+  "format": "list",
+  "topic": "mamine rečenice i prevod",
+  "label": "MAMA",
+  "text": "",
+  "title": "Mamine rečenice i šta stvarno znače",
+  "items": [
+   "'Radi kako hoćeš' = radi kako ja kažem, samo se pravim da biraš",
+   "'Nije mi ništa' = ti već znaš šta si uradio",
+   "'Samo jedan zalogaj' = tanjir do vrha i dodatak za put"
+  ],
+  "slides": [],
+  "chat": [],
+  "jokes": [],
+  "caption": "Svaka mama govori ovaj jezik, a mi smo ga naučili tek kad je bilo kasno 😂 Koja je tvoja mama najčešće koristila?",
+  "comment": "Koja mamina rečenica ti i dalje budi strah? Napiši je dole 👇",
+  "as_reel": true,
+  "mode": "relatable",
+  "posted_at": 1795713160,
+  "request_id": "2c5c982627e848d1bdf4afaf30da1d7f"
  }
 ]
