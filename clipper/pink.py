@@ -84,6 +84,7 @@ def moments(video, done, max_age_days):
         print(f"video failed {video['id']}: {str(e)[:200]}", file=sys.stderr)
         return []
     if info.get("timestamp") and time.time() - info["timestamp"] > max_age_days * 86400:
+        print(f"[pink] {video['id']}: too old ({(time.time() - info['timestamp']) / 86400:.0f} days)")
         return []
     dur = float(info.get("duration") or video["duration"])
     heat = sorted(info.get("heatmap") or [], key=lambda h: -h.get("value", 0))
@@ -96,6 +97,8 @@ def moments(video, done, max_age_days):
             mids.append(mid)
     if not mids and dur <= 240:      # short clip without heatmap: the clip itself
         mids = [min(dur / 2, 45)]
+    print(f"[pink] {video['id']}: {len(mids)} moments, heatmap={'yes' if heat else 'no'}, "
+          f"{info.get('view_count') or 0} views, {dur / 60:.0f} min: {info.get('title', '')[:60]}")
     views = info.get("view_count") or 0
     out = []
     for mid in mids:

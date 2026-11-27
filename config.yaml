@@ -196,7 +196,7 @@ pink:
   max_age_hours: 168     # queued Pinkove Zvezde clips wait up to a week
   searches: ["Pinkove zvezde", "Pinkove zvezde žiri svađa", "Pinkove zvezde Karleuša Desingerica"]
   queue_target: 4
-  max_age_days: 10
+  max_age_days: 730     # the show is off-air between seasons: old best moments are fine
   videos_to_check: 12
   clip_min: 12
   clip_max: 30
