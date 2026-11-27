@@ -11,7 +11,7 @@
   "posted_at": 1795471716,
   "request_id": "3761d6c0df02467c81011b72f00894cd",
   "likes": 0,
-  "views": 118
+  "views": 128
  },
  {
   "format": "breaking",
@@ -28,7 +28,7 @@
   "posted_at": 1795472623,
   "request_id": "31f1cff4593242fe831494e6c9d182bc",
   "likes": 0,
-  "views": 288
+  "views": 310
  },
  {
   "format": "chat",
@@ -74,7 +74,7 @@
   "posted_at": 1795472704,
   "request_id": "125e5311d02e41648b07adc1dbef2c41",
   "likes": 2,
-  "views": 224
+  "views": 225
  },
  {
   "format": "jokes",
@@ -97,7 +97,7 @@
   "posted_at": 1795473327,
   "request_id": "04c6a39520b24eee9cc7fee6be34c9e8",
   "likes": 0,
-  "views": 33
+  "views": 46
  },
  {
   "format": "chat",
@@ -140,7 +140,7 @@
   "posted_at": 1795473879,
   "request_id": "88154797138b4eaf92dedb2298449657",
   "likes": 0,
-  "views": 194
+  "views": 202
  },
  {
   "format": "jokes",
@@ -164,7 +164,7 @@
   "posted_at": 1795474019,
   "request_id": "5ae99cf82cab4a9ba863fda503fa77e5",
   "likes": 0,
-  "views": 51
+  "views": 54
  },
  {
   "format": "chat",
@@ -207,7 +207,7 @@
   "posted_at": 1795474077,
   "request_id": "571c553844e8409a85ddfaa942287e61",
   "likes": 1,
-  "views": 154
+  "views": 160
  },
  {
   "format": "list",
@@ -229,7 +229,7 @@
   "posted_at": 1795522263,
   "request_id": "0431dad13943443abd5abfbecd5087f2",
   "likes": 0,
-  "views": 52
+  "views": 64
  },
  {
   "format": "jokes",
@@ -252,7 +252,7 @@
   "posted_at": 1795540370,
   "request_id": "d034938810aa440faf0aeaa095c7ffe8",
   "likes": 0,
-  "views": 72
+  "views": 77
  },
  {
   "format": "carousel",
@@ -276,7 +276,7 @@
   "posted_at": 1795554626,
   "request_id": "949f602affa847bdb8d34de4b20e2106",
   "likes": 0,
-  "views": 104
+  "views": 124
  },
  {
   "format": "chat",
@@ -320,7 +320,7 @@
   "posted_at": 1795559683,
   "request_id": "d40e0041931942659ca35242e72e2c88",
   "likes": 2,
-  "views": 229
+  "views": 231
  },
  {
   "format": "list",
@@ -343,7 +343,7 @@
   "posted_at": 1795608671,
   "request_id": "e96d807512b54546abe82ee52b94e08e",
   "likes": 0,
-  "views": 175
+  "views": 182
  },
  {
   "format": "jokes",
@@ -368,7 +368,7 @@
   "posted_at": 1795626817,
   "request_id": "4e8e27e3d5304dc283baca61903beae7",
   "likes": 0,
-  "views": 131
+  "views": 138
  },
  {
   "format": "chat",
@@ -412,7 +412,7 @@
   "posted_at": 1795641094,
   "request_id": "780e088cd024466d8f30bfa23748008b",
   "likes": 1,
-  "views": 175
+  "views": 197
  },
  {
   "format": "carousel",
@@ -435,7 +435,9 @@
   "as_reel": true,
   "mode": "relatable",
   "posted_at": 1795695178,
-  "request_id": "52be3a57723843ef9dfa017ae34bc2ac"
+  "request_id": "52be3a57723843ef9dfa017ae34bc2ac",
+  "likes": 1,
+  "views": 148
  },
  {
   "format": "list",
@@ -456,7 +458,9 @@
   "as_reel": true,
   "mode": "relatable",
   "posted_at": 1795713160,
-  "request_id": "2c5c982627e848d1bdf4afaf30da1d7f"
+  "request_id": "2c5c982627e848d1bdf4afaf30da1d7f",
+  "likes": 0,
+  "views": 160
  },
  {
   "format": "chat",
@@ -498,6 +502,8 @@
   "as_reel": true,
   "mode": "relatable",
   "posted_at": 1795727470,
-  "request_id": "da315ae8ebe549e6a9d74863d7eb2be4"
+  "request_id": "da315ae8ebe549e6a9d74863d7eb2be4",
+  "likes": 0,
+  "views": 243
  }
 ]
