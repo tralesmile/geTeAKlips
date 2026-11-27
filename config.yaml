@@ -189,7 +189,7 @@ pink:
   enabled: true
   # YouTube blocks downloads from GitHub's servers, so for now clips come only
   # from videos you upload to the "pink-inbox" release (phone or PC).
-  youtube: false
+  youtube: true
   inbox_per_run: 3       # videos processed per run (make-clips runs every 2 h)
   inbox_clips_max: 8     # max clips from one video (a 3-hour episode = 8 clips = 2 days)
   long_model: base       # fast transcript for long episodes (captions still use small)
