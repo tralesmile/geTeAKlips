@@ -98,10 +98,30 @@ def to_seconds(ts):
     return total
 
 
+def _first_json_array(text):
+    """First '[' in the reply that starts a valid JSON list (skips prose like '[Lacy]')."""
+    dec = json.JSONDecoder()
+    for m in re.finditer(r"\[", text):
+        try:
+            val, _ = dec.raw_decode(text, m.start())
+        except ValueError:
+            continue
+        if isinstance(val, list) and (not val or isinstance(val[0], dict)):
+            return val
+    return None
+
+
 def parse_clips(text, cfg, duration, window_start=0.0):
     match = re.search(r"\[.*\]", text, re.S)
+    raw = None
     if match:
-        raw = json.loads(match.group(0))
+        try:
+            raw = json.loads(match.group(0))
+        except ValueError:
+            # greedy match swallowed a non-JSON bracket (e.g. "[laughs]") before the array
+            raw = _first_json_array(text)
+    if raw is not None:
+        pass
     elif "[" in text and "}" in text:
         # reply cut off (max_tokens): keep the complete items
         body = text[text.index("["): text.rindex("}") + 1]
