@@ -169,7 +169,9 @@
     "https://www.uefa.com/uefaeuropaleague/news/02a8-2174cafa5bb6-82bbc20c9b92-1000--2026-27-europa-league-all-the-league-phase-fixtures-and-re/"
    ],
    "id": "1795695224",
-   "date": "2026-11-26"
+   "date": "2026-11-26",
+   "won": false,
+   "score": "0:0"
   },
   {
    "league": "Liga Evrope",
@@ -192,7 +194,9 @@
     "https://1bet.rs/vesti/fudbal-utakmice-danas/"
    ],
    "id": "1795705917",
-   "date": "2026-11-26"
+   "date": "2026-11-26",
+   "won": true,
+   "score": "4:1"
   },
   {
    "league": "Liga konferencije",
@@ -215,7 +219,32 @@
     "https://www.kladionica.biz/prognoza-borac-banja-luka-vs-atalanta-cetvrtak-2100/"
    ],
    "id": "1795716748",
-   "date": "2026-11-26"
+   "date": "2026-11-26",
+   "won": true,
+   "score": "2:3"
+  },
+  {
+   "league": "Premier liga Engleske",
+   "home": "Nottingham Forest",
+   "away": "Chelsea",
+   "kickoff": "21:00",
+   "tip": "1X",
+   "tip_name": "Domaćin neće izgubiti (pobeda ili remi Foresta)",
+   "confidence": 3,
+   "reasons": [
+    "Chelsea: 4 poraza u 5 mečeva, 20 primljenih golova u 11 kola",
+    "Forest je u maju sa 3-1 pobedio Chelsea na Stamford Bridžu, Delap blista",
+    "Chelsea bez Džejmsa, Lakroa i Žoaa Pedra; Forest bez Domingeza i Savone"
+   ],
+   "caption": "Chelsea stiže na City Ground u lošoj formi, sa četiri poraza u poslednjih pet mečeva i brojnim povredama u timu. Forest je 17. na tabeli i mora da osvaja bodove kod kuće. Zato je 1X siguran izbor, jer Forest ima motiv i Delapa, koji je prošlog kola dao dva gola Sitiju. Igrate li i vi ovaj tip?",
+   "sources": [
+    "https://www.goal.com/en-gb/news/nottingham-forest-v-chelsea-preview-team-news-injury-latest/blt23ee7328cd769385",
+    "https://news.7msport.com/news/newsdata/20261126/276806.shtml",
+    "https://sports.yahoo.com/soccer/articles/nottingham-forest-vs-chelsea-premier-060729730.html",
+    "https://news.bet365.com/en-gb/article/football-nottingham-forest-chelsea-prediction-and-tips/2026112513514221928"
+   ],
+   "id": "1795781667",
+   "date": "2026-11-27"
   }
  ]
 }
