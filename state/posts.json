@@ -887,5 +887,35 @@
    "youtube"
   ],
   "links": {}
+ },
+ {
+  "name": "20261127171127_00_lacy_clip3955045023_0.mp4",
+  "request_id": "0008168209234d3fa74913f88b581f05",
+  "posted_at": 1795803102,
+  "streamer": "lacy",
+  "hook": "Lacy loses it over a broken book",
+  "title": "Lacy Can't Believe What Just Happened in GTA 6",
+  "layout": "irl",
+  "source": "twitch-clip",
+  "platforms": [
+   "tiktok",
+   "youtube"
+  ],
+  "links": {}
+ },
+ {
+  "name": "20261126233719_01_dom_01a1fa65-9620-775a-8dc0-b3e82aa77f6c_3217.mp4",
+  "request_id": "f9dbc0c8f2d94037a2f4ecbc3a8651bd",
+  "posted_at": 1795803213,
+  "streamer": "dom",
+  "hook": "Dom's Bowser outfit has a wild backstory",
+  "title": "Dom Shows Off His Bowser Outfit From Japan | GTA 6 Stream",
+  "layout": "irl",
+  "source": null,
+  "platforms": [
+   "tiktok",
+   "youtube"
+  ],
+  "links": {}
  }
 ]

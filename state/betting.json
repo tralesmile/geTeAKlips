@@ -267,6 +267,28 @@
    ],
    "id": "1795792252",
    "date": "2026-11-27"
+  },
+  {
+   "league": "Bundesliga",
+   "home": "Werder Bremen",
+   "away": "Borussia Mönchengladbach",
+   "kickoff": "20:30",
+   "tip": "1",
+   "tip_name": "Pobeda domaćina",
+   "confidence": 4,
+   "reasons": [
+    "Bremen kod kuće ne gubi: 4 pobede i remi u 5 mečeva (13 bodova)",
+    "Gladbach poslednji: 8 poraza u 10 kola, 15 primljenih golova u 5 gostovanja",
+    "Bremen bez Stagea, Toppa i Musaha, ali Füllkrug daje gol u 8 od 9 mečeva"
+   ],
+   "caption": "Werder je kod kuće ove sezone neporažen, a Gladbach kao poslednji na tabeli prima gomilu golova u gostima. Bremen ima jednu od najjačih navala lige i prošle nedelje je sa 4:0 pregazio Hamburg. Pobeda domaćina deluje kao realan izbor za petak uveče. Igrate li i vi ovaj tip?",
+   "sources": [
+    "https://www.eurosport.de/wetten/prognosen/werder-bremen-vs-borussia-moenchengladbach-prognose-wett-tipps-und-quoten/",
+    "https://www.sportsmole.co.uk/football/werder-bremen/preview/werder-bremen-vs-borussia-mbach-prediction-team-news-lineups_609818.html",
+    "https://www.werder.de/news/maenner/2026-2027/vorbericht-gladbach-26112026"
+   ],
+   "id": "1795803165",
+   "date": "2026-11-27"
   }
  ]
 }
