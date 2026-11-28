@@ -244,7 +244,9 @@
     "https://news.bet365.com/en-gb/article/football-nottingham-forest-chelsea-prediction-and-tips/2026112513514221928"
    ],
    "id": "1795781667",
-   "date": "2026-11-27"
+   "date": "2026-11-27",
+   "won": true,
+   "score": "3:2"
   },
   {
    "league": "Serija A",
@@ -266,7 +268,9 @@
     "https://www.sportsgambler.com/betting-tips/football/venezia-vs-bologna-prediction-lineups-odds-2026-11-27/"
    ],
    "id": "1795792252",
-   "date": "2026-11-27"
+   "date": "2026-11-27",
+   "won": false,
+   "score": "0:0"
   },
   {
    "league": "Bundesliga",
@@ -288,7 +292,31 @@
     "https://www.werder.de/news/maenner/2026-2027/vorbericht-gladbach-26112026"
    ],
    "id": "1795803165",
-   "date": "2026-11-27"
+   "date": "2026-11-27",
+   "won": false,
+   "score": "3:3"
+  },
+  {
+   "league": "La Liga",
+   "home": "Real Madrid",
+   "away": "Alaves",
+   "kickoff": "21:00",
+   "tip": "1",
+   "tip_name": "Pobeda domaćina (Real Madrid)",
+   "confidence": 4,
+   "reasons": [
+    "Real je dobio sve domaće utakmice ove sezone, uz 25 postignutih golova",
+    "Alaves nema gostujuću pobedu u ligi; Real je dobio poslednjih 9 duela",
+    "Real bez Rodriga i Endricka, Alaves bez 4 igrača (Garces, Novoa...)"
+   ],
+   "caption": "Real Madrid na Bernabeuu ove sezone ne zna za poraz u ligi, a Alaves još nije osvojio gostujuće bodove. Real je dobio poslednjih 9 međusobnih duela i ima mnogo kvalitetniju klupu, čak i uz rotacije. Igrate li i vi ovaj tip? Pišite u komentarima!",
+   "sources": [
+    "https://www.101greatgoals.com/match-previews/la-liga-matches/real-madrid-alaves-preview-expected-line-ups-where-to-watch/",
+    "https://sports.yahoo.com/soccer/articles/preview-real-madrid-vs-alav-191500601.html",
+    "https://www.espn.com/soccer/story/_/id/50603609/real-madrid-vs-alaves-tv-channel-how-watch-uk-kickoff-live-stream-team-news-referee-predicted-lineups"
+   ],
+   "id": "1795867948",
+   "date": "2026-11-28"
   }
  ]
 }
