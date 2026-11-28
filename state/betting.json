@@ -317,6 +317,28 @@
    ],
    "id": "1795867948",
    "date": "2026-11-28"
+  },
+  {
+   "league": "Serie A (13. kolo)",
+   "home": "Inter",
+   "away": "Genoa",
+   "kickoff": "20:45",
+   "tip": "1",
+   "tip_name": "Pobeda domaćina (Inter)",
+   "confidence": 4,
+   "reasons": [
+    "Genoa je na San Siru dala gol samo jednom u poslednjih 10 gostovanja u Seriji A",
+    "Inter bez Čalhanoglua i Bastonija, ali Lautaro se vraća u start, a Turam je u formi",
+    "Genoa bez Kolomba, Estigora i Baldancija; Inter je favorit sa kvotom oko 1.28"
+   ],
+   "caption": "Inter dočekuje Genoa na San Siru i, uprkos izostancima Čalhanoglua i Bastonija, ima dovoljno kvaliteta za tri boda. Genoa je u dobroj formi (4 pobede u poslednjih 5), ali na San Siru gotovo nikad ne daje gol, a Kolombo i Estigor ne igraju. Tip je pobeda Intera (1). Igrate li i vi ovaj tip?",
+   "sources": [
+    "https://www.goal.com/it/notizie/inter-genoa-anteprime-match-ultime-notizie-indisponibili/bltc166ab6910d48894",
+    "https://sport.sky.it/calcio/serie-a/2026/11/27/inter-genoa-probabili-formazioni-13-giornata",
+    "https://www.spaziocalcio.it/calcio-italiano/serie-a/pronostico-inter-genoa-quote-1x2-probabili-formazioni-e-dove-vederla/"
+   ],
+   "id": "1795878664",
+   "date": "2026-11-28"
   }
  ]
 }
