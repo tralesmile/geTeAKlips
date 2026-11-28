@@ -33,15 +33,21 @@ def vod_duration(url):  # kept for compatibility
     return float(info.get("duration") or 0)
 
 
+def kick_fix(url):
+    """Kick's CDN now serves HLS segments without a file extension; new ffmpeg
+    refuses them ("not in allowed_segment_extensions") unless told not to."""
+    return ["--downloader-args", "ffmpeg_i:-extension_picky 0"] if "kick.com" in url else []
+
+
 def download_audio(url, start, end, folder):
-    run(ytdlp_base() + ["-f", "bestaudio/worst",
+    run(ytdlp_base() + kick_fix(url) + ["-f", "bestaudio/worst",
                         "--download-sections", f"*{start:.0f}-{end:.0f}",
                         "-o", str(folder / "audio.%(ext)s"), url])
     return next(folder.glob("audio.*"))
 
 
 def download_section(url, start, end, dst):
-    run(ytdlp_base() + [
+    run(ytdlp_base() + kick_fix(url) + [
         "-f", "bv*[height<=1080]+ba/b[height<=1080]/b",
         "--download-sections", f"*{start:.1f}-{end:.1f}",
         "--force-keyframes-at-cuts", "--merge-output-format", "mp4",
